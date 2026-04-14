@@ -24,6 +24,13 @@ KAI_PASSWORD         = os.getenv("KAI_PASSWORD", "")
 FRONTEND_URL         = os.getenv("FRONTEND_URL", "*")
 PORT                 = int(os.getenv("PORT", "8000"))
 
+# Debug print to verify env vars on startup
+print(f"🔧 Environment check:")
+print(f"  SUPABASE_URL: {SUPABASE_URL[:30] if SUPABASE_URL else 'NOT SET'}...")
+print(f"  SUPABASE_ANON_KEY: {SUPABASE_ANON_KEY[:20] if SUPABASE_ANON_KEY else 'NOT SET'}...")
+print(f"  FRONTEND_URL: {FRONTEND_URL}")
+print(f"  PORT: {PORT}")
+
 # ─── Sprite storage directory ──────────────────────────────────────────────────
 SPRITES_DIR = os.path.join(os.path.dirname(__file__), "sprites")
 os.makedirs(SPRITES_DIR, exist_ok=True)
@@ -51,20 +58,26 @@ except FileNotFoundError:
 
 def inject_config(html: str, admin: bool = False) -> str:
     """Inject real Supabase credentials into an HTML template."""
-    html = html.replace("'SUPABASE_URL'",       f"'{SUPABASE_URL}'")
-    html = html.replace('"SUPABASE_URL"',        f'"{SUPABASE_URL}"')
-    html = html.replace("'SUPABASE_ANON_KEY'",   f"'{SUPABASE_ANON_KEY}'")
-    html = html.replace('"SUPABASE_ANON_KEY"',   f'"{SUPABASE_ANON_KEY}"')
+    # Replace placeholders with actual environment variables
+    html = html.replace("'SUPABASE_URL'", f"'{SUPABASE_URL}'")
+    html = html.replace('"SUPABASE_URL"', f'"{SUPABASE_URL}"')
+    html = html.replace("'SUPABASE_ANON_KEY'", f"'{SUPABASE_ANON_KEY}'")
+    html = html.replace('"SUPABASE_ANON_KEY"', f'"{SUPABASE_ANON_KEY}"')
     html = html.replace("'SUPABASE_SERVICE_KEY'", f"'{SUPABASE_ANON_KEY}'")
     html = html.replace('"SUPABASE_SERVICE_KEY"', f'"{SUPABASE_ANON_KEY}"')
-    html = html.replace("'API_URL_PLACEHOLDER'",  f"'{FRONTEND_URL or ''}'")
-    html = html.replace('"API_URL_PLACEHOLDER"',  f'"{FRONTEND_URL or ''}"')
+    html = html.replace("'API_URL_PLACEHOLDER'", f"'{FRONTEND_URL or ''}'")
+    html = html.replace('"API_URL_PLACEHOLDER"', f'"{FRONTEND_URL or ""}"')
+    
+    # Also replace any raw placeholder text without quotes (just in case)
+    html = html.replace("SUPABASE_URL_PLACEHOLDER", SUPABASE_URL)
+    html = html.replace("SUPABASE_ANON_KEY_PLACEHOLDER", SUPABASE_ANON_KEY)
 
     if admin:
         html = html.replace(
             "</body>",
             "<script>window.__KAI_ADMIN__ = true;</script>\n</body>"
         )
+    
     return html
 
 
@@ -78,13 +91,13 @@ async def supabase_query(
     select: str = "*",
     use_service_key: bool = False,
 ) -> dict:
-    key   = SUPABASE_SERVICE_KEY if use_service_key else SUPABASE_ANON_KEY
-    url   = f"{SUPABASE_URL}/rest/v1/{table}"
+    key = SUPABASE_SERVICE_KEY if use_service_key else SUPABASE_ANON_KEY
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
     headers = {
-        "apikey":        key,
+        "apikey": key,
         "Authorization": f"Bearer {key}",
-        "Content-Type":  "application/json",
-        "Prefer":        "return=representation",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation",
     }
     query_params = {"select": select}
     if params:
@@ -110,9 +123,9 @@ async def supabase_storage_upload(bucket: str, path: str, file_bytes: bytes, con
     key = SUPABASE_SERVICE_KEY
     url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{path}"
     headers = {
-        "apikey":        key,
+        "apikey": key,
         "Authorization": f"Bearer {key}",
-        "Content-Type":  content_type,
+        "Content-Type": content_type,
     }
     async with httpx.AsyncClient(timeout=30) as client:
         resp = await client.post(url, headers=headers, content=file_bytes)
@@ -127,7 +140,7 @@ async def verify_kai_token(authorization: Optional[str] = Header(None)) -> bool:
         resp = await client.get(
             f"{SUPABASE_URL}/auth/v1/user",
             headers={
-                "apikey":        SUPABASE_ANON_KEY,
+                "apikey": SUPABASE_ANON_KEY,
                 "Authorization": f"Bearer {token}",
             },
         )
@@ -270,10 +283,10 @@ async def track_visit(payload: TrackPayload, request: Request):
         method="POST",
         body={
             "visitor_id": payload.visitor_id[:64],
-            "page":       (payload.page or "home")[:64],
-            "referrer":   (payload.referrer or "")[:200] or None,
-            "ua":         (payload.ua or "")[:300] or None,
-            "ip":         (ip or "")[:64] or None,
+            "page": (payload.page or "home")[:64],
+            "referrer": (payload.referrer or "")[:200] or None,
+            "ua": (payload.ua or "")[:300] or None,
+            "ip": (ip or "")[:64] or None,
         },
         use_service_key=True,
     )
@@ -281,7 +294,7 @@ async def track_visit(payload: TrackPayload, request: Request):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  API — STATS  (Kai only)
+#  API — STATS (Kai only)
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/stats")
@@ -306,7 +319,7 @@ async def get_stats(authorization: Optional[str] = Header(None)):
         visitors = []
 
     unique_visitors = len(set(v.get("visitor_id", "") for v in visitors))
-    today_visits    = sum(1 for v in visitors if (v.get("created_at") or "").startswith(today))
+    today_visits = sum(1 for v in visitors if (v.get("created_at") or "").startswith(today))
     cutoff = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
     active_count = sum(1 for v in visitors if (v.get("created_at") or "") >= cutoff)
 
@@ -319,24 +332,24 @@ async def get_stats(authorization: Optional[str] = Header(None)):
         for pg, ct in sorted(page_counts.items(), key=lambda x: -x[1])
     ]
 
-    threads_r  = await supabase_query("threads",             select="id", use_service_key=True)
-    comments_r = await supabase_query("comments",            select="id", use_service_key=True)
-    vlogs_r    = await supabase_query("vlogs",               select="id", use_service_key=True)
-    sigs_r     = await supabase_query("iwashere_signatures", select="id", use_service_key=True)
+    threads_r = await supabase_query("threads", select="id", use_service_key=True)
+    comments_r = await supabase_query("comments", select="id", use_service_key=True)
+    vlogs_r = await supabase_query("vlogs", select="id", use_service_key=True)
+    sigs_r = await supabase_query("iwashere_signatures", select="id", use_service_key=True)
 
     def count(result):
         d = result.get("data") or []
         return len(d) if isinstance(d, list) else 0
 
     return JSONResponse({
-        "total":      unique_visitors,
-        "today":      today_visits,
-        "active":     active_count,
-        "threads":    count(threads_r),
-        "comments":   count(comments_r),
-        "vlogs":      count(vlogs_r),
+        "total": unique_visitors,
+        "today": today_visits,
+        "active": active_count,
+        "threads": count(threads_r),
+        "comments": count(comments_r),
+        "vlogs": count(vlogs_r),
         "signatures": count(sigs_r),
-        "pages":      pages_sorted[:10],
+        "pages": pages_sorted[:10],
     })
 
 
@@ -347,9 +360,26 @@ async def get_stats(authorization: Optional[str] = Header(None)):
 @app.get("/api/config")
 async def get_config():
     return JSONResponse({
-        "supabase_url":  SUPABASE_URL,
+        "supabase_url": SUPABASE_URL,
         "supabase_anon": SUPABASE_ANON_KEY,
     })
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  DEBUG ENDPOINT (remove in production if needed)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/debug/env")
+async def debug_env():
+    """Debug endpoint to verify environment variables are loaded."""
+    return {
+        "supabase_url_set": bool(SUPABASE_URL),
+        "supabase_anon_key_set": bool(SUPABASE_ANON_KEY),
+        "supabase_url_prefix": SUPABASE_URL[:30] + "..." if SUPABASE_URL else None,
+        "frontend_url": FRONTEND_URL,
+        "sprites_dir_exists": os.path.exists(SPRITES_DIR),
+        "sprites_count": len(os.listdir(SPRITES_DIR)) if os.path.exists(SPRITES_DIR) else 0,
+    }
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -360,12 +390,12 @@ async def get_config():
 async def health():
     sprite_files = os.listdir(SPRITES_DIR) if os.path.exists(SPRITES_DIR) else []
     return JSONResponse({
-        "status":    "ok",
-        "service":   "KAICORE",
-        "version":   "3.0.0",
+        "status": "ok",
+        "service": "KAICORE",
+        "version": "3.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "supabase":  bool(SUPABASE_URL),
-        "sprites":   sprite_files,
+        "supabase": bool(SUPABASE_URL),
+        "sprites": sprite_files,
     })
 
 
