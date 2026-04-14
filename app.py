@@ -19,8 +19,8 @@ load_dotenv()
 SUPABASE_URL         = os.getenv("SUPABASE_URL", "")
 SUPABASE_ANON_KEY    = os.getenv("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", SUPABASE_ANON_KEY)
-KAI_EMAIL            = os.getenv("KAI_EMAIL", "")
-KAI_PASSWORD         = os.getenv("KAI_PASSWORD", "")
+KAI_EMAIL            = os.getenv("KAI_EMAIL",)
+KAI_PASSWORD         = os.getenv("KAI_PASSWORD")
 FRONTEND_URL         = os.getenv("FRONTEND_URL", "*")
 PORT                 = int(os.getenv("PORT", "8000"))
 
@@ -28,6 +28,8 @@ PORT                 = int(os.getenv("PORT", "8000"))
 print(f"🔧 Environment check:")
 print(f"  SUPABASE_URL: {SUPABASE_URL[:30] if SUPABASE_URL else 'NOT SET'}...")
 print(f"  SUPABASE_ANON_KEY: {SUPABASE_ANON_KEY[:20] if SUPABASE_ANON_KEY else 'NOT SET'}...")
+print(f"  KAI_EMAIL: {KAI_EMAIL}")
+print(f"  KAI_PASSWORD: {'*' * len(KAI_PASSWORD) if KAI_PASSWORD else 'NOT SET'}")
 print(f"  FRONTEND_URL: {FRONTEND_URL}")
 print(f"  PORT: {PORT}")
 
@@ -91,6 +93,9 @@ async def supabase_query(
     select: str = "*",
     use_service_key: bool = False,
 ) -> dict:
+    if not SUPABASE_URL:
+        return {"data": [], "status": 503, "ok": False}
+    
     key = SUPABASE_SERVICE_KEY if use_service_key else SUPABASE_ANON_KEY
     url = f"{SUPABASE_URL}/rest/v1/{table}"
     headers = {
@@ -120,6 +125,9 @@ async def supabase_query(
 
 async def supabase_storage_upload(bucket: str, path: str, file_bytes: bytes, content_type: str) -> dict:
     """Upload a file to Supabase Storage."""
+    if not SUPABASE_URL:
+        return {"ok": False, "status": 503}
+    
     key = SUPABASE_SERVICE_KEY
     url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{path}"
     headers = {
@@ -136,6 +144,10 @@ async def verify_kai_token(authorization: Optional[str] = Header(None)) -> bool:
     if not authorization or not authorization.startswith("Bearer "):
         return False
     token = authorization.split(" ", 1)[1]
+    
+    if not SUPABASE_URL:
+        return False
+        
     async with httpx.AsyncClient(timeout=8) as client:
         resp = await client.get(
             f"{SUPABASE_URL}/auth/v1/user",
@@ -174,6 +186,52 @@ class TrackPayload(BaseModel):
     page: str = "home"
     referrer: Optional[str] = None
     ua: Optional[str] = None
+
+
+class LoginPayload(BaseModel):
+    email: str
+    password: str
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  AUTHENTICATION ENDPOINTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.post("/api/auth/login")
+async def auth_login(payload: LoginPayload):
+    """Direct login endpoint for Kai's Lounge."""
+    if not SUPABASE_URL:
+        raise HTTPException(status_code=503, detail="Supabase not configured")
+    
+    # Use the credentials from environment
+    if payload.email != KAI_EMAIL or payload.password != KAI_PASSWORD:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Authenticate with Supabase to get a token
+    async with httpx.AsyncClient(timeout=10) as client:
+        resp = await client.post(
+            f"{SUPABASE_URL}/auth/v1/token?grant_type=password",
+            headers={
+                "apikey": SUPABASE_ANON_KEY,
+                "Content-Type": "application/json",
+            },
+            json={
+                "email": KAI_EMAIL,
+                "password": KAI_PASSWORD,
+            }
+        )
+    
+    if resp.status_code != 200:
+        print(f"❌ Supabase auth failed: {resp.status_code} - {resp.text}")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    data = resp.json()
+    return JSONResponse({
+        "access_token": data.get("access_token"),
+        "token_type": "bearer",
+        "expires_in": data.get("expires_in"),
+        "refresh_token": data.get("refresh_token"),
+    })
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -376,6 +434,8 @@ async def debug_env():
         "supabase_url_set": bool(SUPABASE_URL),
         "supabase_anon_key_set": bool(SUPABASE_ANON_KEY),
         "supabase_url_prefix": SUPABASE_URL[:30] + "..." if SUPABASE_URL else None,
+        "kai_email": KAI_EMAIL,
+        "kai_password_length": len(KAI_PASSWORD) if KAI_PASSWORD else 0,
         "frontend_url": FRONTEND_URL,
         "sprites_dir_exists": os.path.exists(SPRITES_DIR),
         "sprites_count": len(os.listdir(SPRITES_DIR)) if os.path.exists(SPRITES_DIR) else 0,
