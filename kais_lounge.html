@@ -851,20 +851,53 @@ async function saveLinks() { await saveProfile(); }
 // ─── FUN FACTS ───────────────────────────────────────────────────
 async function loadFacts() {
   const el = document.getElementById('facts-editor');
-  el.innerHTML = Array.from({length:8},(_,i)=>`
+  if (!el) return;
+  
+  el.innerHTML = Array.from({length: 8}, (_, i) => `
     <div class="form-group">
       <label class="form-label">Fact ${i+1}</label>
-      <input class="form-input" id="ef-${i+1}" placeholder="Fun fact...">
-    </div>`).join('');
-  const {data} = await db.tbl('fun_facts').order('slot_number',{asc:true}).get();
-  data.forEach(f => { const el=document.getElementById(`ef-${f.slot_number}`); if(el) el.value=f.fact_text||''; });
-}
-async function saveFacts() {
-  for (let i=1; i<=8; i++) {
-    const el = document.getElementById(`ef-${i}`); if (!el) continue;
-    await db.tbl('fun_facts').upsert({slot_number:i, fact_text:el.value, updated_at:new Date().toISOString()}, {onConflict:'slot_number'});
+      <input class="form-input" id="ef-${i+1}" placeholder="Fun fact..." value="">
+    </div>
+  `).join('');
+  
+  try {
+    const {data} = await db.tbl('fun_facts').order('slot_number', {asc: true}).get();
+    if (data && data.length) {
+      data.forEach(f => { 
+        const el = document.getElementById(`ef-${f.slot_number}`); 
+        if (el) el.value = f.fact_text || ''; 
+      });
+    }
+  } catch(e) {
+    console.log('Load facts error:', e);
   }
-  toast('Fun facts saved! ✦');
+}
+// Replace the existing saveFacts function with this:
+async function saveFacts() {
+  try {
+    for (let i = 1; i <= 8; i++) {
+      const el = document.getElementById(`ef-${i}`);
+      if (!el) continue;
+      
+      const factText = el.value.trim();
+      if (factText) {
+        // Upsert - update if exists, insert if not
+        await db.tbl('fun_facts').upsert(
+          { 
+            slot_number: i, 
+            fact_text: factText, 
+            updated_at: new Date().toISOString() 
+          }, 
+          { onConflict: 'slot_number' }
+        );
+      }
+    }
+    toast('Fun facts saved! ✦');
+    loadFacts(); // Reload to refresh the editor
+  } catch(e) {
+    console.error('Save facts error:', e);
+    toast('Error saving facts: ' + (e.message || 'Unknown error'));
+  }
 }
 
 // ─── SPRITES ─────────────────────────────────────────────────────
