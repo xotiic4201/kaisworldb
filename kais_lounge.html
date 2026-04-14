@@ -640,9 +640,31 @@ async function doLogin() {
   const email = document.getElementById('login-email').value;
   const pass  = document.getElementById('login-password').value;
   document.getElementById('login-error').style.display = 'none';
-  const {data, ok} = await db.signIn(email, pass);
-  if (!ok || !data.access_token) { document.getElementById('login-error').style.display='block'; return; }
-  enterLounge();
+  
+  try {
+    // Use the backend login endpoint
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      document.getElementById('login-error').style.display = 'block';
+      return;
+    }
+    
+    // Store the token
+    db.token = data.access_token;
+    sessionStorage.setItem('lounge_token', data.access_token);
+    enterLounge();
+    
+  } catch (err) {
+    console.error('Login error:', err);
+    document.getElementById('login-error').style.display = 'block';
+  }
 }
 
 function enterLounge() {
