@@ -252,7 +252,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; h
   <div class="login-box">
     <div class="login-logo">✦ KAI'S LOUNGE ✦</div>
     <div class="login-sub">WEB PORTAL — PRINCESSES ONLY</div>
-    <input class="form-input" type="email" id="login-email" placeholder="kai@email.com" autocomplete="email">
+    <input class="form-input" type="email" id="login-email" placeholder="username autocomplete="email">
     <input class="form-input" type="password" id="login-password" placeholder="password..." autocomplete="current-password">
     <button class="bubble-btn" onclick="doLogin()" style="width:100%">ENTER THE LOUNGE</button>
     <div class="login-error" id="login-error">✗ Invalid credentials. Try again.</div>
@@ -597,7 +597,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; h
 const SUPABASE_URL  = 'SUPABASE_URL';
 const SUPABASE_ANON = 'SUPABASE_ANON_KEY';
 // API_URL is the backend root (same origin in production)
-const API_URL = window.location.origin;
+const API_URL = 'https://kaisworldb.onrender.com'
 
 // ─── SUPABASE CLIENT ────────────────────────────────────────────
 class SupaClient {
