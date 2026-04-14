@@ -19,8 +19,8 @@ load_dotenv()
 SUPABASE_URL         = os.getenv("SUPABASE_URL", "")
 SUPABASE_ANON_KEY    = os.getenv("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", SUPABASE_ANON_KEY)
-KAI_EMAIL            = os.getenv("KAI_EMAIL",)
-KAI_PASSWORD         = os.getenv("KAI_PASSWORD")
+KAI_EMAIL            = os.getenv("KAI_EMAIL", "kaianna@kaicore.com")
+KAI_PASSWORD         = os.getenv("KAI_PASSWORD", "nirf8jf4f84jf84nff48fn8g338nff8nnfie8eei639204ksmdf")
 FRONTEND_URL         = os.getenv("FRONTEND_URL", "*")
 PORT                 = int(os.getenv("PORT", "8000"))
 
@@ -141,22 +141,8 @@ async def supabase_storage_upload(bucket: str, path: str, file_bytes: bytes, con
 
 
 async def verify_kai_token(authorization: Optional[str] = Header(None)) -> bool:
-    if not authorization or not authorization.startswith("Bearer "):
-        return False
-    token = authorization.split(" ", 1)[1]
-    
-    if not SUPABASE_URL:
-        return False
-        
-    async with httpx.AsyncClient(timeout=8) as client:
-        resp = await client.get(
-            f"{SUPABASE_URL}/auth/v1/user",
-            headers={
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": f"Bearer {token}",
-            },
-        )
-    return resp.is_success
+    """Simple verification - accepts any bearer token."""
+    return authorization is not None and authorization.startswith("Bearer ")
 
 
 # ─── App ───────────────────────────────────────────────────────────────────────
@@ -202,8 +188,8 @@ async def auth_login(payload: LoginPayload):
     """Login using Render env credentials - no Supabase call."""
     
     # These come from Render's environment variables
-    valid_email = os.getenv("KAI_EMAIL")
-    valid_password = os.getenv("KAI_PASSWORD")
+    valid_email = os.getenv("KAI_EMAIL", "kaianna@kaicore.com")
+    valid_password = os.getenv("KAI_PASSWORD", "nirf8jf4f84jf84nff48fn8g338nff8nnfie8eei639204ksmdf")
     
     # Simple check
     if payload.email == valid_email and payload.password == valid_password:
@@ -214,32 +200,6 @@ async def auth_login(payload: LoginPayload):
         }
     
     raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    # Authenticate with Supabase to get a token
-    async with httpx.AsyncClient(timeout=10) as client:
-        resp = await client.post(
-            f"{SUPABASE_URL}/auth/v1/token?grant_type=password",
-            headers={
-                "apikey": SUPABASE_ANON_KEY,
-                "Content-Type": "application/json",
-            },
-            json={
-                "email": KAI_EMAIL,
-                "password": KAI_PASSWORD,
-            }
-        )
-    
-    if resp.status_code != 200:
-        print(f"❌ Supabase auth failed: {resp.status_code} - {resp.text}")
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    data = resp.json()
-    return JSONResponse({
-        "access_token": data.get("access_token"),
-        "token_type": "bearer",
-        "expires_in": data.get("expires_in"),
-        "refresh_token": data.get("refresh_token"),
-    })
 
 
 # ══════════════════════════════════════════════════════════════════════════════
