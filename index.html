@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIANNACORE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink:    #FF69B4;
+  --softpink:#FFB6C1;
+  --purple:  #8B00FF;
+  --lavender:#DDA0DD;
+  --yellow:  #FFD700;
+  --blood:   #8B0000;
+  --crimson: #4A0000;
+  --black:   #000000;
+  --white:   #ffffff;
+  --glass:   rgba(255,105,180,0.13);
+  --glassborder: rgba(255,215,0,0.4);
+  --glow-pink: 0 0 20px rgba(255,105,180,0.7), 0 0 40px rgba(255,105,180,0.4);
+  --glow-purple: 0 0 20px rgba(139,0,255,0.7), 0 0 40px rgba(139,0,255,0.4);
+  --glow-yellow: 0 0 20px rgba(255,215,0,0.8), 0 0 40px rgba(255,215,0,0.5);
+  --bubble-radius: 60px 60px 60px 40px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Raleway',sans-serif; background:#000; }
+
+/* ============================================================
+   BOOK GATE
+   ============================================================ */
+#gate {
+  position:fixed; inset:0; z-index:9999;
+  background: radial-gradient(ellipse at 50% 30%, #3a0000 0%, #1a0000 40%, #000 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:visible;
+}
+#gate.unlocking { pointer-events:none; }
+#gate.hidden { opacity:0; transform:scale(1.1); transition:opacity 1s ease, transform 1.5s ease; pointer-events:none; }
+
+.gate-particle {
+  position:absolute; border-radius:50%;
+  animation: drift linear infinite;
+  opacity:0.4; pointer-events:none;
+}
+@keyframes drift {
+  0%  { transform: translateY(110vh) rotate(0deg);   opacity:0; }
+  10% { opacity:0.5; }
+  90% { opacity:0.3; }
+  100%{ transform: translateY(-10vh) rotate(720deg); opacity:0; }
+}
+
+#book-scene {
+  perspective: 1500px;
+  width: 340px; height: 440px;
+  position:relative; margin-bottom:60px;
+}
+#book { width:100%; height:100%; position:relative; transform-style: preserve-3d; }
+#book-back {
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, #2a0a0a 0%, #1a0505 50%, #2a0a0a 100%);
+  border-radius: 4px 16px 16px 4px;
+  box-shadow: -6px 0 20px rgba(0,0,0,0.8), 6px 0 30px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+#book-back::before {
+  content:''; position:absolute; top:4px; right:0; bottom:4px; left:12px;
+  background: repeating-linear-gradient(to bottom, #f5e6c8 0px, #f5e6c8 1px, #e8d5b0 1px, #e8d5b0 2px, #f0debb 2px, #f0debb 3px);
+  border-radius:0 12px 12px 0;
+}
+#book-cover {
+  position:absolute; inset:0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+}
+#book-cover.open { transform: rotateY(-170deg); }
+#cover-front {
+  position:absolute; inset:0; backface-visibility: hidden;
+  background: linear-gradient(145deg, #6b0000 0%, #8B0000 30%, #a00000 50%, #7a0000 70%, #5a0000 100%);
+  border-radius: 4px 16px 16px 4px;
+  border-left: 8px solid #2a0000;
+  box-shadow: 6px 0 30px rgba(0,0,0,0.6), inset 2px 0 10px rgba(255,255,255,0.05);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+#cover-front::before {
+  content:''; position:absolute; inset:0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+  opacity:0.3; mix-blend-mode:overlay;
+}
+#cover-front::after {
+  content:''; position:absolute; inset:10px;
+  border:2px solid rgba(255,215,0,0.4); border-radius:8px;
+  box-shadow: inset 0 0 20px rgba(255,215,0,0.1);
+}
+.spine-text {
+  position:absolute; left:6px; top:0; bottom:0; width:28px;
+  display:flex; align-items:center; justify-content:center;
+  writing-mode:vertical-rl; text-orientation:mixed;
+  font-family:'Cinzel Decorative',serif; font-size:11px; font-weight:700; letter-spacing:3px;
+  color: var(--yellow); text-shadow: 0 0 8px var(--yellow);
+  transform: rotate(180deg); z-index:5;
+}
+.cover-title {
+  font-family:'Cinzel Decorative',serif; font-size:32px; font-weight:900; letter-spacing:4px;
+  color: var(--yellow); text-shadow: 0 0 20px var(--yellow), 0 0 40px rgba(255,215,0,0.5);
+  text-align:center; z-index:2; margin-bottom:8px; position:relative;
+}
+.cover-subtitle {
+  font-family:'Special Elite',serif; font-size:11px; letter-spacing:6px; color:rgba(255,215,0,0.6);
+  text-transform:uppercase; z-index:2; position:relative;
+}
+#lock-container {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  z-index:10; cursor:default; transition: filter 0.3s;
+}
+#lock-svg { width:90px; height:110px; filter: drop-shadow(0 0 15px rgba(255,215,0,0.6)); transition: filter 0.3s; }
+#lock-container.glowing #lock-svg { filter: drop-shadow(0 0 30px rgba(255,215,0,1)) drop-shadow(0 0 60px rgba(255,165,0,0.8)); }
+#lock-container.shaking { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake {
+  10%,90%{ transform:translate(-50%,-50%) rotate(-2deg); }
+  20%,80%{ transform:translate(-50%,-50%) rotate(3deg); }
+  30%,50%,70%{ transform:translate(-50%,-50%) rotate(-4deg); }
+  40%,60%{ transform:translate(-50%,-50%) rotate(4deg); }
+}
+#keyhole-glow { animation: keyhole-pulse 2s ease-in-out infinite; }
+@keyframes keyhole-pulse { 0%,100%{ opacity:0.6; } 50%{ opacity:1; } }
+
+/* ============================================================
+   CUTE KEY — fixed drag system
+   ============================================================ */
+#key-wrapper {
+  position: fixed;
+  z-index: 99999;
+  cursor: grab;
+  width: 90px;
+  height: 90px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+#key-wrapper.is-dragging {
+  cursor: grabbing;
+}
+#key-svg {
+  width: 90px;
+  height: 90px;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(255,105,180,0.8)) drop-shadow(0 0 20px rgba(255,215,0,0.4));
+  animation: key-float 2.5s ease-in-out infinite;
+  transform-origin: center center;
+}
+#key-wrapper.is-dragging #key-svg {
+  animation: none;
+  filter: drop-shadow(0 0 18px rgba(255,215,0,1)) drop-shadow(0 0 35px rgba(255,105,180,0.9));
+  transform: scale(1.1);
+}
+
+@keyframes key-float {
+  0%,100% { transform: translateY(0px) rotate(-8deg) scale(1); }
+  25%     { transform: translateY(-8px) rotate(-5deg) scale(1.03); }
+  50%     { transform: translateY(-12px) rotate(-8deg) scale(1.05); }
+  75%     { transform: translateY(-6px) rotate(-11deg) scale(1.02); }
+}
+
+.drag-hint {
+  position: fixed;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #FF69B4;
+  text-shadow: 0 0 10px #FF69B4;
+  white-space: nowrap;
+  animation: hint-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 99999;
+  background: rgba(0,0,0,0.6);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,105,180,0.4);
+}
+@keyframes hint-pulse {
+  0%,100% { opacity: 0.5; }
+  50%     { opacity: 1; }
+}
+
+#lock-container.lock-glow-active {
+  animation: lock-breathe 0.4s ease-in-out infinite;
+}
+@keyframes lock-breathe {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%     { transform: translate(-50%,-50%) scale(1.08); }
+}
+
+/* ============================================================
+   PARTICLE CANVAS
+   ============================================================ */
+#particle-canvas { position:fixed; inset:0; pointer-events:none; z-index:99998; }
+
+/* ============================================================
+   MAIN SITE
+   ============================================================ */
+#site {
+  position:fixed; inset:0; opacity:0; pointer-events:none;
+  background: radial-gradient(ellipse at 20% 50%, #2a0020 0%, #0d0015 50%, #000 100%);
+  overflow:hidden; transition: opacity 1s ease 0.5s;
+}
+#site.visible { opacity:1; pointer-events:all; }
+#cloud-layer { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.cloud { position:absolute; opacity:0.12; animation: cloud-drift linear infinite; }
+@keyframes cloud-drift { from { transform: translateX(-200px); } to { transform: translateX(calc(100vw + 200px)); } }
+#site::after {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(139,0,0,0.3) 0%, transparent 60%),
+              radial-gradient(ellipse at 0% 50%, rgba(139,0,255,0.1) 0%, transparent 40%),
+              radial-gradient(ellipse at 100% 50%, rgba(255,105,180,0.1) 0%, transparent 40%);
+  pointer-events:none; z-index:1;
+}
+#scanlines {
+  position:fixed; inset:0; z-index:99997; pointer-events:none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+}
+#pet-canvas { position:fixed; inset:0; z-index:50; pointer-events:none; }
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+#nav {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%);
+  z-index:1000; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+  padding:10px 16px; background: rgba(0,0,0,0.4); backdrop-filter:blur(20px);
+  border-radius:60px; border:1px solid rgba(255,215,0,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), var(--glow-purple); max-width:95vw;
+}
+.nav-bubble {
+  padding:8px 16px; border-radius:40px;
+  background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(139,0,255,0.2));
+  border:1.5px solid rgba(255,215,0,0.3); color: var(--softpink);
+  font-family:'Raleway',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; cursor:pointer; transition: all 0.3s ease; white-space:nowrap;
+  text-shadow: 0 0 8px var(--pink); position:relative; overflow:hidden;
+}
+.nav-bubble::after {
+  content:''; position:absolute; top:-50%; left:-50%; width:200%; height:50%;
+  background: linear-gradient(rgba(255,255,255,0.15), transparent);
+  border-radius:50%; pointer-events:none;
+}
+.nav-bubble:hover {
+  background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,105,180,0.3));
+  border-color: var(--yellow); color: var(--yellow);
+  transform: translateY(-2px) scale(1.05); box-shadow: var(--glow-yellow);
+}
+.nav-bubble.active {
+  background: linear-gradient(135deg, var(--blood), var(--purple));
+  border-color:var(--pink); color:var(--yellow);
+  box-shadow: var(--glow-pink); animation: nav-pulse 2s ease-in-out infinite;
+}
+@keyframes nav-pulse {
+  0%,100%{ box-shadow:var(--glow-pink); }
+  50%{ box-shadow:0 0 30px var(--pink), 0 0 60px rgba(255,105,180,0.6); }
+}
+
+/* ============================================================
+   BUBBLE CARD
+   ============================================================ */
+.bubble-card {
+  background: radial-gradient(circle at 30% 20%, rgba(255,105,180,0.2), rgba(74,0,0,0.3));
+  backdrop-filter:blur(16px); border-radius:60px 60px 60px 40px;
+  border:2px solid rgba(255,215,0,0.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  padding:28px; margin:12px; position:relative; overflow:hidden;
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+.bubble-card::before {
+  content:''; position:absolute; top:-50%; left:-30%; width:80%; height:50%;
+  background:linear-gradient(rgba(255,255,255,0.08), transparent);
+  transform:rotate(-10deg); border-radius:50%; pointer-events:none;
+}
+.bubble-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.5), var(--glow-pink); }
+.bubble-card-purple { background: radial-gradient(circle at 30% 20%, rgba(139,0,255,0.25), rgba(74,0,0,0.3)); border-color:rgba(139,0,255,0.5); }
+.bubble-card-yellow { background: radial-gradient(circle at 30% 20%, rgba(255,215,0,0.2), rgba(74,0,0,0.3)); border-color:rgba(255,215,0,0.6); }
+
+/* ============================================================
+   PAGES
+   ============================================================ */
+#pages {
+  position:fixed; inset:0; z-index:10; padding:90px 20px 20px;
+  overflow-y:auto; overflow-x:hidden;
+}
+#pages::-webkit-scrollbar { width:6px; }
+#pages::-webkit-scrollbar-track { background:rgba(0,0,0,0.3); }
+#pages::-webkit-scrollbar-thumb { background:var(--pink); border-radius:3px; }
+.page { display:none; animation:page-in 0.5s ease; }
+.page.active { display:block; }
+@keyframes page-in { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.page-title {
+  font-family:'Cinzel Decorative',serif; font-size:clamp(20px,4vw,36px);
+  color:var(--yellow); text-shadow:var(--glow-yellow); margin-bottom:8px; letter-spacing:4px;
+}
+.page-sub { font-size:12px; letter-spacing:3px; color:var(--lavender); text-transform:uppercase; margin-bottom:28px; }
+
+/* HOME */
+#home-hero { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:1200px; margin:0 auto; }
+@media(max-width:700px){ #home-hero{ grid-template-columns:1fr; } }
+.online-badge {
+  display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:40px;
+  background:rgba(0,255,100,0.1); border:1px solid rgba(0,255,100,0.4);
+  font-size:11px; font-weight:700; letter-spacing:2px; color:#00ff64; margin-bottom:12px;
+}
+.online-dot { width:8px; height:8px; border-radius:50%; background:#00ff64; box-shadow:0 0 8px #00ff64; animation:blink 1.5s ease-in-out infinite; }
+@keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.profile-avatar {
+  width:120px; height:120px; border-radius:50%; border:3px solid var(--yellow);
+  box-shadow:var(--glow-yellow); object-fit:cover;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel Decorative',serif; font-size:40px; color:var(--yellow); margin:0 auto 16px;
+}
+.stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.stat-box { background:rgba(255,105,180,0.1); border:1px solid rgba(255,105,180,0.3); border-radius:20px; padding:16px; text-align:center; }
+.stat-num { font-family:'Cinzel Decorative',serif; font-size:28px; color:var(--yellow); text-shadow:var(--glow-yellow); }
+.stat-label { font-size:10px; letter-spacing:2px; color:var(--lavender); text-transform:uppercase; }
+.mood-display {
+  display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:30px;
+  background:rgba(255,215,0,0.1); border:1px solid rgba(255,215,0,0.4);
+  font-size:12px; color:var(--yellow); margin:10px 0;
+}
+
+/* THREADS */
+.thread-card {
+  max-width:700px; margin:0 auto 20px; padding:24px;
+  background:radial-gradient(circle at 20% 20%,rgba(255,105,180,0.15),rgba(74,0,0,0.25));
+  border:2px solid rgba(255,215,0,0.3); border-radius:40px 40px 40px 20px;
+  backdrop-filter:blur(12px); position:relative; box-shadow:0 8px 30px rgba(0,0,0,0.4);
+}
+.thread-card::before {
+  content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px;
+  border-radius:41px 41px 41px 21px;
+  background:linear-gradient(135deg,var(--yellow),transparent,var(--pink));
+  z-index:-1; opacity:0.3;
+}
+.thread-author { font-size:12px; color:var(--lavender); letter-spacing:2px; margin-bottom:8px; }
+.thread-content { color:#f0d0d0; line-height:1.7; margin-bottom:16px; }
+.thread-image { width:100%; border-radius:20px; margin-bottom:16px; border:2px solid rgba(255,105,180,0.3); }
+.thread-actions { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.thread-btn {
+  padding:8px 18px; border-radius:30px; border:1.5px solid rgba(255,105,180,0.4);
+  background:rgba(255,105,180,0.1); color:var(--softpink);
+  font-size:11px; font-weight:700; letter-spacing:2px; cursor:pointer;
+  transition:all 0.3s; font-family:'Raleway',sans-serif;
+}
+.thread-btn:hover { background:rgba(255,105,180,0.3); border-color:var(--pink); transform:translateY(-2px); box-shadow:var(--glow-pink); }
+.view-count { font-size:11px; color:var(--lavender); letter-spacing:1px; }
+.comments-section { margin-top:20px; }
+.comment-bubble {
+  background:rgba(139,0,255,0.1); border:1.5px solid rgba(139,0,255,0.3);
+  border-radius:30px 30px 30px 10px; padding:14px 18px; margin-bottom:10px; backdrop-filter:blur(8px);
+}
+.comment-bubble.nested { margin-left:32px; background:rgba(255,105,180,0.08); border-color:rgba(255,105,180,0.25); border-radius:20px 20px 20px 6px; }
+.comment-author-name { font-size:12px; font-weight:700; letter-spacing:1px; margin-bottom:4px; }
+.comment-text { font-size:13px; color:#e0c0d0; line-height:1.6; }
+.comment-actions { display:flex; gap:8px; margin-top:8px; }
+.vote-btn {
+  padding:4px 12px; border-radius:20px; background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.15); color:var(--lavender); font-size:11px;
+  cursor:pointer; font-family:'Raleway',sans-serif; transition:all 0.2s;
+}
+.vote-btn:hover { background:rgba(255,105,180,0.2); color:var(--pink); }
+.add-comment-form { margin-top:16px; }
+.bubble-input {
+  width:100%; padding:14px 20px; border-radius:30px; background:rgba(0,0,0,0.4);
+  border:2px solid rgba(255,105,180,0.3); color:#f0d0e0; font-family:'Raleway',sans-serif;
+  font-size:13px; outline:none; transition:all 0.3s; margin-bottom:10px;
+}
+.bubble-input:focus { border-color:var(--pink); box-shadow:var(--glow-pink); }
+.bubble-input::placeholder { color:rgba(255,182,193,0.5); }
+.bubble-btn {
+  padding:12px 28px; border-radius:40px;
+  background:linear-gradient(135deg,var(--blood),var(--purple));
+  border:2px solid var(--pink); color:var(--yellow);
+  font-family:'Cinzel Decorative',serif; font-size:12px; letter-spacing:2px;
+  cursor:pointer; transition:all 0.3s; box-shadow:var(--glow-purple);
+}
+.bubble-btn:hover { background:linear-gradient(135deg,var(--purple),var(--pink)); border-color:var(--yellow); transform:translateY(-3px); box-shadow:var(--glow-yellow); }
+.bubble-btn-sm { padding:8px 18px; font-size:10px; }
+
+/* VLOG */
+.vlog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; max-width:1100px; margin:0 auto; }
+.vlog-card { border-radius:30px 30px 30px 15px; background:rgba(255,105,180,0.1); border:2px solid rgba(255,105,180,0.3); overflow:hidden; backdrop-filter:blur(12px); transition:transform 0.3s, box-shadow 0.3s; }
+.vlog-card:hover { transform:translateY(-6px); box-shadow:var(--glow-pink); }
+.vlog-thumb { position:relative; padding-bottom:56.25%; background:#1a0020; }
+.vlog-thumb iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+.vlog-info { padding:18px; }
+.vlog-title { font-family:'Cinzel Decorative',serif; font-size:14px; color:var(--yellow); margin-bottom:8px; }
+.vlog-desc { font-size:12px; color:var(--lavender); line-height:1.6; }
+.vlog-date { font-size:10px; color:rgba(255,105,180,0.6); margin-top:8px; letter-spacing:1px; }
+
+/* ABOUT */
+#about-layout { display:grid; grid-template-columns:300px 1fr; gap:24px; max-width:1100px; margin:0 auto; }
+@media(max-width:700px){ #about-layout{ grid-template-columns:1fr; } }
+.about-profile-card {
+  border-radius:40px 40px 40px 20px;
+  background:radial-gradient(circle at 40% 20%,rgba(255,105,180,0.2),rgba(74,0,0,0.3));
+  border:2px solid rgba(255,215,0,0.4); padding:28px; text-align:center; backdrop-filter:blur(16px);
+}
+.about-avatar {
+  width:140px; height:140px; border-radius:50%; border:4px solid var(--yellow);
+  box-shadow:var(--glow-yellow); object-fit:cover;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  margin:0 auto 16px; display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel Decorative',serif; font-size:50px; color:var(--yellow);
+}
+.about-name { font-family:'Cinzel Decorative',serif; font-size:22px; color:var(--yellow); text-shadow:var(--glow-yellow); margin-bottom:6px; }
+.about-detail { font-size:12px; color:var(--lavender); margin:6px 0; letter-spacing:1px; }
+.about-bio { font-size:13px; color:#e0c0d0; line-height:1.7; margin:16px 0; }
+.fun-facts-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:500px){ .fun-facts-grid{ grid-template-columns:1fr; } }
+.fun-fact-bubble {
+  background:radial-gradient(circle at 20% 20%,rgba(139,0,255,0.2),rgba(74,0,0,0.2));
+  border:2px solid rgba(139,0,255,0.4); border-radius:30px 30px 30px 10px;
+  padding:18px; position:relative; backdrop-filter:blur(8px);
+}
+.fact-num { font-family:'Cinzel Decorative',serif; font-size:30px; color:rgba(255,215,0,0.3); position:absolute; top:10px; right:16px; line-height:1; }
+.fact-text { font-size:13px; color:#d0c0e0; line-height:1.6; }
+
+/* LINKS */
+.links-container { display:flex; flex-direction:column; gap:20px; max-width:500px; margin:0 auto; }
+.link-bubble { padding:24px 32px; border-radius:50px; display:flex; align-items:center; gap:20px; cursor:pointer; text-decoration:none; transition:all 0.3s; position:relative; overflow:hidden; }
+.link-bubble::before { content:''; position:absolute; top:-60%; left:-20%; width:60%; height:60%; background:linear-gradient(rgba(255,255,255,0.12),transparent); border-radius:50%; transform:rotate(-10deg); }
+.link-instagram { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); border:3px solid rgba(255,215,0,0.5); box-shadow:0 8px 30px rgba(253,29,29,0.4); }
+.link-tiktok { background:linear-gradient(135deg,#010101,#fe2c55); border:3px solid rgba(255,105,180,0.5); box-shadow:0 8px 30px rgba(254,44,85,0.4); }
+.link-spotify { background:linear-gradient(135deg,#1db954,#191414); border:3px solid rgba(29,185,84,0.5); box-shadow:0 8px 30px rgba(29,185,84,0.4); }
+.link-bubble:hover { transform:scale(1.04) translateY(-4px); }
+.link-icon { width:40px; height:40px; }
+.link-text { flex:1; }
+.link-name { font-family:'Cinzel Decorative',serif; font-size:18px; color:#fff; font-weight:900; }
+.link-handle { font-size:12px; color:rgba(255,255,255,0.7); letter-spacing:1px; }
+.link-arrow { font-size:20px; color:rgba(255,255,255,0.6); }
+
+/* PETSCAPE */
+#petscape-canvas { width:100%; height:500px; border-radius:40px; border:2px solid rgba(255,105,180,0.4); background:linear-gradient(135deg,#0d0020,#200010); display:block; cursor:crosshair; }
+.petscape-controls { display:flex; gap:12px; margin-top:16px; flex-wrap:wrap; justify-content:center; }
+.sprite-credit { font-size:10px; color:rgba(255,182,193,0.5); margin-top:4px; letter-spacing:1px; }
+
+/* PET CREATOR */
+#creator-layout { display:grid; grid-template-columns:auto 1fr; gap:24px; align-items:start; max-width:900px; margin:0 auto; }
+@media(max-width:700px){ #creator-layout{ grid-template-columns:1fr; } }
+#pixel-canvas { image-rendering:pixelated; cursor:crosshair; border:3px solid var(--yellow); border-radius:12px; box-shadow:var(--glow-yellow); }
+.color-palette { display:grid; grid-template-columns:repeat(8,32px); gap:4px; margin:16px 0; }
+.palette-color { width:32px; height:32px; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; }
+.palette-color:hover,.palette-color.selected { border-color:var(--yellow); transform:scale(1.2); }
+.creator-tools { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.tool-btn { padding:8px 16px; border-radius:20px; background:rgba(255,105,180,0.15); border:1.5px solid rgba(255,105,180,0.4); color:var(--softpink); font-size:11px; font-weight:700; cursor:pointer; font-family:'Raleway',sans-serif; transition:all 0.2s; }
+.tool-btn:hover,.tool-btn.active { background:rgba(255,105,180,0.35); border-color:var(--pink); color:var(--pink); }
+.creator-preview-box { display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:1; max-width:320px; background:rgba(0,0,0,0.5); border-radius:20px; border:2px solid rgba(255,105,180,0.3); margin-bottom:16px; }
+#preview-canvas { image-rendering:pixelated; }
+
+/* JOURNAL */
+.journal-entry-card { background:radial-gradient(circle at 20% 20%,rgba(255,215,0,0.1),rgba(74,0,0,0.2)); border:2px solid rgba(255,215,0,0.3); border-radius:30px 30px 30px 10px; padding:24px; backdrop-filter:blur(12px); }
+.journal-date { font-size:11px; color:var(--lavender); letter-spacing:2px; margin-bottom:6px; }
+.journal-mood { font-size:22px; margin-bottom:8px; }
+.journal-title { font-family:'Cinzel Decorative',serif; font-size:16px; color:var(--yellow); margin-bottom:10px; }
+.journal-content { font-size:13px; color:#d0c0d0; line-height:1.8; }
+
+/* LIVE */
+#stage-layout { display:grid; grid-template-columns:1fr 320px; gap:20px; max-width:1100px; margin:0 auto; }
+@media(max-width:900px){ #stage-layout{ grid-template-columns:1fr; } }
+.live-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:30px; background:rgba(255,0,0,0.2); border:2px solid red; color:red; font-size:12px; font-weight:700; letter-spacing:3px; margin-bottom:16px; animation:live-pulse 1.5s ease-in-out infinite; }
+@keyframes live-pulse { 0%,100%{ box-shadow:0 0 10px rgba(255,0,0,0.4); } 50%{ box-shadow:0 0 25px rgba(255,0,0,0.8); } }
+.live-dot { width:8px; height:8px; border-radius:50%; background:red; animation:blink 1s infinite; }
+.offline-screen { aspect-ratio:16/9; border-radius:20px; background:linear-gradient(135deg,#0a0015,#200020); border:2px solid rgba(255,105,180,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.stage-video-wrapper { aspect-ratio:16/9; border-radius:20px; overflow:hidden; }
+.stage-video-wrapper iframe { width:100%; height:100%; border:none; }
+.chat-box { background:rgba(0,0,0,0.5); border:2px solid rgba(255,105,180,0.3); border-radius:20px; display:flex; flex-direction:column; height:500px; overflow:hidden; }
+.chat-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:8px; }
+.chat-msg { background:rgba(255,105,180,0.1); border:1px solid rgba(255,105,180,0.2); border-radius:16px 16px 16px 4px; padding:10px 14px; animation:msg-in 0.3s ease; }
+@keyframes msg-in{ from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;} }
+.chat-author { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--pink); }
+.chat-text { font-size:12px; color:#e0c0d0; }
+.chat-input-area { padding:12px; border-top:1px solid rgba(255,105,180,0.2); display:flex; gap:8px; }
+.chat-input { flex:1; padding:10px 16px; border-radius:20px; background:rgba(0,0,0,0.5); border:1.5px solid rgba(255,105,180,0.3); color:#f0d0e0; font-family:'Raleway',sans-serif; font-size:12px; outline:none; }
+.chat-input:focus { border-color:var(--pink); }
+.chat-send { padding:10px 18px; border-radius:20px; background:var(--blood); border:1.5px solid var(--pink); color:var(--yellow); font-family:'Cinzel Decorative',serif; font-size:10px; cursor:pointer; letter-spacing:1px; }
+
+/* I WAS HERE */
+.iwashere-form { max-width:500px; margin:0 auto 40px; }
+.signatures-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px; max-width:1100px; margin:0 auto; }
+.signature-bubble { background:radial-gradient(circle at 30% 20%,rgba(255,105,180,0.15),rgba(74,0,0,0.2)); border:2px solid rgba(255,105,180,0.3); border-radius:30px 30px 30px 8px; padding:20px; backdrop-filter:blur(8px); }
+.sig-name { font-family:'Cinzel Decorative',serif; font-size:14px; color:var(--yellow); margin-bottom:6px; }
+.sig-message { font-size:12px; color:#d0c0d0; line-height:1.6; }
+.sig-date { font-size:10px; color:var(--lavender); margin-top:8px; letter-spacing:1px; }
+
+/* STATS */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; max-width:1100px; margin:0 auto 28px; }
+.stat-card { background:radial-gradient(circle at 30% 20%,rgba(255,215,0,0.1),rgba(74,0,0,0.25)); border:2px solid rgba(255,215,0,0.3); border-radius:30px; padding:24px; text-align:center; backdrop-filter:blur(12px); }
+.big-num { font-family:'Cinzel Decorative',serif; font-size:42px; color:var(--yellow); text-shadow:var(--glow-yellow); }
+.stat-card-label { font-size:11px; color:var(--lavender); letter-spacing:2px; text-transform:uppercase; }
+.chart-section { max-width:1100px; margin:0 auto 28px; }
+.chart-title { font-family:'Cinzel Decorative',serif; font-size:16px; color:var(--pink); margin-bottom:16px; letter-spacing:2px; }
+.bar-chart { display:flex; flex-direction:column; gap:10px; }
+.bar-row { display:flex; align-items:center; gap:12px; }
+.bar-label { width:100px; font-size:12px; color:var(--lavender); text-align:right; flex-shrink:0; }
+.bar-track { flex:1; height:24px; background:rgba(0,0,0,0.4); border-radius:12px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:12px; background:linear-gradient(90deg,var(--blood),var(--pink),var(--yellow)); transition:width 1.5s cubic-bezier(0.4,0,0.2,1); }
+.bar-val { width:50px; font-size:12px; color:var(--yellow); }
+
+/* EDIT VIEW */
+#edit-view { position:fixed; inset:0; z-index:5000; background:rgba(0,0,0,0.95); backdrop-filter:blur(20px); display:none; overflow-y:auto; }
+#edit-view.open { display:block; }
+.edit-header { padding:20px 28px; background:linear-gradient(90deg,var(--crimson),rgba(74,0,0,0.8)); border-bottom:2px solid rgba(255,215,0,0.4); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+.edit-title { font-family:'Cinzel Decorative',serif; font-size:20px; color:var(--yellow); letter-spacing:4px; text-shadow:var(--glow-yellow); }
+.edit-close { padding:10px 20px; border-radius:30px; background:rgba(255,0,0,0.2); border:2px solid red; color:red; cursor:pointer; font-family:'Raleway',sans-serif; font-weight:700; font-size:12px; letter-spacing:2px; transition:all 0.3s; }
+.edit-close:hover { background:rgba(255,0,0,0.4); transform:scale(1.05); }
+.edit-tabs { display:flex; gap:6px; padding:16px 20px; overflow-x:auto; border-bottom:1px solid rgba(255,215,0,0.2); flex-wrap:wrap; }
+.edit-tab { padding:10px 18px; border-radius:30px; white-space:nowrap; background:rgba(255,105,180,0.1); border:1.5px solid rgba(255,105,180,0.3); color:var(--softpink); font-size:11px; font-weight:700; letter-spacing:2px; cursor:pointer; font-family:'Raleway',sans-serif; transition:all 0.3s; }
+.edit-tab:hover { background:rgba(255,105,180,0.3); }
+.edit-tab.active { background:var(--blood); border-color:var(--yellow); color:var(--yellow); }
+.edit-panel { display:none; padding:24px; }
+.edit-panel.active { display:block; }
+.edit-section-title { font-family:'Cinzel Decorative',serif; font-size:16px; color:var(--pink); margin-bottom:20px; letter-spacing:2px; }
+.form-group { margin-bottom:20px; }
+.form-label { display:block; font-size:12px; color:var(--lavender); letter-spacing:2px; margin-bottom:8px; text-transform:uppercase; }
+.form-input { width:100%; padding:14px 18px; border-radius:20px; background:rgba(0,0,0,0.5); border:2px solid rgba(255,105,180,0.3); color:#f0d0e0; font-family:'Raleway',sans-serif; font-size:13px; outline:none; transition:all 0.3s; }
+.form-input:focus { border-color:var(--pink); box-shadow:var(--glow-pink); }
+textarea.form-input { min-height:120px; resize:vertical; border-radius:20px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:600px){ .form-row{ grid-template-columns:1fr; } }
+.color-picker-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.color-picker-label { font-size:12px; color:var(--lavender); width:140px; }
+input[type=color] { width:50px; height:36px; padding:2px; border-radius:10px; border:2px solid rgba(255,215,0,0.4); background:transparent; cursor:pointer; }
+input[type=range] { -webkit-appearance:none; width:200px; height:6px; border-radius:3px; background:rgba(255,105,180,0.3); outline:none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--pink); cursor:pointer; box-shadow:var(--glow-pink); }
+.slider-row { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.slider-label { font-size:12px; color:var(--lavender); width:140px; }
+.slider-val { font-size:12px; color:var(--yellow); width:40px; }
+.theme-preview { width:100%; height:150px; border-radius:30px; border:2px solid rgba(255,215,0,0.4); display:flex; align-items:center; justify-content:center; margin-bottom:20px; transition:all 0.5s; }
+.toggle-wrap { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+.toggle { width:50px; height:26px; position:relative; cursor:pointer; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; inset:0; border-radius:26px; background:rgba(255,105,180,0.2); border:2px solid rgba(255,105,180,0.4); transition:all 0.3s; }
+.toggle-slider::before { content:''; position:absolute; width:18px; height:18px; border-radius:50%; background:var(--lavender); left:2px; top:2px; transition:all 0.3s; }
+.toggle input:checked + .toggle-slider { background:var(--blood); border-color:var(--pink); }
+.toggle input:checked + .toggle-slider::before { background:var(--pink); transform:translateX(24px); box-shadow:var(--glow-pink); }
+.toggle-label { font-size:12px; color:var(--lavender); letter-spacing:1px; }
+.rich-editor { width:100%; min-height:200px; padding:18px; border-radius:20px; background:rgba(0,0,0,0.5); border:2px solid rgba(255,215,0,0.3); color:#f0d0e0; font-family:'Special Elite',serif; font-size:14px; outline:none; resize:vertical; line-height:1.8; transition:all 0.3s; }
+.rich-editor:focus { border-color:var(--yellow); box-shadow:var(--glow-yellow); }
+.login-box { background:radial-gradient(circle at 30% 20%,rgba(255,105,180,0.15),rgba(74,0,0,0.3)); border:2px solid rgba(255,215,0,0.4); border-radius:50px; padding:48px; max-width:400px; width:90%; backdrop-filter:blur(20px); text-align:center; box-shadow:var(--glow-purple); }
+.login-title { font-family:'Cinzel Decorative',serif; font-size:24px; color:var(--yellow); text-shadow:var(--glow-yellow); margin-bottom:8px; }
+.login-sub { font-size:11px; color:var(--lavender); letter-spacing:3px; margin-bottom:32px; }
+.login-error { color:#ff6060; font-size:12px; margin-top:12px; display:none; }
+#mute-btn { position:fixed; bottom:20px; right:20px; z-index:9000; width:48px; height:48px; border-radius:50%; background:rgba(0,0,0,0.7); border:2px solid rgba(255,215,0,0.4); color:var(--yellow); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.3s; box-shadow:0 4px 16px rgba(0,0,0,0.5); }
+#mute-btn:hover { border-color:var(--yellow); box-shadow:var(--glow-yellow); transform:scale(1.1); }
+#kai-status { display:none; align-items:center; gap:6px; padding:8px 16px; border-radius:40px; background:rgba(0,255,100,0.1); border:1.5px solid rgba(0,255,100,0.3); font-size:10px; color:#00ff64; font-weight:700; letter-spacing:2px; }
+#kai-status.visible { display:inline-flex; }
+#kai-status .dot { width:7px; height:7px; border-radius:50%; background:#00ff64; animation:blink 1.5s infinite; }
+#toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,0.85); border:2px solid var(--pink); border-radius:30px; padding:14px 28px; z-index:99999; color:var(--pink); font-size:13px; letter-spacing:1px; opacity:0; pointer-events:none; transition:all 0.4s ease; text-align:center; box-shadow:var(--glow-pink); }
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.loader { width:40px; height:40px; border-radius:50%; border:3px solid rgba(255,105,180,0.2); border-top-color:var(--pink); animation:spin 0.8s linear infinite; margin:40px auto; }
+@keyframes spin{ to{transform:rotate(360deg);} }
+.empty-state { text-align:center; padding:60px 20px; color:var(--lavender); font-size:14px; letter-spacing:1px; }
+.empty-icon { font-size:48px; margin-bottom:16px; opacity:0.6; filter:drop-shadow(0 0 10px var(--pink)); }
+.pet-tooltip { position:fixed; background:rgba(0,0,0,0.85); border:1.5px solid var(--pink); border-radius:14px; padding:8px 14px; font-size:11px; color:var(--pink); pointer-events:none; z-index:200; opacity:0; transition:opacity 0.2s; }
+.otd-date-picker { display:flex; align-items:center; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+@media(max-width:600px){
+  #nav { gap:4px; padding:8px 12px; }
+  .nav-bubble { padding:6px 10px; font-size:9px; letter-spacing:1px; }
+  #pages { padding:80px 12px 20px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div id="scanlines"></div>
+
+<!-- BOOK GATE -->
+<div id="gate">
+  <div id="book-scene">
+    <div id="book">
+      <div id="book-back"></div>
+      <div id="book-cover">
+        <div id="cover-front">
+          <div class="spine-text">Kais world</div>
+          <div id="lock-container">
+            <svg id="lock-svg" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="45" width="70" height="58" rx="12" fill="#3a2000" stroke="#FFD700" stroke-width="2.5"/>
+              <rect x="10" y="45" width="70" height="58" rx="12" fill="url(#lock-grad)"/>
+              <path d="M25 45 V28 Q25 8 45 8 Q65 8 65 28 V45" stroke="#FFD700" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <circle cx="45" cy="72" r="12" fill="#1a0a00" stroke="#FFD700" stroke-width="2"/>
+              <rect x="42" y="72" width="6" height="14" rx="3" fill="#1a0a00"/>
+              <circle id="keyhole-glow" cx="45" cy="72" r="8" fill="none" stroke="url(#key-glow)" stroke-width="3"/>
+              <circle cx="20" cy="55" r="4" fill="#6b4000" stroke="#FFD700" stroke-width="1"/>
+              <circle cx="70" cy="55" r="4" fill="#6b4000" stroke="#FFD700" stroke-width="1"/>
+              <circle cx="20" cy="95" r="4" fill="#6b4000" stroke="#FFD700" stroke-width="1"/>
+              <circle cx="70" cy="95" r="4" fill="#6b4000" stroke="#FFD700" stroke-width="1"/>
+              <defs>
+                <linearGradient id="lock-grad" x1="10" y1="45" x2="80" y2="103" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#8B6000" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#3a2000" stop-opacity="0.3"/>
+                </linearGradient>
+                <radialGradient id="key-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FF69B4"/>
+                  <stop offset="100%" stop-color="#8B00FF"/>
+                </radialGradient>
+              </defs>
+            </svg>
+          </div>
+          <div style="position:absolute;bottom:50px;left:0;right:0;text-align:center;z-index:2;">
+            <div class="cover-title">KAICORE</div>
+            <div class="cover-subtitle">&#x2605; Welcome &#x2605;</div>
+          </div>
+          <svg style="position:absolute;top:18px;left:18px;width:40px;height:40px;z-index:3" viewBox="0 0 40 40"><path d="M2,2 L14,2 L2,14 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/></svg>
+          <svg style="position:absolute;top:18px;right:18px;width:40px;height:40px;z-index:3" viewBox="0 0 40 40"><path d="M38,2 L26,2 L38,14 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/></svg>
+          <svg style="position:absolute;bottom:18px;left:18px;width:40px;height:40px;z-index:3" viewBox="0 0 40 40"><path d="M2,38 L14,38 L2,26 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/></svg>
+          <svg style="position:absolute;bottom:18px;right:18px;width:40px;height:40px;z-index:3" viewBox="0 0 40 40"><path d="M38,38 L26,38 L38,26 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/></svg>
+        </div>
+        <div id="cover-back"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CUTE KEY — proper key shape SVG, draggable
+       ============================================================ -->
+  <div id="key-wrapper">
+    <svg id="key-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gold gradient for key body -->
+        <linearGradient id="keyBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#FFE066"/>
+          <stop offset="40%"  stop-color="#FFD700"/>
+          <stop offset="70%"  stop-color="#FFA800"/>
+          <stop offset="100%" stop-color="#CC8800"/>
+        </linearGradient>
+        <!-- Pink gem gradient -->
+        <radialGradient id="gemGrad" cx="35%" cy="30%" r="60%">
+          <stop offset="0%"   stop-color="#FFB6D9"/>
+          <stop offset="50%"  stop-color="#FF69B4"/>
+          <stop offset="100%" stop-color="#CC0077"/>
+        </radialGradient>
+        <!-- Highlight gradient -->
+        <linearGradient id="keyHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="rgba(255,255,255,0.5)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+        <!-- Glow filter -->
+        <filter id="keyGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <!-- Shadow -->
+        <filter id="keyShadow">
+          <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.5)"/>
+        </filter>
+      </defs>
+
+      <!-- Key shadow layer -->
+      <g opacity="0.3" transform="translate(1,3)">
+        <!-- Bow ring -->
+        <circle cx="22" cy="28" r="16" fill="#000" stroke="none"/>
+        <circle cx="22" cy="28" r="9"  fill="transparent" stroke="#000" stroke-width="7"/>
+        <!-- Blade -->
+        <rect x="36" y="25" width="50" height="7" rx="3.5" fill="#000"/>
+        <!-- Teeth -->
+        <rect x="52" y="30" width="5" height="6" rx="2" fill="#000"/>
+        <rect x="63" y="30" width="5" height="8" rx="2" fill="#000"/>
+        <rect x="74" y="30" width="5" height="5" rx="2" fill="#000"/>
+      </g>
+
+      <!-- Key body group with glow -->
+      <g filter="url(#keyGlow)">
+        <!-- Bow (ring part) - outer circle -->
+        <circle cx="22" cy="28" r="16" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1.5"/>
+        <!-- Bow inner hole -->
+        <circle cx="22" cy="28" r="9"  fill="transparent" stroke="#CC8800" stroke-width="7"/>
+        <circle cx="22" cy="28" r="9"  fill="transparent" stroke="url(#keyBodyGrad)" stroke-width="5.5"/>
+        <!-- Hole highlight -->
+        <circle cx="19" cy="25" r="3"  fill="rgba(255,255,200,0.2)"/>
+
+        <!-- Blade (shaft) -->
+        <rect x="36" y="25" width="50" height="7" rx="3.5" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
+
+        <!-- Teeth (key bits) -->
+        <rect x="51" y="30" width="6"  height="7"  rx="2" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
+        <rect x="62" y="30" width="6"  height="9"  rx="2" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
+        <rect x="73" y="30" width="6"  height="5.5" rx="2" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
+
+        <!-- Blade top highlight -->
+        <rect x="38" y="25.5" width="46" height="2.5" rx="1.25" fill="rgba(255,255,200,0.4)"/>
+
+        <!-- Bow top arc highlight -->
+        <path d="M10,20 Q22,6 34,20" stroke="rgba(255,255,200,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- Pink gem in bow center -->
+      <circle cx="22" cy="28" r="6" fill="url(#gemGrad)" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
+      <!-- Gem highlight sparkle -->
+      <circle cx="19.5" cy="25.5" r="1.8" fill="rgba(255,255,255,0.75)"/>
+      <circle cx="24"   cy="23"   r="0.9" fill="rgba(255,255,255,0.5)"/>
+
+      <!-- Tiny star sparkles around key -->
+      <g fill="#FFD700" opacity="0.9">
+        <path d="M4,10 L5,7 L6,10 L9,11 L6,12 L5,15 L4,12 L1,11 Z" transform="scale(0.6) translate(2,0)"/>
+        <path d="M88,8  L89,5 L90,8 L93,9 L90,10 L89,13 L88,10 L85,9  Z" transform="scale(0.5) translate(8,-5)"/>
+        <path d="M90,45 L91,42 L92,45 L95,46 L92,47 L91,50 L90,47 L87,46 Z" transform="scale(0.45) translate(12,12)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Drag hint label -->
+  <div class="drag-hint" id="drag-hint">✦ drag key to lock ✦</div>
+</div>
+
+<!-- MAIN SITE -->
+<div id="site">
+  <div id="cloud-layer"></div>
+  <canvas id="pet-canvas"></canvas>
+
+  <nav id="nav">
+    <div id="kai-status"><div class="dot"></div>KAI ONLINE</div>
+    <div class="nav-bubble active" data-page="home">HOME</div>
+    <div class="nav-bubble" data-page="threads">THREADS</div>
+    <div class="nav-bubble" data-page="vlog">VLOG</div>
+    <div class="nav-bubble" data-page="about">ABOUT</div>
+    <div class="nav-bubble" data-page="corelinks">LINKS</div>
+    <div class="nav-bubble" data-page="petscape">PETS</div>
+    <div class="nav-bubble" data-page="onthisday">ON THIS DAY</div>
+    <div class="nav-bubble" data-page="stage">LIVE</div>
+    <div class="nav-bubble" data-page="iwashere">I WAS HERE</div>
+    <div class="nav-bubble" id="admin-nav-btn" style="display:none;background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(139,0,0,0.3));border-color:rgba(255,215,0,0.5);color:var(--yellow);" data-page="edit">EDIT</div>
+  </nav>
+
+  <div id="pages">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div id="home-hero">
+        <div class="bubble-card">
+          <div style="text-align:center">
+            <div id="home-online-badge" class="online-badge" style="display:none;"><span class="online-dot"></span>KAI IS ONLINE</div>
+            <div class="profile-avatar" id="home-avatar">K</div>
+            <div style="font-family:'Cinzel Decorative',serif;font-size:22px;color:var(--yellow);text-shadow:var(--glow-yellow);margin-bottom:6px;" id="home-name">KAI</div>
+            <div id="home-mood" class="mood-display" style="margin:10px auto;width:fit-content;"><span id="home-mood-emoji">&#x2728;</span><span id="home-mood-text"> Vibing</span></div>
+            <div id="home-location" style="font-size:12px;color:var(--lavender);margin:6px 0;letter-spacing:1px;"></div>
+            <div id="home-bio" style="font-size:13px;color:#d0c0d0;line-height:1.7;margin-top:14px;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="bubble-card bubble-card-yellow" style="margin-bottom:0">
+            <div class="page-title" style="font-size:20px;margin-bottom:16px;">WELCOME BACK</div>
+            <div class="stat-grid">
+              <div class="stat-box"><div class="stat-num" id="stat-threads">0</div><div class="stat-label">THREADS</div></div>
+              <div class="stat-box"><div class="stat-num" id="stat-visitors">0</div><div class="stat-label">VISITORS</div></div>
+              <div class="stat-box"><div class="stat-num" id="stat-comments">0</div><div class="stat-label">COMMENTS</div></div>
+            </div>
+          </div>
+          <div class="bubble-card bubble-card-purple" style="margin-top:16px">
+            <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--lavender);margin-bottom:16px;letter-spacing:2px;">RECENT THREADS</div>
+            <div id="home-recent-threads"><div class="loader"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THREADS -->
+    <div class="page" id="page-threads">
+      <div class="page-title">THREADS</div>
+      <div class="page-sub">&#x2665; KAI'S THOUGHTS &amp; MOMENTS &#x2665;</div>
+      <div id="threads-list"><div class="loader"></div></div>
+    </div>
+
+    <!-- VLOG -->
+    <div class="page" id="page-vlog">
+      <div class="page-title">VLOG</div>
+      <div class="page-sub">&#x25B6; VIDEO DIARY &#x25B6;</div>
+      <div class="vlog-grid" id="vlog-list"><div class="loader"></div></div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="page" id="page-about">
+      <div class="page-title">ABOUT KAI</div>
+      <div class="page-sub">&#x2605; THE LORE &#x2605;</div>
+      <div id="about-layout">
+        <div class="about-profile-card">
+          <div class="about-avatar" id="about-avatar">K</div>
+          <div class="about-name" id="about-name">KAI</div>
+          <div class="mood-display" id="about-mood"><span id="about-mood-emoji">&#x2728;</span><span id="about-mood-text"> Vibing</span></div>
+          <div class="about-detail" id="about-location"></div>
+          <div class="about-detail" id="about-zodiac"></div>
+          <div class="about-bio" id="about-bio"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--yellow);margin-bottom:20px;letter-spacing:3px;text-shadow:var(--glow-yellow);">8 FUN FACTS</div>
+          <div class="fun-facts-grid" id="fun-facts-grid"><div class="loader"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div class="page" id="page-corelinks">
+      <div class="page-title">CORE LINKS</div>
+      <div class="page-sub">&#x2764; FIND KAI &#x2764;</div>
+      <div class="links-container" id="links-container">
+        <a class="link-bubble link-instagram" id="link-instagram" href="#" target="_blank">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <div class="link-text"><div class="link-name">INSTAGRAM</div><div class="link-handle" id="ig-handle">@kai</div></div>
+          <div class="link-arrow">&#x279C;</div>
+        </a>
+        <a class="link-bubble link-tiktok" id="link-tiktok" href="#" target="_blank">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.74a4.85 4.85 0 01-1-.05z"/></svg>
+          <div class="link-text"><div class="link-name">TIKTOK</div><div class="link-handle" id="tt-handle">@kai</div></div>
+          <div class="link-arrow">&#x279C;</div>
+        </a>
+        <a class="link-bubble link-spotify" id="link-spotify" href="#" target="_blank">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          <div class="link-text"><div class="link-name">SPOTIFY</div><div class="link-handle" id="sp-handle">Kai's music</div></div>
+          <div class="link-arrow">&#x279C;</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- PETSCAPE -->
+    <div class="page" id="page-petscape">
+      <div class="page-title">PETSCAPE</div>
+      <div class="page-sub">&#x2665; KAI'S PIXEL COMPANIONS &#x2665;</div>
+      <canvas id="petscape-canvas"></canvas>
+      <div class="petscape-controls" id="petscape-controls"></div>
+      <div style="margin-top:16px;padding:12px 20px;background:rgba(0,0,0,0.3);border-radius:20px;border:1px solid rgba(255,215,0,0.2);max-width:700px;margin-left:auto;margin-right:auto;">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:11px;color:rgba(255,215,0,0.5);letter-spacing:2px;margin-bottom:6px;">SPRITE CREDITS (CC0 / Public Domain)</div>
+        <div class="sprite-credit">Cat: "A Cat" by StumpyStrust — opengameart.org</div>
+        <div class="sprite-credit">Bird: "Furry RPG Bird" by Calciumtrice — opengameart.org</div>
+        <div class="sprite-credit">Bat: "Bat sprite" by irmirx — opengameart.org</div>
+        <div class="sprite-credit">Dog: "German Shepherd" by finalbossblues — opengameart.org</div>
+      </div>
+    </div>
+
+    <!-- ON THIS DAY -->
+    <div class="page" id="page-onthisday">
+      <div class="page-title">ON THIS DAY</div>
+      <div class="page-sub">&#x231A; MEMORY VAULT &#x231A;</div>
+      <div class="otd-date-picker">
+        <input type="date" class="bubble-input" id="otd-date" style="width:auto;">
+        <button class="bubble-btn bubble-btn-sm" onclick="loadOnThisDay()">LOOK BACK</button>
+      </div>
+      <div id="otd-results"><div class="empty-state"><div class="empty-icon">&#x231A;</div>Pick a date to see threads from that day</div></div>
+    </div>
+
+    <!-- LIVE STAGE -->
+    <div class="page" id="page-stage">
+      <div class="page-title">LIVE STAGE</div>
+      <div class="page-sub">&#x25C8; TUNE IN &#x25C8;</div>
+      <div id="stage-layout">
+        <div>
+          <div id="live-badge" class="live-badge" style="display:none;"><span class="live-dot"></span>LIVE NOW</div>
+          <div id="stage-video-area">
+            <div class="offline-screen">
+              <div style="font-size:48px;margin-bottom:16px;opacity:0.4;">&#x25A0;</div>
+              <div style="font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--lavender);">KAI IS OFFLINE</div>
+              <div style="font-size:12px;color:rgba(255,105,180,0.5);margin-top:8px;letter-spacing:2px;">CHECK BACK LATER</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-box">
+          <div style="padding:14px 16px;border-bottom:1px solid rgba(255,105,180,0.2);font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--pink);letter-spacing:2px;">LIVE CHAT</div>
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="chat-input-area">
+            <input class="chat-input" id="chat-name-input" placeholder="Your name..." style="width:100px;flex:none;">
+            <input class="chat-input" id="chat-msg-input" placeholder="Say something...">
+            <button class="chat-send" onclick="sendChatMessage()">SEND</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I WAS HERE -->
+    <div class="page" id="page-iwashere">
+      <div class="page-title">I WAS HERE</div>
+      <div class="page-sub">&#x270D; LEAVE YOUR MARK &#x270D;</div>
+      <div class="iwashere-form bubble-card" style="max-width:500px;margin:0 auto 32px;">
+        <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--pink);margin-bottom:20px;letter-spacing:2px;">SIGN THE GUESTBOOK</div>
+        <div class="form-group"><input class="bubble-input" id="sig-name" placeholder="Your name..."></div>
+        <div class="form-group"><textarea class="bubble-input" id="sig-message" placeholder="Leave a message for Kai..." rows="3"></textarea></div>
+        <button class="bubble-btn" onclick="addSignature()">SIGN</button>
+      </div>
+      <div class="signatures-grid" id="signatures-grid"><div class="loader"></div></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="page" id="page-stats">
+      <div class="page-title">STATS DASHBOARD</div>
+      <div class="page-sub">&#x25CF; VISITOR ANALYTICS &#x25CF;</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="big-num" id="s-total">-</div><div class="stat-card-label">TOTAL VISITORS</div></div>
+        <div class="stat-card"><div class="big-num" id="s-today">-</div><div class="stat-card-label">TODAY</div></div>
+        <div class="stat-card"><div class="big-num" id="s-active">-</div><div class="stat-card-label">ACTIVE NOW</div></div>
+        <div class="stat-card"><div class="big-num" id="s-threads">-</div><div class="stat-card-label">TOTAL THREADS</div></div>
+      </div>
+      <div class="chart-section"><div class="chart-title">TOP LOCATIONS</div><div class="bar-chart" id="geo-chart"></div></div>
+      <div class="chart-section"><div class="chart-title">TOP PAGES</div><div class="bar-chart" id="pages-chart"></div></div>
+      <div class="chart-section"><div class="chart-title">DEVICES</div><div class="bar-chart" id="device-chart"></div></div>
+    </div>
+
+    <!-- KAI LOGIN -->
+    <div class="page" id="page-kai">
+      <div style="min-height:500px;display:flex;align-items:center;justify-content:center;">
+        <div class="login-box">
+          <div class="login-title">KAI PORTAL</div>
+          <div class="login-sub">&#x2605; AUTHORIZED ACCESS ONLY &#x2605;</div>
+          <div class="form-group"><input class="form-input" type="email" id="login-email" placeholder="kai@kaicore.com"></div>
+          <div class="form-group"><input class="form-input" type="password" id="login-password" placeholder="password..."></div>
+          <button class="bubble-btn" onclick="kaiLogin()" style="width:100%;">ENTER</button>
+          <div class="login-error" id="login-error">Invalid credentials. Try again.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#pages -->
+</div><!-- /#site -->
+
+<!-- EDIT VIEW -->
+<div id="edit-view">
+  <div class="edit-header">
+    <div class="edit-title">&#x270F; KAICORE EDIT VIEW</div>
+    <button class="edit-close" onclick="closeEditView()">&#x2715; CLOSE</button>
+  </div>
+  <div class="edit-tabs">
+    <div class="edit-tab active" data-etab="threads">THREADS</div>
+    <div class="edit-tab" data-etab="vlog">VLOG</div>
+    <div class="edit-tab" data-etab="profile">PROFILE</div>
+    <div class="edit-tab" data-etab="links">CORE LINKS</div>
+    <div class="edit-tab" data-etab="facts">FUN FACTS</div>
+    <div class="edit-tab" data-etab="pets">PETS</div>
+    <div class="edit-tab" data-etab="journal">JOURNAL</div>
+    <div class="edit-tab" data-etab="live">LIVE STAGE</div>
+    <div class="edit-tab" data-etab="theme">THEME STUDIO</div>
+    <div class="edit-tab" data-etab="signatures">GUESTBOOK</div>
+    <div class="edit-tab" data-etab="stats">STATS</div>
+  </div>
+
+  <div class="edit-panel active" id="etab-threads">
+    <div class="edit-section-title">CREATE THREAD</div>
+    <div class="form-group"><label class="form-label">Content</label><textarea class="form-input" id="et-content" rows="5" placeholder="What's on your mind..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="et-image" placeholder="https://..."></div>
+      <div class="form-group"><label class="form-label">Video URL</label><input class="form-input" id="et-video" placeholder="https://youtube.com/..."></div>
+    </div>
+    <button class="bubble-btn" onclick="createThread()">POST THREAD</button>
+    <div class="edit-section-title" style="margin-top:32px;">ALL THREADS</div>
+    <div id="et-threads-list"></div>
+  </div>
+
+  <div class="edit-panel" id="etab-vlog">
+    <div class="edit-section-title">ADD VLOG ENTRY</div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ev-title" placeholder="Vlog title..."></div>
+    <div class="form-group"><label class="form-label">YouTube Video ID / URL</label><input class="form-input" id="ev-url" placeholder="dQw4w9WgXcQ or full URL"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ev-desc" rows="3" placeholder="What's this vlog about..."></textarea></div>
+    <button class="bubble-btn" onclick="addVlog()">ADD VLOG</button>
+    <div class="edit-section-title" style="margin-top:32px;">ALL VLOGS</div>
+    <div id="ev-vlog-list"></div>
+  </div>
+
+  <div class="edit-panel" id="etab-profile">
+    <div class="edit-section-title">PROFILE SETTINGS</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Profile Picture URL</label><input class="form-input" id="ep-pic" placeholder="https://..."></div>
+      <div class="form-group"><label class="form-label">Cover Image URL</label><input class="form-input" id="ep-cover" placeholder="https://..."></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Mood Emoji</label><input class="form-input" id="ep-mood" placeholder="✨"></div>
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ep-location" placeholder="Planet Earth"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Zodiac</label><input class="form-input" id="ep-zodiac" placeholder="Scorpio"></div>
+      <div class="form-group"><label class="form-label">Kai Online Status</label>
+        <div class="toggle-wrap" style="margin-top:8px;"><label class="toggle"><input type="checkbox" id="ep-online"><span class="toggle-slider"></span></label><span class="toggle-label">Show as Online</span></div>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" id="ep-bio" rows="4" placeholder="Tell the world about Kai..."></textarea></div>
+    <button class="bubble-btn" onclick="saveProfile()">SAVE PROFILE</button>
+  </div>
+
+  <div class="edit-panel" id="etab-links">
+    <div class="edit-section-title">CORE LINKS</div>
+    <div class="form-group"><label class="form-label">Instagram URL</label><input class="form-input" id="el-instagram" placeholder="https://instagram.com/kai"></div>
+    <div class="form-group"><label class="form-label">TikTok URL</label><input class="form-input" id="el-tiktok" placeholder="https://tiktok.com/@kai"></div>
+    <div class="form-group"><label class="form-label">Spotify URL</label><input class="form-input" id="el-spotify" placeholder="https://open.spotify.com/..."></div>
+    <button class="bubble-btn" onclick="saveLinks()">SAVE LINKS</button>
+  </div>
+
+  <div class="edit-panel" id="etab-facts">
+    <div class="edit-section-title">8 FUN FACTS ABOUT KAI</div>
+    <div id="facts-editor"></div>
+    <button class="bubble-btn" onclick="saveFacts()">SAVE ALL FACTS</button>
+  </div>
+
+  <div class="edit-panel" id="etab-pets">
+    <div class="edit-section-title">PET SETTINGS</div>
+    <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="ep-pets-enabled" checked><span class="toggle-slider"></span></label><span class="toggle-label">Pets Enabled</span></div>
+    <div class="slider-row">
+      <span class="slider-label">Max Pets on Screen</span>
+      <input type="range" id="ep-pet-max" min="1" max="12" value="6" oninput="document.getElementById('ep-pet-max-val').textContent=this.value">
+      <span class="slider-val" id="ep-pet-max-val">6</span>
+    </div>
+    <button class="bubble-btn" onclick="savePetSettings()">SAVE</button>
+
+    <div class="edit-section-title" style="margin-top:28px;">OPENGAMEART SPRITE SETUP</div>
+    <div style="background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.3);border-radius:20px;padding:20px;margin-bottom:20px;font-size:13px;color:#d0c0d0;line-height:1.8;">
+      <strong style="color:var(--yellow);">HOW TO USE REAL SPRITES (all CC0 / free):</strong><br>
+      1. Download PNG sprite sheets from the links below<br>
+      2. Host them: GitHub raw URL OR Supabase Storage → public bucket<br>
+      3. Paste the raw image URLs + set frame dimensions<br>
+      4. Click SAVE SPRITE URLS — pets update instantly!<br><br>
+      <strong style="color:var(--pink);">Download links:</strong><br>
+      • Cat → <a href="https://opengameart.org/content/a-cat" target="_blank" style="color:var(--yellow);">opengameart.org/content/a-cat</a><br>
+      • Bird → <a href="https://opengameart.org/content/furry-rpg-bird-characters" target="_blank" style="color:var(--yellow);">opengameart.org/content/furry-rpg-bird-characters</a><br>
+      • Bat → <a href="https://opengameart.org/content/bat-sprite" target="_blank" style="color:var(--yellow);">opengameart.org/content/bat-sprite</a><br>
+      • German Shepherd → <a href="https://opengameart.org/content/german-shepherd" target="_blank" style="color:var(--yellow);">opengameart.org/content/german-shepherd</a>
+    </div>
+    <div class="form-group"><label class="form-label">Cat Sprite Sheet URL</label><input class="form-input" id="sprite-cat-url" placeholder="https://raw.githubusercontent.com/.../cat.png"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Cat Frame Width (px)</label><input class="form-input" id="sprite-cat-fw" type="number" value="32"></div>
+      <div class="form-group"><label class="form-label">Cat Frame Height (px)</label><input class="form-input" id="sprite-cat-fh" type="number" value="32"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Bird Sprite Sheet URL</label><input class="form-input" id="sprite-bird-url" placeholder="https://..."></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Bird Frame Width (px)</label><input class="form-input" id="sprite-bird-fw" type="number" value="32"></div>
+      <div class="form-group"><label class="form-label">Bird Frame Height (px)</label><input class="form-input" id="sprite-bird-fh" type="number" value="32"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Bat Sprite Sheet URL</label><input class="form-input" id="sprite-bat-url" placeholder="https://..."></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Bat Frame Width (px)</label><input class="form-input" id="sprite-bat-fw" type="number" value="16"></div>
+      <div class="form-group"><label class="form-label">Bat Frame Height (px)</label><input class="form-input" id="sprite-bat-fh" type="number" value="16"></div>
+    </div>
+    <div class="form-group"><label class="form-label">German Shepherd Sprite Sheet URL</label><input class="form-input" id="sprite-dog-url" placeholder="https://..."></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Dog Frame Width (px)</label><input class="form-input" id="sprite-dog-fw" type="number" value="64"></div>
+      <div class="form-group"><label class="form-label">Dog Frame Height (px)</label><input class="form-input" id="sprite-dog-fh" type="number" value="64"></div>
+    </div>
+    <button class="bubble-btn" onclick="saveSpriteUrls()">SAVE SPRITE URLS</button>
+
+    <div class="edit-section-title" style="margin-top:32px;">CUSTOM PET CREATOR (pixel art)</div>
+    <p style="font-size:13px;color:var(--lavender);margin-bottom:20px;">Draw a custom 32×32 pixel pet.</p>
+    <div id="creator-layout">
+      <div>
+        <div class="creator-tools">
+          <button class="tool-btn active" onclick="setTool('draw')">DRAW</button>
+          <button class="tool-btn" onclick="setTool('erase')">ERASE</button>
+          <button class="tool-btn" onclick="fillCanvas()">FILL ALL</button>
+          <button class="tool-btn" onclick="clearCanvas()">CLEAR</button>
+        </div>
+        <canvas id="pixel-canvas" width="320" height="320"></canvas>
+        <div class="color-palette" id="creator-palette"></div>
+        <div class="form-group" style="margin-top:12px;"><input class="form-input" id="pet-name-input" placeholder="Pet name..."></div>
+        <div class="form-group">
+          <select class="form-input" id="pet-behavior">
+            <option value="sleepy">Sleepy (slow)</option>
+            <option value="playful">Playful (follows cursor)</option>
+            <option value="chaotic">Chaotic (random teleports)</option>
+          </select>
+        </div>
+        <button class="bubble-btn" onclick="savePet()">SAVE PET</button>
+      </div>
+      <div>
+        <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--lavender);margin-bottom:12px;letter-spacing:2px;">PREVIEW (8x)</div>
+        <div class="creator-preview-box"><canvas id="preview-canvas" width="256" height="256"></canvas></div>
+        <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--lavender);margin-bottom:12px;letter-spacing:2px;">SAVED PETS</div>
+        <div id="saved-pets-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="edit-panel" id="etab-journal">
+    <div class="edit-section-title">WRITE JOURNAL ENTRY</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="ej-date"></div>
+      <div class="form-group"><label class="form-label">Mood</label><input class="form-input" id="ej-mood" placeholder="Happy, Sad, Reflective..."></div>
+    </div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ej-title" placeholder="Entry title..."></div>
+    <div class="form-group"><label class="form-label">Entry</label><textarea class="rich-editor" id="ej-content" placeholder="Dear journal..."></textarea></div>
+    <button class="bubble-btn" onclick="saveJournalEntry()">SAVE ENTRY</button>
+    <div class="edit-section-title" style="margin-top:28px;">ALL ENTRIES</div>
+    <div id="ej-entries-list"></div>
+  </div>
+
+  <div class="edit-panel" id="etab-live">
+    <div class="edit-section-title">LIVE STAGE SETTINGS</div>
+    <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="el-live-status"><span class="toggle-slider"></span></label><span class="toggle-label">GO LIVE</span></div>
+    <div class="form-group"><label class="form-label">YouTube Stream URL / ID</label><input class="form-input" id="el-stream-url" placeholder="YouTube video ID or full URL"></div>
+    <div class="form-group"><label class="form-label">Offline Image URL</label><input class="form-input" id="el-offline-img" placeholder="https://..."></div>
+    <button class="bubble-btn" onclick="saveLiveSettings()">UPDATE LIVE STATUS</button>
+    <div style="margin-top:20px;"><button class="bubble-btn" style="background:linear-gradient(135deg,#4a0000,#800000);border-color:#ff4444;color:#ff9999;" onclick="clearChat()">CLEAR ALL CHAT</button></div>
+  </div>
+
+  <div class="edit-panel" id="etab-theme">
+    <div class="edit-section-title">THEME STUDIO</div>
+    <div class="theme-preview" id="theme-preview"><div style="font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--yellow);">PREVIEW</div></div>
+    <div class="color-picker-row"><span class="color-picker-label">Primary (Pink)</span><input type="color" id="tc-primary" value="#FF69B4" oninput="updateThemePreview()"></div>
+    <div class="color-picker-row"><span class="color-picker-label">Secondary (Purple)</span><input type="color" id="tc-secondary" value="#8B00FF" oninput="updateThemePreview()"></div>
+    <div class="color-picker-row"><span class="color-picker-label">Accent (Yellow)</span><input type="color" id="tc-yellow" value="#FFD700" oninput="updateThemePreview()"></div>
+    <div class="color-picker-row"><span class="color-picker-label">Background Dark</span><input type="color" id="tc-bg" value="#4A0000" oninput="updateThemePreview()"></div>
+    <div class="slider-row"><span class="slider-label">Glossiness</span><input type="range" id="ts-gloss" min="0" max="100" value="50" oninput="document.getElementById('ts-gloss-val').textContent=this.value+'%'"><span class="slider-val" id="ts-gloss-val">50%</span></div>
+    <div class="slider-row"><span class="slider-label">Border Radius</span><input type="range" id="ts-radius" min="0" max="80" value="40" oninput="document.getElementById('ts-radius-val').textContent=this.value+'px'"><span class="slider-val" id="ts-radius-val">40px</span></div>
+    <div class="slider-row"><span class="slider-label">Scanlines</span><input type="range" id="ts-scan" min="0" max="30" value="10" oninput="document.getElementById('ts-scan-val').textContent=this.value+'%';updateScanlines()"><span class="slider-val" id="ts-scan-val">10%</span></div>
+    <div class="slider-row"><span class="slider-label">Bubble Size</span><input type="range" id="ts-bubble" min="50" max="150" value="100" oninput="document.getElementById('ts-bubble-val').textContent=this.value+'%'"><span class="slider-val" id="ts-bubble-val">100%</span></div>
+    <button class="bubble-btn" onclick="saveTheme()">APPLY THEME</button>
+  </div>
+
+  <div class="edit-panel" id="etab-signatures">
+    <div class="edit-section-title">GUESTBOOK SIGNATURES</div>
+    <div id="es-sigs-list"></div>
+  </div>
+
+  <div class="edit-panel" id="etab-stats">
+    <div class="edit-section-title">FULL ANALYTICS</div>
+    <div id="es-stats-content"><div class="loader"></div></div>
+  </div>
+</div><!-- /#edit-view -->
+
+<button id="mute-btn" onclick="toggleMute()" title="Toggle Sound">&#x1F508;</button>
+<div class="pet-tooltip" id="pet-tooltip"></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG — Render backend
+   ============================================================ */
+// ── Paste your Supabase project URL and anon key here ──────────────────────────
+// Dashboard → Settings → API
+const SUPABASE_URL  = 'SUPABASE_URL';   // e.g. https://xxxx.supabase.co
+const SUPABASE_ANON = 'SUPABASE_ANON_KEY'; // public anon key (safe to expose)
+const API_URL = 'https://kaisworldb.onrender.com'
+
+
+/* ============================================================
+   SPRITE SYSTEM
+   ============================================================ */
+const SPRITE_URLS = {
+  cat:  { url: null, fw: 32, fh: 32, frames: 4, row: 0 },
+  bird: { url: null, fw: 32, fh: 32, frames: 3, row: 0 },
+  bat:  { url: null, fw: 16, fh: 16, frames: 4, row: 0 },
+  dog:  { url: null, fw: 64, fh: 64, frames: 4, row: 0 },
+};
+const SPRITE_IMGS = {};
+
+function loadSpriteImage(type) {
+  return new Promise((resolve) => {
+    const cfg = SPRITE_URLS[type];
+    if (!cfg || !cfg.url) { resolve(null); return; }
+    if (SPRITE_IMGS[type]) { resolve(SPRITE_IMGS[type]); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { SPRITE_IMGS[type] = img; resolve(img); };
+    img.onerror = () => resolve(null);
+    img.src = cfg.url;
+  });
+}
+
+function drawOpenGameArtFrame(ctx, type, frameIndex, x, y, scale, flipped) {
+  const img = SPRITE_IMGS[type]; const cfg = SPRITE_URLS[type];
+  if (!img || !cfg) return false;
+  const fw = cfg.fw, fh = cfg.fh, sx = (frameIndex % cfg.frames) * fw, sy = (cfg.row || 0) * fh;
+  ctx.save(); ctx.translate(x, y);
+  if (flipped) ctx.scale(-1, 1);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(img, sx, sy, fw, fh, -fw * scale / 2, -fh * scale / 2, fw * scale, fh * scale);
+  ctx.restore(); return true;
+}
+
+function saveSpriteUrls() {
+  ['cat','bird','bat','dog'].forEach(type => {
+    const urlEl = document.getElementById(`sprite-${type}-url`), fwEl = document.getElementById(`sprite-${type}-fw`), fhEl = document.getElementById(`sprite-${type}-fh`);
+    if (urlEl && urlEl.value.trim()) {
+      SPRITE_URLS[type].url = urlEl.value.trim();
+      if (fwEl) SPRITE_URLS[type].fw = parseInt(fwEl.value) || SPRITE_URLS[type].fw;
+      if (fhEl) SPRITE_URLS[type].fh = parseInt(fhEl.value) || SPRITE_URLS[type].fh;
+      delete SPRITE_IMGS[type]; loadSpriteImage(type);
+    }
+  });
+  localStorage.setItem('kaicore_sprite_urls', JSON.stringify(SPRITE_URLS));
+  showToast('Sprite URLs saved!');
+}
+
+function loadSpriteUrlsFromStorage() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('kaicore_sprite_urls') || '{}');
+    ['cat','bird','bat','dog'].forEach(type => { if (saved[type] && saved[type].url) { Object.assign(SPRITE_URLS[type], saved[type]); loadSpriteImage(type); } });
+  } catch (e) {}
+}
+
+/* ============================================================
+   BUILT-IN FALLBACK PIXEL ART
+   ============================================================ */
+const BUILTIN_SPRITES = {
+  cat: { name:'Pixel Cat', color:'#FF69B4', sounds:['meow'], frames:[
+    { p:[[0,0,1,1,1,1,0,0],[0,1,0,1,1,0,1,0],[0,1,1,1,1,1,1,0],[0,1,2,1,1,2,1,0],[0,1,1,3,3,1,1,0],[1,1,1,1,1,1,1,1],[0,1,0,1,1,0,1,0],[0,0,1,0,0,1,0,0]], c:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s:4 },
+    { p:[[0,0,1,1,1,1,0,0],[0,1,0,1,1,0,1,0],[0,1,1,1,1,1,1,0],[0,1,2,1,1,2,1,0],[0,1,1,3,3,1,1,0],[1,1,1,1,1,1,1,1],[0,1,1,0,0,1,1,0],[0,0,0,1,1,0,0,0]], c:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s:4 }
+  ]},
+  bird: { name:'Pixel Bird', color:'#FFD700', sounds:['chirp'], frames:[
+    { p:[[0,0,0,1,1,0,0,0],[0,0,1,1,1,1,0,0],[0,1,2,1,1,1,1,0],[1,1,1,1,1,1,1,0],[0,1,1,1,3,0,0,0],[0,0,1,1,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s:4 },
+    { p:[[0,0,0,0,0,0,0,0],[0,0,0,1,1,0,0,0],[0,1,1,1,1,1,1,0],[1,1,2,1,1,1,1,0],[0,1,1,1,3,0,0,0],[0,0,1,1,0,0,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s:4 }
+  ]},
+  bat: { name:'Pixel Bat', color:'#8B00FF', sounds:['chirp'], frames:[
+    { p:[[1,0,0,0,0,0,0,1],[1,1,0,0,0,0,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,3,3,1,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#8B00FF',2:'#ff69b4',3:'#ff6600'}, s:4 },
+    { p:[[0,1,0,0,0,0,1,0],[1,1,1,0,0,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,3,3,1,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#8B00FF',2:'#ff69b4',3:'#ff6600'}, s:4 }
+  ]},
+  dog: { name:'German Shepherd', color:'#D2691E', sounds:['meow'], frames:[
+    { p:[[0,0,1,1,0,0,0,0],[0,0,1,1,1,0,0,0],[0,1,2,2,1,1,0,0],[1,1,2,2,2,1,1,0],[0,1,1,1,1,1,1,1],[0,1,0,1,1,0,1,0],[0,1,0,0,0,0,1,0],[0,0,0,0,0,0,0,0]], c:{1:'#D2691E',2:'#8B4513',3:'#111'}, s:4 },
+    { p:[[0,0,1,1,0,0,0,0],[0,0,1,1,1,0,0,0],[0,1,2,2,1,1,0,0],[1,1,2,2,2,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,0,0,1,1,0],[0,0,1,0,0,1,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#D2691E',2:'#8B4513',3:'#111'}, s:4 }
+  ]}
+};
+
+function drawBuiltinSprite(ctx, type, frame, ox, oy) {
+  const spr = BUILTIN_SPRITES[type]; if (!spr) return;
+  const f = spr.frames[frame % spr.frames.length];
+  f.p.forEach((row, ry) => row.forEach((v, cx) => { if (v && f.c[v]) { ctx.fillStyle = f.c[v]; ctx.fillRect(ox + cx * f.s, oy + ry * f.s, f.s, f.s); } }));
+}
+
+/* ============================================================
+   SUPABASE CLIENT
+   ============================================================ */
+class SupabaseClient {
+  constructor(url, key) { this.url = url; this.key = key; this.authToken = null; }
+  _h(x={}) { return {'Content-Type':'application/json','apikey':this.key,'Authorization':`Bearer ${this.authToken||this.key}`,...x}; }
+  async from(table) {
+    const base = `${this.url}/rest/v1/${table}`, h = () => this._h();
+    return {
+      _f:[], _s:'*', _o:null, _l:null,
+      select(c='*'){this._s=c;return this;}, eq(c,v){this._f.push(`${c}=eq.${v}`);return this;},
+      neq(c,v){this._f.push(`${c}=neq.${v}`);return this;},
+      order(c,o={}){this._o=`${c}.${o.ascending===false?'desc':'asc'}`;return this;},
+      limit(n){this._l=n;return this;},
+      _u(){let u=`${base}?select=${this._s}`;this._f.forEach(f=>u+=`&${f}`);if(this._o)u+=`&order=${this._o}`;if(this._l)u+=`&limit=${this._l}`;return u;},
+      async get(){const r=await fetch(this._u(),{headers:h()});const d=await r.json();return{data:d,error:r.ok?null:d};},
+      async insert(row){const r=await fetch(base,{method:'POST',headers:{...h(),'Prefer':'return=representation'},body:JSON.stringify(row)});const d=await r.json();return{data:d,error:r.ok?null:d};},
+      async update(row){const r=await fetch(this._u(),{method:'PATCH',headers:{...h(),'Prefer':'return=representation'},body:JSON.stringify(row)});const d=await r.json();return{data:d,error:r.ok?null:d};},
+      async upsert(row,opts={}){const prefer=opts.onConflict?'resolution=merge-duplicates':'return=representation';const url=base+(opts.onConflict?`?on_conflict=${opts.onConflict}`:'');const r=await fetch(url,{method:'POST',headers:{...h(),'Prefer':prefer},body:JSON.stringify(row)});const d=await r.json();return{data:d,error:r.ok?null:d};},
+      async delete(){const r=await fetch(this._u(),{method:'DELETE',headers:h()});return{error:r.ok?null:await r.json()};}
+    };
+  }
+  async signIn(email,password){const r=await fetch(`${this.url}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'apikey':this.key,'Content-Type':'application/json'},body:JSON.stringify({email,password})});const d=await r.json();if(d.access_token)this.authToken=d.access_token;return{data:d,error:r.ok?null:d};}
+  signOut(){this.authToken=null;}
+  getUser(){return this.authToken?{token:this.authToken}:null;}
+}
+const db = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let audioCtx=null, muted=false;
+function getACtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function toggleMute(){muted=!muted;document.getElementById('mute-btn').textContent=muted?'\uD83D\uDD07':'\uD83D\uDD08';}
+function playSound(type){
+  if(muted)return;
+  try{
+    const ctx=getACtx(),g=ctx.createGain();g.connect(ctx.destination);
+    if(type==='lock-break'){const buf=ctx.createBuffer(1,ctx.sampleRate*0.3,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/5000);const s=ctx.createBufferSource();s.buffer=buf;s.connect(g);s.start();g.gain.setValueAtTime(0.6,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);}
+    else if(type==='key-drag'){const o=ctx.createOscillator();o.type='sawtooth';o.frequency.value=220;o.connect(g);g.gain.setValueAtTime(0.04,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);o.start();o.stop(ctx.currentTime+0.08);}
+    else if(type==='book-open'){const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(80,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(40,ctx.currentTime+0.8);o.connect(g);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.8);o.start();o.stop(ctx.currentTime+0.8);}
+    else if(type==='unlock'){[440,550,660].forEach((f,i)=>{const o=ctx.createOscillator();o.frequency.value=f;const g2=ctx.createGain();g2.gain.setValueAtTime(0.2,ctx.currentTime+i*0.08);g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.08+0.15);o.connect(g2);g2.connect(ctx.destination);o.start(ctx.currentTime+i*0.08);o.stop(ctx.currentTime+i*0.08+0.15);});}
+    else if(type==='meow'){const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(600,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+0.3);o.connect(g);g.gain.setValueAtTime(0.2,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);o.start();o.stop(ctx.currentTime+0.3);}
+    else if(type==='chirp'){[800,1000].forEach((f,i)=>{const o=ctx.createOscillator();o.frequency.value=f;const g2=ctx.createGain();g2.gain.setValueAtTime(0.15,ctx.currentTime+i*0.12);g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.1);o.connect(g2);g2.connect(ctx.destination);o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+i*0.12+0.1);});}
+  }catch(e){}
+}
+
+/* ============================================================
+   PARTICLES
+   ============================================================ */
+const pCanvas=document.getElementById('particle-canvas'), pCtx=pCanvas.getContext('2d');
+let particles=[];
+function resizeP(){pCanvas.width=window.innerWidth;pCanvas.height=window.innerHeight;}
+resizeP();window.addEventListener('resize',resizeP);
+
+class Particle{
+  constructor(x,y,color,vx,vy,size,life){this.x=x;this.y=y;this.color=color;this.vx=vx;this.vy=vy;this.size=size;this.life=life;this.maxLife=life;this.gravity=0.12;}
+  update(){this.x+=this.vx;this.y+=this.vy;this.vy+=this.gravity;this.vx*=0.98;this.life--;}
+  draw(ctx){const a=this.life/this.maxLife;ctx.globalAlpha=a;ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size*a,0,Math.PI*2);ctx.fill();}
+}
+function spawnExplosion(x,y,count=80){
+  const colors=['#FFD700','#FFA500','#FF69B4','#8B00FF','#fff','#FFE000'];
+  for(let i=0;i<count;i++){const angle=Math.random()*Math.PI*2,speed=2+Math.random()*6;particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)],Math.cos(angle)*speed,Math.sin(angle)*speed-2,1+Math.random()*4,40+Math.random()*40));}
+}
+function animateParticles(){pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);pCtx.globalAlpha=1;particles=particles.filter(p=>{p.update();p.draw(pCtx);return p.life>0;});requestAnimationFrame(animateParticles);}
+animateParticles();
+
+/* ============================================================
+   GATE AMBIENT PARTICLES
+   ============================================================ */
+(function(){
+  const gate=document.getElementById('gate'),colors=['rgba(255,105,180,0.6)','rgba(139,0,255,0.5)','rgba(255,215,0,0.4)','rgba(139,0,0,0.7)'];
+  for(let i=0;i<25;i++){const p=document.createElement('div');p.className='gate-particle';const size=3+Math.random()*8;p.style.cssText=`width:${size}px;height:${size}px;background:${colors[i%4]};left:${Math.random()*100}%;animation-duration:${4+Math.random()*6}s;animation-delay:${-Math.random()*6}s;`;gate.appendChild(p);}
+})();
+
+/* ============================================================
+   KEY DRAG SYSTEM — complete rewrite, reliable
+   ============================================================ */
+(function() {
+  const keyEl    = document.getElementById('key-wrapper');
+  const keySvg   = document.getElementById('key-svg');
+  const lockEl   = document.getElementById('lock-container');
+  const hintEl   = document.getElementById('drag-hint');
+  const gateEl   = document.getElementById('gate');
+  const siteEl   = document.getElementById('site');
+  const bookCover= document.getElementById('book-cover');
+
+  // ── Position key to the right of the book ──────────────────────
+  // Use a small delay to let layout settle, then place with px
+  function positionKey() {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    // Place key: 62% from left, 62% from top (right of book)
+    keyEl.style.left = Math.round(vw * 0.62) + 'px';
+    keyEl.style.top  = Math.round(vh * 0.62) + 'px';
+
+    if (hintEl) {
+      hintEl.style.left = Math.round(vw * 0.62 - 20) + 'px';
+      hintEl.style.top  = Math.round(vh * 0.62 + 96) + 'px';
+    }
+  }
+  // Run immediately and after fonts/layout
+  positionKey();
+  window.addEventListener('resize', positionKey);
+  setTimeout(positionKey, 200);
+
+  // ── Drag state ──────────────────────────────────────────────────
+  let dragging  = false;
+  let ox = 0, oy = 0; // cursor offset from element top-left
+
+  function getXY(e) {
+    if (e.touches && e.touches.length > 0) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
+  }
+
+  function onPointerDown(e) {
+    e.preventDefault();
+    dragging = true;
+    const { x, y } = getXY(e);
+    const rect = keyEl.getBoundingClientRect();
+    ox = x - rect.left;
+    oy = y - rect.top;
+
+    keyEl.classList.add('is-dragging');
+    if (hintEl) hintEl.style.display = 'none';
+    playSound('key-drag');
+
+    document.addEventListener('mousemove',  onPointerMove, { passive: false });
+    document.addEventListener('touchmove',  onPointerMove, { passive: false });
+    document.addEventListener('mouseup',    onPointerUp);
+    document.addEventListener('touchend',   onPointerUp);
+    document.addEventListener('touchcancel',onPointerUp);
+  }
+
+  function onPointerMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    const { x, y } = getXY(e);
+    keyEl.style.left = (x - ox) + 'px';
+    keyEl.style.top  = (y - oy) + 'px';
+
+    // Check proximity to lock
+    if (lockEl) {
+      const lr = lockEl.getBoundingClientRect();
+      const kr = keyEl.getBoundingClientRect();
+      const dist = Math.hypot(
+        (kr.left + kr.width/2)  - (lr.left + lr.width/2),
+        (kr.top  + kr.height/2) - (lr.top  + lr.height/2)
+      );
+      if (dist < 110) {
+        lockEl.classList.add('glowing', 'lock-glow-active');
+      } else {
+        lockEl.classList.remove('glowing', 'lock-glow-active');
+      }
+    }
+  }
+
+  function onPointerUp(e) {
+    if (!dragging) return;
+    dragging = false;
+    keyEl.classList.remove('is-dragging');
+    if (lockEl) lockEl.classList.remove('lock-glow-active');
+
+    document.removeEventListener('mousemove',  onPointerMove);
+    document.removeEventListener('touchmove',  onPointerMove);
+    document.removeEventListener('mouseup',    onPointerUp);
+    document.removeEventListener('touchend',   onPointerUp);
+    document.removeEventListener('touchcancel',onPointerUp);
+
+    // Check if dropped on lock
+    if (lockEl) {
+      const lr = lockEl.getBoundingClientRect();
+      const kr = keyEl.getBoundingClientRect();
+      const dist = Math.hypot(
+        (kr.left + kr.width/2)  - (lr.left + lr.width/2),
+        (kr.top  + kr.height/2) - (lr.top  + lr.height/2)
+      );
+      if (dist < 110) {
+        doUnlock();
+        return;
+      }
+    }
+
+    // Snap back with CSS transition
+    keyEl.style.transition = 'left 0.5s cubic-bezier(0.34,1.56,0.64,1), top 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+    positionKey();
+    setTimeout(() => { keyEl.style.transition = ''; if (hintEl) hintEl.style.display = ''; }, 520);
+  }
+
+  function doUnlock() {
+    playSound('unlock');
+    if (lockEl) lockEl.classList.add('shaking', 'glowing');
+    if (gateEl) gateEl.classList.add('unlocking');
+
+    setTimeout(() => {
+      if (lockEl) {
+        const lr = lockEl.getBoundingClientRect();
+        spawnExplosion(lr.left + lr.width/2, lr.top + lr.height/2, 120);
+        lockEl.style.display = 'none';
+      }
+      keyEl.style.display = 'none';
+      if (hintEl) hintEl.style.display = 'none';
+    }, 350);
+
+    setTimeout(() => {
+      playSound('book-open');
+      if (bookCover) bookCover.classList.add('open');
+    }, 700);
+
+    setTimeout(() => {
+      if (gateEl) gateEl.classList.add('hidden');
+      if (siteEl) siteEl.classList.add('visible');
+      if (typeof initSite === 'function') initSite();
+    }, 2200);
+  }
+
+  // Attach listeners
+  keyEl.addEventListener('mousedown',  onPointerDown);
+  keyEl.addEventListener('touchstart', onPointerDown, { passive: false });
+})();
+
+/* ============================================================
+   CLOUD BACKGROUND
+   ============================================================ */
+function createClouds(){
+  const layer=document.getElementById('cloud-layer');
+  const colors=['rgba(255,105,180,0.5)','rgba(139,0,255,0.4)','rgba(255,215,0,0.3)','rgba(255,182,193,0.5)'];
+  for(let i=0;i<8;i++){
+    const cloud=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    cloud.setAttribute('viewBox','0 0 200 120');cloud.className.baseVal='cloud';
+    const c=colors[i%colors.length];
+    cloud.innerHTML=`<ellipse cx="100" cy="80" rx="90" ry="40" fill="${c}"/><ellipse cx="70" cy="65" rx="50" ry="35" fill="${c}"/><ellipse cx="130" cy="60" rx="45" ry="32" fill="${c}"/><ellipse cx="100" cy="55" rx="40" ry="30" fill="${c}"/>`;
+    const size=150+Math.random()*200;
+    cloud.style.cssText=`width:${size}px;height:auto;top:${Math.random()*70}%;left:-${size}px;animation-duration:${20+Math.random()*30}s;animation-delay:${-Math.random()*30}s;`;
+    layer.appendChild(cloud);
+  }
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+function switchPage(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-bubble').forEach(n=>n.classList.remove('active'));
+  const page=document.getElementById('page-'+pageId);if(page)page.classList.add('active');
+  const nb=document.querySelector(`.nav-bubble[data-page="${pageId}"]`);if(nb)nb.classList.add('active');
+  loadPageData(pageId);
+}
+document.querySelectorAll('.nav-bubble').forEach(btn=>btn.addEventListener('click',()=>{
+  const p=btn.dataset.page;if(p==='edit'){openEditView();return;}switchPage(p);
+}));
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+let appState={isKai:false,kaiSettings:{},threads:[],vlogs:[],liveStatus:{is_live:false,stream_url:''},funFacts:[],visitorId:null,petsEnabled:true,maxPets:6};
+
+/* ============================================================
+   VISITOR TRACKING
+   ============================================================ */
+function getOrCreateVid(){let id=localStorage.getItem('kaicore_vid');if(!id){id='v_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('kaicore_vid',id);}return id;}
+async function trackVisit(page='home'){
+  appState.visitorId=getOrCreateVid();
+  // Track visit in Supabase visitors table (create if not exists via Supabase dashboard)
+  // Table: visitors (id uuid, visitor_id text, page text, referrer text, ua text, created_at timestamptz)
+  try{
+    const t=await db.from('visitors');
+    await(await t).insert({visitor_id:appState.visitorId,page,referrer:document.referrer||null,ua:navigator.userAgent||null});
+    // Bump visitor count in stats
+    const stored=parseInt(localStorage.getItem('kaicore_stat_visitors')||'0');
+    const isNew=!localStorage.getItem('kaicore_vid_seen');
+    if(isNew){localStorage.setItem('kaicore_vid_seen','1');localStorage.setItem('kaicore_stat_visitors',stored+1);}
+  }catch(e){/* Supabase not configured yet — tracking skipped */}
+}
+
+/* ============================================================
+   INIT SITE
+   ============================================================ */
+async function initSite(){
+  createClouds();loadSpriteUrlsFromStorage();
+  await loadKaiSettings();loadPageData('home');initPetCanvas();startLivePolling();await trackVisit();
+  const saved=sessionStorage.getItem('kai_token');if(saved){db.authToken=saved;appState.isKai=true;showAdminControls();}
+}
+
+/* ============================================================
+   KAI SETTINGS
+   ============================================================ */
+async function loadKaiSettings(){
+  try{const t=await db.from('kai_settings');const{data}=await(await t).get();if(data&&data.length>0){appState.kaiSettings=data[0];applyKaiSettings(data[0]);}}catch(e){console.log('Supabase not configured yet');}
+}
+function applyKaiSettings(s){
+  if(!s)return;
+  if(s.kai_online_status){document.getElementById('home-online-badge').style.display='inline-flex';document.getElementById('kai-status').classList.add('visible');}
+  if(s.profile_pic_url){['home-avatar','about-avatar'].forEach(id=>{document.getElementById(id).innerHTML=`<img src="${s.profile_pic_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;});}
+  const name=s.name||'KAI';document.getElementById('home-name').textContent=name;document.getElementById('about-name').textContent=name;
+  if(s.mood_emoji){['home-mood-emoji','about-mood-emoji'].forEach(id=>document.getElementById(id).textContent=s.mood_emoji);}
+  if(s.location){['home-location','about-location'].forEach(id=>{document.getElementById(id).textContent='📍 '+s.location;});}
+  if(s.zodiac)document.getElementById('about-zodiac').textContent='⭐ '+s.zodiac;
+  if(s.bio){['home-bio','about-bio'].forEach(id=>document.getElementById(id).textContent=s.bio);}
+  if(s.social_instagram){document.getElementById('link-instagram').href=s.social_instagram;document.getElementById('ig-handle').textContent='@'+s.social_instagram.split('/').pop();}
+  if(s.social_tiktok){document.getElementById('link-tiktok').href=s.social_tiktok;document.getElementById('tt-handle').textContent='@'+s.social_tiktok.split('/').pop().replace('@','');}
+  if(s.social_spotify)document.getElementById('link-spotify').href=s.social_spotify;
+}
+
+/* ============================================================
+   PAGE DATA
+   ============================================================ */
+function loadPageData(page){
+  switch(page){
+    case'home':     loadHomeData();break;
+    case'threads':  loadThreads();break;
+    case'vlog':     loadVlogs();break;
+    case'about':    loadAbout();break;
+    case'petscape': initPetscape();break;
+    case'stage':    loadStage();break;
+    case'iwashere': loadSignatures();break;
+  }
+}
+
+/* HOME */
+async function loadHomeData(){
+  try{
+    const t=await db.from('threads');
+    const{data}=await(await t).select('id,content,created_at').order('created_at',{ascending:false}).limit(3).get();
+    document.getElementById('stat-threads').textContent=data?data.length:0;
+    if(data&&data.length){document.getElementById('home-recent-threads').innerHTML=data.map(t=>`<div style="padding:12px 0;border-bottom:1px solid rgba(255,105,180,0.15);cursor:pointer" onclick="switchPage('threads')"><div style="font-size:12px;color:var(--lavender);margin-bottom:4px;">${formatDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;line-height:1.5;">${(t.content||'').substr(0,100)}…</div></div>`).join('');}
+    else{document.getElementById('home-recent-threads').innerHTML=`<div style="font-size:13px;color:var(--lavender);text-align:center;padding:20px 0;">No threads yet ✦</div>`;}
+  }catch(e){document.getElementById('home-recent-threads').innerHTML=`<div style="font-size:13px;color:var(--lavender);text-align:center;padding:20px 0;">Connect Supabase to see threads</div>`;}
+}
+
+/* THREADS */
+async function loadThreads(){
+  const el=document.getElementById('threads-list');el.innerHTML='<div class="loader"></div>';
+  try{const t=await db.from('threads');const{data}=await(await t).eq('is_hidden','false').order('created_at',{ascending:false}).get();appState.threads=data||[];renderThreads(data||[]);}
+  catch(e){el.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div>Configure Supabase to load threads</div>`;}
+}
+function renderThreads(threads){
+  const el=document.getElementById('threads-list');
+  if(!threads.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">💭</div>No threads yet. Kai hasn't posted!</div>`;return;}
+  el.innerHTML=threads.map(t=>`<div class="thread-card" id="thread-${t.id}"><div class="thread-author">KAI • ${formatDate(t.created_at)} • 👁 ${t.view_count||0}</div><div class="thread-content">${escapeHtml(t.content||'')}</div>${t.image_url?`<img class="thread-image" src="${t.image_url}" alt="" loading="lazy">`:''}${t.video_url?`<div style="margin-bottom:16px;border-radius:20px;overflow:hidden;"><iframe width="100%" height="315" src="${ytEmbed(t.video_url)}" frameborder="0" allowfullscreen></iframe></div>`:''}<div class="thread-actions"><button class="thread-btn" onclick="toggleComments('${t.id}')">💬 COMMENTS (${t.comment_count||0})</button>${appState.isKai?`<button class="thread-btn" style="border-color:rgba(255,0,0,0.4);color:#ff9090;" onclick="deleteThread('${t.id}')">DELETE</button>`:''}<span class="view-count">♥ ${t.view_count||0} views</span></div><div class="comments-section" id="comments-${t.id}" style="display:none;"><div id="comments-content-${t.id}"><div class="loader"></div></div><div class="add-comment-form"><input class="bubble-input" id="comment-name-${t.id}" placeholder="Your name..."><textarea class="bubble-input" id="comment-text-${t.id}" rows="3" placeholder="Add a comment..."></textarea><button class="bubble-btn bubble-btn-sm" onclick="addComment('${t.id}',null)">POST COMMENT</button></div></div></div>`).join('');
+}
+async function toggleComments(tid){const s=document.getElementById(`comments-${tid}`);const open=s.style.display!=='none';s.style.display=open?'none':'block';if(!open)loadComments(tid);}
+async function loadComments(tid){
+  const el=document.getElementById(`comments-content-${tid}`);
+  try{const t=await db.from('comments');const{data}=await(await t).eq('thread_id',tid).order('created_at',{ascending:true}).get();renderComments(data||[],tid,el);}
+  catch(e){el.innerHTML='<div style="font-size:12px;color:var(--lavender);">Unable to load comments</div>';}
+}
+function renderComments(comments,tid,el){
+  const roots=comments.filter(c=>!c.parent_id),kids={};
+  comments.filter(c=>c.parent_id).forEach(c=>{(kids[c.parent_id]=kids[c.parent_id]||[]).push(c);});
+  if(!roots.length){el.innerHTML='<div style="font-size:12px;color:var(--lavender);padding:10px 0;">No comments yet. Be the first!</div>';return;}
+  el.innerHTML=roots.map(c=>renderComment(c,kids,false)).join('');
+}
+function renderComment(c,kids,nested){
+  const ch=(kids[c.id]||[]).map(k=>renderComment(k,kids,true)).join('');
+  return `<div class="comment-bubble${nested?' nested':''}"><div class="comment-author-name" style="color:${c.author_color||'#FF69B4'}">${escapeHtml(c.author_name||'Anonymous')}</div><div class="comment-text">${escapeHtml(c.content||'')}</div><div class="comment-actions"><button class="vote-btn" onclick="voteComment('${c.id}','up')">▲ ${c.upvotes||0}</button><button class="vote-btn" onclick="voteComment('${c.id}','down')">▼ ${c.downvotes||0}</button><button class="vote-btn" onclick="showReplyBox('${c.id}')">REPLY</button>${appState.isKai?`<button class="vote-btn" style="color:#ff6060;" onclick="deleteComment('${c.id}','${c.thread_id||''}')">DELETE</button>`:''}</div><div id="reply-box-${c.id}" style="display:none;margin-top:10px;"><input class="bubble-input" id="reply-name-${c.id}" placeholder="Your name..."><textarea class="bubble-input" id="reply-text-${c.id}" rows="2" placeholder="Reply..."></textarea><button class="bubble-btn bubble-btn-sm" onclick="addComment('${c.thread_id||''}','${c.id}')">REPLY</button></div>${ch}</div>`;
+}
+function showReplyBox(id){const b=document.getElementById(`reply-box-${id}`);b.style.display=b.style.display==='none'?'block':'none';}
+async function addComment(tid,pid){
+  const nameEl=document.getElementById(pid?`reply-name-${pid}`:`comment-name-${tid}`);
+  const textEl=document.getElementById(pid?`reply-text-${pid}`:`comment-text-${tid}`);
+  const name=nameEl.value.trim()||'Anonymous',content=textEl.value.trim();
+  if(!content){showToast('Write something first!');return;}
+  const colors=['#FF69B4','#8B00FF','#FFD700','#DDA0DD','#FF6347','#00CED1'];
+  try{const t=await db.from('comments');await(await t).insert({thread_id:tid,parent_id:pid||null,author_name:name,author_color:colors[Math.floor(Math.random()*colors.length)],content});nameEl.value='';textEl.value='';if(pid)document.getElementById(`reply-box-${pid}`).style.display='none';loadComments(tid);showToast('Comment posted!');}
+  catch(e){showToast('Could not post comment');}
+}
+async function voteComment(id,dir){
+  try{const t=await db.from('comments');const{data}=await(await t).select('upvotes,downvotes').eq('id',id).get();if(data&&data.length){const row=data[0],update=dir==='up'?{upvotes:(row.upvotes||0)+1}:{downvotes:(row.downvotes||0)+1};const t2=await db.from('comments');await(await t2).eq('id',id).update(update);}}catch(e){}
+}
+async function deleteThread(id){if(!confirm('Delete this thread?'))return;try{const t=await db.from('threads');await(await t).eq('id',id).delete();loadThreads();showToast('Thread deleted');}catch(e){showToast('Error');}}
+async function deleteComment(id,tid){try{const t=await db.from('comments');await(await t).eq('id',id).delete();loadComments(tid);}catch(e){}}
+
+/* VLOGS */
+async function loadVlogs(){
+  const el=document.getElementById('vlog-list');
+  try{const t=await db.from('vlogs');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  if(!data||!data.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">▶</div>No vlogs yet</div>`;return;}
+  el.innerHTML=data.map(v=>`<div class="vlog-card"><div class="vlog-thumb"><iframe src="${ytEmbed(v.video_url)}" allowfullscreen></iframe></div><div class="vlog-info"><div class="vlog-title">${escapeHtml(v.title||'Untitled')}</div><div class="vlog-desc">${escapeHtml(v.description||'')}</div><div class="vlog-date">${formatDate(v.created_at)}</div>${appState.isKai?`<button class="thread-btn" style="margin-top:10px;border-color:rgba(255,0,0,0.4);color:#ff9090;" onclick="deleteVlog('${v.id}')">DELETE</button>`:''}</div></div>`).join('');}
+  catch(e){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">▶</div>Configure Supabase to load vlogs</div>`;}
+}
+async function deleteVlog(id){if(!confirm('Delete?'))return;try{const t=await db.from('vlogs');await(await t).eq('id',id).delete();loadVlogs();}catch(e){}}
+
+/* ABOUT */
+async function loadAbout(){
+  try{const t=await db.from('fun_facts');const{data}=await(await t).order('slot_number',{ascending:true}).get();renderFunFacts(data||[]);}
+  catch(e){renderFunFacts([{slot_number:1,fact_text:'Loves pixel art and retro games'},{slot_number:2,fact_text:'Can watch anime for 12 hours straight'},{slot_number:3,fact_text:'Obsessed with collecting plushies'},{slot_number:4,fact_text:'Has a playlist for every mood'},{slot_number:5,fact_text:'Makes the best matcha lattes'},{slot_number:6,fact_text:'Night owl – 3am is productive time'},{slot_number:7,fact_text:'Can name every Pokémon by heart'},{slot_number:8,fact_text:'Dreams in vivid color'}]);}
+}
+function renderFunFacts(facts){document.getElementById('fun-facts-grid').innerHTML=facts.slice(0,8).map((f,i)=>`<div class="fun-fact-bubble"><div class="fact-num">${f.slot_number||i+1}</div><div class="fact-text">${escapeHtml(f.fact_text||'')}</div></div>`).join('');}
+
+/* ON THIS DAY */
+async function loadOnThisDay(){
+  const dateVal=document.getElementById('otd-date').value;if(!dateVal){showToast('Pick a date first!');return;}
+  const el=document.getElementById('otd-results');el.innerHTML='<div class="loader"></div>';
+  try{const t=await db.from('threads');const{data}=await(await t).get();
+  const filtered=(data||[]).filter(t=>t.created_at>=dateVal+'T00:00:00'&&t.created_at<=dateVal+'T23:59:59');
+  if(!filtered.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🕰</div>Nothing posted on this day</div>`;return;}
+  el.innerHTML=filtered.map(t=>`<div class="thread-card"><div class="thread-author">KAI • ${formatDate(t.created_at)}</div><div class="thread-content">${escapeHtml(t.content||'')}</div>${t.image_url?`<img class="thread-image" src="${t.image_url}" alt="">`:''}</div>`).join('');}
+  catch(e){el.innerHTML='<div class="empty-state">Configure Supabase to use this feature</div>';}
+}
+document.getElementById('otd-date').value=new Date().toISOString().split('T')[0];
+
+/* LIVE STAGE */
+async function loadStage(){
+  try{const t=await db.from('live_status');const{data}=await(await t).limit(1).get();if(data&&data.length){appState.liveStatus=data[0];renderLiveStage(data[0]);}}catch(e){}
+  loadChatMessages();
+}
+function renderLiveStage(status){
+  const badge=document.getElementById('live-badge'),area=document.getElementById('stage-video-area');
+  if(status.is_live&&status.stream_url){badge.style.display='inline-flex';area.innerHTML=`<div class="stage-video-wrapper"><iframe src="${ytEmbed(status.stream_url)}" allowfullscreen></iframe></div>`;}
+  else{badge.style.display='none';const img=status.offline_image_url;area.innerHTML=`<div class="offline-screen" style="${img?`background-image:url(${img});background-size:cover`:''}">` +(!img?`<div style="font-size:48px;opacity:0.4;">■</div><div style="font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--lavender);">KAI IS OFFLINE</div><div style="font-size:12px;color:rgba(255,105,180,0.5);margin-top:8px;letter-spacing:2px;">CHECK BACK LATER</div>`:'')+`</div>`;}
+}
+function startLivePolling(){setInterval(async()=>{try{const t=await db.from('live_status');const{data}=await(await t).limit(1).get();if(data&&data.length)renderLiveStage(data[0]);}catch(e){}loadChatMessages();},5000);}
+async function loadChatMessages(){
+  try{const t=await db.from('live_chat');const{data}=await(await t).order('created_at',{ascending:true}).limit(50).get();
+  const el=document.getElementById('chat-messages');if(data&&data.length){const atBottom=el.scrollHeight-el.scrollTop===el.clientHeight;el.innerHTML=data.map(m=>`<div class="chat-msg"><div class="chat-author">${escapeHtml(m.author_name||'anon')}</div><div class="chat-text">${escapeHtml(m.message||'')}</div></div>`).join('');if(atBottom)el.scrollTop=el.scrollHeight;}}catch(e){}
+}
+async function sendChatMessage(){
+  const name=document.getElementById('chat-name-input').value.trim()||'Anonymous';const msg=document.getElementById('chat-msg-input').value.trim();if(!msg)return;
+  document.getElementById('chat-msg-input').value='';
+  try{const t=await db.from('live_chat');await(await t).insert({author_name:name,message:msg,session_id:appState.visitorId||'guest'});loadChatMessages();}catch(e){showToast('Could not send message');}
+}
+document.getElementById('chat-msg-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendChatMessage();});
+
+/* I WAS HERE */
+async function loadSignatures(){
+  const el=document.getElementById('signatures-grid');
+  try{const t=await db.from('iwashere_signatures');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  if(!data||!data.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✍</div>Be the first to sign!</div>`;return;}
+  el.innerHTML=data.map(s=>`<div class="signature-bubble"><div class="sig-name">${escapeHtml(s.name||'Anonymous')}</div><div class="sig-message">${escapeHtml(s.message||'')}</div><div class="sig-date">${formatDate(s.created_at)}</div>${appState.isKai?`<button class="vote-btn" style="color:#ff6060;margin-top:8px;" onclick="deleteSignature('${s.id}')">DELETE</button>`:''}</div>`).join('');}
+  catch(e){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1">Configure Supabase to see signatures</div>`;}
+}
+async function addSignature(){
+  const name=document.getElementById('sig-name').value.trim(),message=document.getElementById('sig-message').value.trim();
+  if(!name||!message){showToast('Please fill in your name and message!');return;}
+  try{const t=await db.from('iwashere_signatures');await(await t).insert({name,message,visitor_id:appState.visitorId});document.getElementById('sig-name').value='';document.getElementById('sig-message').value='';loadSignatures();showToast('You were here! ✦');}
+  catch(e){showToast('Could not save signature');}
+}
+async function deleteSignature(id){try{const t=await db.from('iwashere_signatures');await(await t).eq('id',id).delete();loadSignatures();}catch(e){}}
+
+/* ============================================================
+   PET SYSTEM
+   ============================================================ */
+const petCanvas=document.getElementById('pet-canvas'), petCtx=petCanvas.getContext('2d');
+let pets=[],mouseX=0,mouseY=0;
+function resizePetCanvas(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
+resizePetCanvas();window.addEventListener('resize',resizePetCanvas);
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+const PET_TYPES=['cat','bird','bat','dog'];
+
+class PixelPet{
+  constructor(type,x,y,personality){
+    this.type=type;this.x=x;this.y=y;this.personality=personality||'sleepy';
+    this.vx=(Math.random()-0.5)*2;this.vy=0;this.frame=0;this.frameTimer=0;this.direction=1;
+    this.soundTimer=Math.random()*300+200;this.teleportTimer=Math.random()*200+100;
+    this.name=(BUILTIN_SPRITES[type]||{name:type}).name;this.isCustom=false;this.customPixels=null;this.scale=type==='dog'?1.5:1;
+  }
+  update(){
+    if(!appState.petsEnabled)return;
+    this.frameTimer++;if(this.frameTimer>12){this.frameTimer=0;this.frame=1-this.frame;}
+    if(this.personality==='sleepy'){this.vx*=0.97;if(Math.random()<0.01)this.vx=(Math.random()-0.5)*1.5;}
+    else if(this.personality==='playful'){const dx=mouseX-this.x,dy=mouseY-this.y,dist=Math.hypot(dx,dy);if(dist>80&&dist<400){this.vx+=dx/dist*0.3;this.vy+=dy/dist*0.3;}this.vx*=0.9;this.vy*=0.9;}
+    else if(this.personality==='chaotic'){this.teleportTimer--;if(this.teleportTimer<=0){this.x=Math.random()*window.innerWidth;this.y=Math.random()*(window.innerHeight-120)+80;this.teleportTimer=Math.random()*150+80;spawnExplosion(this.x,this.y,10);}this.vx+=(Math.random()-0.5)*0.5;this.vx*=0.95;}
+    if(this.type==='bat'){this.vy+=Math.sin(Date.now()*0.001+this.x)*0.05;this.vy*=0.95;}
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.vx<-0.1)this.direction=-1;else if(this.vx>0.1)this.direction=1;
+    const w=window.innerWidth,h=window.innerHeight;
+    if(this.x<-40)this.x=w+40;if(this.x>w+40)this.x=-40;if(this.y<80){this.y=80;this.vy=Math.abs(this.vy);}if(this.y>h-40){this.y=h-40;this.vy=-Math.abs(this.vy)*0.5;}
+    this.soundTimer--;if(this.soundTimer<=0){const snd=(BUILTIN_SPRITES[this.type]||{sounds:['meow']}).sounds;playSound(snd[0]);this.soundTimer=Math.random()*400+200;}
+  }
+  draw(ctx){
+    if(!appState.petsEnabled)return;
+    const s=this.scale;ctx.save();ctx.translate(this.x,this.y);if(this.direction<0)ctx.scale(-1,1);
+    const drawn=drawOpenGameArtFrame(ctx,this.type,this.frame,0,0,s*2,false);
+    if(!drawn){if(this.isCustom&&this.customPixels)drawCustomPixels(ctx,this.customPixels,-16,-16,2);else drawBuiltinSprite(ctx,this.type,this.frame,-16,-16);}
+    ctx.restore();
+    const color=(BUILTIN_SPRITES[this.type]||{color:'#ff69b4'}).color;
+    ctx.save();ctx.globalAlpha=0.12;ctx.fillStyle=color;ctx.beginPath();ctx.arc(this.x,this.y+12,20*s,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
+}
+function drawCustomPixels(ctx,pxData,ox,oy,scale){if(!pxData||!pxData.length)return;pxData.forEach((row,ry)=>row.forEach((color,cx)=>{if(color){ctx.fillStyle=color;ctx.fillRect(ox+cx*scale,oy+ry*scale,scale,scale);}}));}
+function spawnPet(){const type=PET_TYPES[Math.floor(Math.random()*PET_TYPES.length)];const personalities=['sleepy','playful','chaotic'];const p=new PixelPet(type,Math.random()*window.innerWidth,100+Math.random()*(window.innerHeight-200),personalities[Math.floor(Math.random()*3)]);pets.push(p);if(pets.length>appState.maxPets)pets.shift();}
+function initPetCanvas(){for(let i=0;i<3;i++)setTimeout(spawnPet,i*800);setInterval(()=>{if(pets.length<appState.maxPets&&appState.petsEnabled)spawnPet();},30000);loadCustomPets();animatePets();}
+async function loadCustomPets(){try{const t=await db.from('custom_pets');const{data}=await(await t).eq('is_active','true').get();if(data)data.forEach(p=>{const pet=new PixelPet('custom',Math.random()*window.innerWidth,200+Math.random()*300,p.personality||'sleepy');pet.isCustom=true;pet.customPixels=p.pixel_data;pet.name=p.name||'Custom Pet';pets.push(pet);});}catch(e){}}
+function animatePets(){petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);pets.forEach(p=>{p.update();p.draw(petCtx);});requestAnimationFrame(animatePets);}
+petCanvas.addEventListener('mousemove',e=>{const tooltip=document.getElementById('pet-tooltip');let found=false;pets.forEach(p=>{if(Math.hypot(e.clientX-p.x,e.clientY-p.y)<24){tooltip.textContent=p.name;tooltip.style.left=(e.clientX+12)+'px';tooltip.style.top=(e.clientY-20)+'px';tooltip.style.opacity='1';found=true;}});if(!found)tooltip.style.opacity='0';});
+petCanvas.addEventListener('click',e=>{pets.forEach(p=>{if(Math.hypot(e.clientX-p.x,e.clientY-p.y)<30){playSound((BUILTIN_SPRITES[p.type]||{sounds:['meow']}).sounds[0]);spawnExplosion(p.x,p.y,20);p.personality='playful';}});});
+
+/* PETSCAPE PAGE */
+function initPetscape(){
+  const canvas=document.getElementById('petscape-canvas'),ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;canvas.height=500;
+  const scenePets=[];PET_TYPES.forEach((type,i)=>scenePets.push(new PixelPet(type,100+i*180,200+Math.random()*150,['sleepy','playful','chaotic'][i%3])));
+  const controls=document.getElementById('petscape-controls');
+  controls.innerHTML=PET_TYPES.map(t=>`<button class="bubble-btn bubble-btn-sm" onclick="window.petscapeSpawn('${t}')">+ ${(BUILTIN_SPRITES[t]||{name:t}).name}</button>`).join('')+`<button class="bubble-btn bubble-btn-sm" style="border-color:rgba(255,0,0,0.4);color:#ff9090;" onclick="window._scenePets.length=0">CLEAR</button>`;
+  window._scenePets=scenePets;window.petscapeSpawn=(type)=>{scenePets.push(new PixelPet(type,50+Math.random()*(canvas.width-100),100+Math.random()*300,'playful'));};
+  (function loop(){ctx.fillStyle='#0a0015';ctx.fillRect(0,0,canvas.width,canvas.height);for(let i=0;i<50;i++){ctx.fillStyle=`rgba(255,255,255,${0.3+Math.random()*0.4})`;ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);}scenePets.forEach(p=>{p.update();p.draw(ctx);});requestAnimationFrame(loop);})();
+}
+
+/* ============================================================
+   PET CREATOR
+   ============================================================ */
+let creatorPixels=Array.from({length:32},()=>Array(32).fill(null)),currentTool='draw',currentColor='#FF69B4',isDrawing=false;
+const PALETTE_COLORS=['#FF69B4','#FFB6C1','#8B00FF','#DDA0DD','#FFD700','#8B0000','#4A0000','#000000','#ffffff','#ff6600','#00ff88','#0088ff','#ff0044','#88ff00','#ff88ff','#00ffff','#663399','#993366','#336699','#669933','#996633','#336666','#663366','#336633','rgba(0,0,0,0)','#aaaaaa','#555555','#222222','#ff2200','#002288','#008822','#880022'];
+function initCreatorPalette(){const el=document.getElementById('creator-palette');if(!el)return;el.innerHTML=PALETTE_COLORS.map(c=>`<div class="palette-color${c===currentColor?' selected':''}" style="background:${c};${c==='rgba(0,0,0,0)'?'border:2px dashed #666;':''}" onclick="selectColor('${c}',this)"></div>`).join('');}
+function selectColor(color,el){currentColor=color;document.querySelectorAll('.palette-color').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');}
+function setTool(tool){currentTool=tool;document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.tool-btn[onclick="setTool('${tool}')"]`)?.classList.add('active');}
+function fillCanvas(){for(let r=0;r<32;r++)for(let c=0;c<32;c++)creatorPixels[r][c]=currentColor;renderCreatorCanvas();}
+function clearCanvas(){creatorPixels=Array.from({length:32},()=>Array(32).fill(null));renderCreatorCanvas();}
+function renderCreatorCanvas(){
+  const canvas=document.getElementById('pixel-canvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,320,320);
+  for(let r=0;r<32;r++)for(let c=0;c<32;c++){const cx=c*10,cy=r*10;ctx.fillStyle=(r+c)%2===0?'#1a0020':'#200030';ctx.fillRect(cx,cy,10,10);if(creatorPixels[r][c]){ctx.fillStyle=creatorPixels[r][c];ctx.fillRect(cx,cy,10,10);}}
+  ctx.strokeStyle='rgba(255,105,180,0.1)';ctx.lineWidth=0.5;for(let i=0;i<=32;i++){ctx.beginPath();ctx.moveTo(i*10,0);ctx.lineTo(i*10,320);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*10);ctx.lineTo(320,i*10);ctx.stroke();}
+  renderPreview();
+}
+function renderPreview(){const p=document.getElementById('preview-canvas');if(!p)return;const ctx=p.getContext('2d');ctx.clearRect(0,0,256,256);creatorPixels.forEach((row,r)=>row.forEach((color,c)=>{if(color){ctx.fillStyle=color;ctx.fillRect(c*8,r*8,8,8);}}));}
+function initPixelCanvas(){
+  const canvas=document.getElementById('pixel-canvas');if(!canvas)return;
+  initCreatorPalette();renderCreatorCanvas();
+  function getCell(e){const rect=canvas.getBoundingClientRect(),ev=e.touches?e.touches[0]:e;return[Math.min(31,Math.max(0,Math.floor((ev.clientY-rect.top)/10))),Math.min(31,Math.max(0,Math.floor((ev.clientX-rect.left)/10)))];}
+  function paint(e){const[r,c]=getCell(e);if(currentTool==='draw')creatorPixels[r][c]=currentColor;else if(currentTool==='erase')creatorPixels[r][c]=null;renderCreatorCanvas();}
+  canvas.addEventListener('mousedown',e=>{isDrawing=true;paint(e);});canvas.addEventListener('mousemove',e=>{if(isDrawing)paint(e);});canvas.addEventListener('mouseup',()=>isDrawing=false);canvas.addEventListener('mouseleave',()=>isDrawing=false);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();isDrawing=true;paint(e);},{passive:false});canvas.addEventListener('touchmove',e=>{e.preventDefault();if(isDrawing)paint(e);},{passive:false});canvas.addEventListener('touchend',()=>isDrawing=false);
+}
+document.querySelector('[data-etab="pets"]').addEventListener('click',()=>setTimeout(initPixelCanvas,100));
+async function savePet(){
+  const name=document.getElementById('pet-name-input').value.trim()||'My Pet',behavior=document.getElementById('pet-behavior').value;
+  try{const t=await db.from('custom_pets');await(await t).insert({name,pixel_data:creatorPixels,personality:behavior,is_active:true});clearCanvas();loadSavedPets();showToast('Pet saved!');}catch(e){showToast('Error saving pet');}
+}
+async function loadSavedPets(){
+  const el=document.getElementById('saved-pets-list');if(!el)return;
+  try{const t=await db.from('custom_pets');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  el.innerHTML=(data||[]).map(p=>`<div class="bubble-card" style="margin-bottom:12px;padding:14px;display:flex;align-items:center;gap:12px;"><canvas width="64" height="64" style="border:1px solid rgba(255,105,180,0.3);border-radius:8px;image-rendering:pixelated;background:#0a0015;" data-pixels="${encodeURIComponent(JSON.stringify(p.pixel_data||[]))}"></canvas><div style="flex:1;"><div style="font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--yellow);">${escapeHtml(p.name||'Pet')}</div><div style="font-size:11px;color:var(--lavender);">${p.personality||''}</div></div><button class="vote-btn" style="color:#ff6060;" onclick="deleteCustomPet('${p.id}')">DEL</button></div>`).join('')||'<div style="font-size:12px;color:var(--lavender);">No custom pets yet</div>';
+  el.querySelectorAll('canvas').forEach(c=>{try{const pixels=JSON.parse(decodeURIComponent(c.dataset.pixels||'[]'));const ctx=c.getContext('2d');drawCustomPixels(ctx,pixels,0,0,2);}catch(e){}});}catch(e){}
+}
+async function deleteCustomPet(id){try{const t=await db.from('custom_pets');await(await t).eq('id',id).delete();loadSavedPets();}catch(e){}}
+
+/* ============================================================
+   KAI LOGIN
+   ============================================================ */
+async function kaiLogin(){
+  const email=document.getElementById('login-email').value,pass=document.getElementById('login-password').value;
+  document.getElementById('login-error').style.display='none';
+  try{const{data,error}=await db.signIn(email,pass);if(error||!data.access_token)throw new Error('bad');sessionStorage.setItem('kai_token',data.access_token);appState.isKai=true;showAdminControls();switchPage('home');showToast('Welcome back, Kai ✦');}
+  catch(e){document.getElementById('login-error').style.display='block';}
+}
+function showAdminControls(){document.getElementById('admin-nav-btn').style.display='block';}
+
+/* ============================================================
+   EDIT VIEW
+   ============================================================ */
+function openEditView(){if(!appState.isKai){switchPage('kai');return;}document.getElementById('edit-view').classList.add('open');initEditView();}
+function closeEditView(){document.getElementById('edit-view').classList.remove('open');}
+document.querySelectorAll('.edit-tab').forEach(tab=>tab.addEventListener('click',()=>{
+  document.querySelectorAll('.edit-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.edit-panel').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');const panel=document.getElementById('etab-'+tab.dataset.etab);if(panel)panel.classList.add('active');loadEditTabData(tab.dataset.etab);
+}));
+function initEditView(){
+  loadEditTabData('threads');
+  const s=appState.kaiSettings;
+  if(s){setValue('ep-pic',s.profile_pic_url);setValue('ep-cover',s.cover_image_url);setValue('ep-mood',s.mood_emoji);setValue('ep-location',s.location);setValue('ep-zodiac',s.zodiac);setValue('ep-bio',s.bio);setValue('el-instagram',s.social_instagram);setValue('el-tiktok',s.social_tiktok);setValue('el-spotify',s.social_spotify);if(s.kai_online_status)document.getElementById('ep-online').checked=true;}
+  const fe=document.getElementById('facts-editor');fe.innerHTML=Array.from({length:8},(_,i)=>`<div class="form-group"><label class="form-label">Fact ${i+1}</label><input class="form-input" id="ef-fact-${i+1}" placeholder="Fun fact..."></div>`).join('');
+  (appState.funFacts||[]).forEach(f=>{const el=document.getElementById(`ef-fact-${f.slot_number}`);if(el)el.value=f.fact_text||'';});
+  const live=appState.liveStatus;if(live){document.getElementById('el-live-status').checked=live.is_live||false;setValue('el-stream-url',live.stream_url);setValue('el-offline-img',live.offline_image_url);}
+  document.getElementById('ej-date').value=new Date().toISOString().split('T')[0];
+  ['cat','bird','bat','dog'].forEach(type=>{const el=document.getElementById(`sprite-${type}-url`);if(el&&SPRITE_URLS[type].url)el.value=SPRITE_URLS[type].url;});
+  document.getElementById('ep-pet-max').value=appState.maxPets;document.getElementById('ep-pet-max-val').textContent=appState.maxPets;
+}
+function setValue(id,val){const el=document.getElementById(id);if(el&&val)el.value=val;}
+async function loadEditTabData(tab){
+  if(tab==='threads')loadAdminThreads();else if(tab==='vlog'){loadVlogs();loadAdminVlogs();}else if(tab==='journal')loadAdminJournal();else if(tab==='signatures')loadAdminSignatures();else if(tab==='stats')loadStats();else if(tab==='pets')loadSavedPets();
+}
+async function loadAdminThreads(){
+  const el=document.getElementById('et-threads-list');
+  try{const t=await db.from('threads');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  el.innerHTML=(data||[]).map(t=>`<div class="bubble-card" style="margin-bottom:12px;padding:16px;"><div style="font-size:12px;color:var(--lavender);margin-bottom:6px;">${formatDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;margin-bottom:10px;">${(t.content||'').substr(0,150)}…</div><div style="display:flex;gap:8px;"><button class="tool-btn" onclick="toggleHideThread('${t.id}',${t.is_hidden})">${t.is_hidden?'UNHIDE':'HIDE'}</button><button class="tool-btn" style="border-color:rgba(255,0,0,0.5);color:#ff9090;" onclick="deleteThread('${t.id}');loadAdminThreads()">DELETE</button></div></div>`).join('')||'<div class="empty-state">No threads</div>';}
+  catch(e){el.innerHTML='<div class="empty-state">Configure Supabase</div>';}
+}
+async function toggleHideThread(id,hidden){try{const t=await db.from('threads');await(await t).eq('id',id).update({is_hidden:!hidden});loadAdminThreads();loadThreads();}catch(e){}}
+async function loadAdminVlogs(){
+  const el=document.getElementById('ev-vlog-list');
+  try{const t=await db.from('vlogs');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  el.innerHTML=(data||[]).map(v=>`<div class="bubble-card" style="margin-bottom:12px;padding:16px;"><div style="font-size:14px;color:var(--yellow);">${escapeHtml(v.title||'')}</div><button class="tool-btn" style="border-color:rgba(255,0,0,0.5);color:#ff9090;margin-top:8px;" onclick="deleteVlog('${v.id}');loadAdminVlogs()">DELETE</button></div>`).join('')||'<div class="empty-state">No vlogs</div>';}
+  catch(e){}
+}
+async function loadAdminJournal(){
+  const el=document.getElementById('ej-entries-list');
+  try{const t=await db.from('journal_entries');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  el.innerHTML=(data||[]).map(e=>`<div class="journal-entry-card" style="margin-bottom:12px;"><div class="journal-date">${e.date}</div><div class="journal-mood">${e.mood||''}</div><div class="journal-title">${escapeHtml(e.title||'')}</div><div class="journal-content">${escapeHtml((e.content||'').substr(0,200))}…</div><button class="vote-btn" style="color:#ff6060;margin-top:10px;" onclick="deleteJournalEntry('${e.id}')">DELETE</button></div>`).join('')||'<div class="empty-state">No journal entries</div>';}
+  catch(e){}
+}
+async function loadAdminSignatures(){
+  const el=document.getElementById('es-sigs-list');
+  try{const t=await db.from('iwashere_signatures');const{data}=await(await t).order('created_at',{ascending:false}).get();
+  el.innerHTML=(data||[]).map(s=>`<div class="signature-bubble" style="margin-bottom:12px;"><div class="sig-name">${escapeHtml(s.name||'')}</div><div class="sig-message">${escapeHtml(s.message||'')}</div><div class="sig-date">${formatDate(s.created_at)}</div><button class="vote-btn" style="color:#ff6060;margin-top:8px;" onclick="deleteSignature('${s.id}');loadAdminSignatures()">DELETE</button></div>`).join('')||'<div class="empty-state">No signatures</div>';}
+  catch(e){}
+}
+async function createThread(){
+  const content=document.getElementById('et-content').value.trim(),image_url=document.getElementById('et-image').value.trim(),video_url=document.getElementById('et-video').value.trim();
+  if(!content){showToast('Write something!');return;}
+  try{const t=await db.from('threads');await(await t).insert({content,image_url:image_url||null,video_url:video_url||null});document.getElementById('et-content').value='';document.getElementById('et-image').value='';document.getElementById('et-video').value='';loadAdminThreads();loadThreads();showToast('Thread posted!');}
+  catch(e){showToast('Error posting thread');}
+}
+async function addVlog(){
+  const title=document.getElementById('ev-title').value.trim(),video_url=document.getElementById('ev-url').value.trim(),description=document.getElementById('ev-desc').value.trim();
+  if(!title||!video_url){showToast('Fill in title and URL!');return;}
+  try{const t=await db.from('vlogs');await(await t).insert({title,video_url,description});document.getElementById('ev-title').value='';document.getElementById('ev-url').value='';document.getElementById('ev-desc').value='';loadAdminVlogs();loadVlogs();showToast('Vlog added!');}
+  catch(e){showToast('Error');}
+}
+async function saveProfile(){
+  const settings={profile_pic_url:document.getElementById('ep-pic').value.trim()||null,cover_image_url:document.getElementById('ep-cover').value.trim()||null,mood_emoji:document.getElementById('ep-mood').value.trim()||null,location:document.getElementById('ep-location').value.trim()||null,zodiac:document.getElementById('ep-zodiac').value.trim()||null,bio:document.getElementById('ep-bio').value.trim()||null,kai_online_status:document.getElementById('ep-online').checked,social_instagram:document.getElementById('el-instagram').value.trim()||null,social_tiktok:document.getElementById('el-tiktok').value.trim()||null,social_spotify:document.getElementById('el-spotify').value.trim()||null};
+  try{const t=await db.from('kai_settings');const existing=appState.kaiSettings;if(existing&&existing.id){await(await t).eq('id',existing.id).update(settings);}else{await(await t).insert(settings);}appState.kaiSettings={...appState.kaiSettings,...settings};applyKaiSettings(appState.kaiSettings);showToast('Profile saved!');}
+  catch(e){showToast('Error saving profile');}
+}
+async function saveLinks(){await saveProfile();}
+async function saveFacts(){
+  try{for(let i=1;i<=8;i++){const el=document.getElementById(`ef-fact-${i}`);if(!el)continue;const t=await db.from('fun_facts');await(await t).upsert({slot_number:i,fact_text:el.value,updated_at:new Date().toISOString()},{onConflict:'slot_number'});}await loadAbout();showToast('Fun facts saved!');}
+  catch(e){showToast('Error saving facts');}
+}
+async function saveJournalEntry(){
+  const entry={date:document.getElementById('ej-date').value,mood:document.getElementById('ej-mood').value.trim(),title:document.getElementById('ej-title').value.trim(),content:document.getElementById('ej-content').value.trim()};
+  if(!entry.content){showToast('Write something!');return;}
+  try{const t=await db.from('journal_entries');await(await t).insert(entry);document.getElementById('ej-content').value='';document.getElementById('ej-title').value='';loadAdminJournal();showToast('Journal saved ✦');}
+  catch(e){showToast('Error');}
+}
+async function deleteJournalEntry(id){try{const t=await db.from('journal_entries');await(await t).eq('id',id).delete();loadAdminJournal();}catch(e){}}
+async function saveLiveSettings(){
+  const is_live=document.getElementById('el-live-status').checked,stream_url=document.getElementById('el-stream-url').value.trim(),offline_image_url=document.getElementById('el-offline-img').value.trim();
+  try{const t=await db.from('live_status');const{data:existing}=await(await t).limit(1).get();const t2=await db.from('live_status');
+  if(existing&&existing.length){await(await t2).eq('id',existing[0].id).update({is_live,stream_url,offline_image_url,updated_at:new Date().toISOString(),started_at:is_live?new Date().toISOString():null});}else{await(await t2).insert({is_live,stream_url,offline_image_url});}
+  appState.liveStatus={is_live,stream_url,offline_image_url};renderLiveStage({is_live,stream_url,offline_image_url});showToast(is_live?'You are LIVE!':'Stream ended');}
+  catch(e){showToast('Error');}
+}
+async function clearChat(){if(!confirm('Clear all chat messages?'))return;try{const t=await db.from('live_chat');await(await t).neq('id','00000000-0000-0000-0000-000000000000').delete();document.getElementById('chat-messages').innerHTML='';showToast('Chat cleared');}catch(e){}}
+function savePetSettings(){appState.petsEnabled=document.getElementById('ep-pets-enabled').checked;appState.maxPets=parseInt(document.getElementById('ep-pet-max').value)||6;showToast('Pet settings saved!');}
+function updateThemePreview(){const p=document.getElementById('tc-primary').value,s=document.getElementById('tc-secondary').value,y=document.getElementById('tc-yellow').value;document.getElementById('theme-preview').style.background=`linear-gradient(135deg,${p}33,${s}33,${y}22)`;document.getElementById('theme-preview').style.borderColor=`${y}88`;}
+function updateScanlines(){document.getElementById('scanlines').style.opacity=document.getElementById('ts-scan').value/100;}
+async function saveTheme(){const p=document.getElementById('tc-primary').value,s=document.getElementById('tc-secondary').value;document.documentElement.style.setProperty('--pink',p);document.documentElement.style.setProperty('--purple',s);try{const t=await db.from('theme_settings');await(await t).insert({primary_color:p,secondary_color:s,is_active:true});}catch(e){}showToast('Theme applied!');}
+
+/* STATS — fetched from backend /api/stats (auth required) */
+async function loadStats(){
+  const el=id=>document.getElementById(id);
+  try{
+    // Call backend stats endpoint with Kai's Supabase token
+    const token=db.authToken||sessionStorage.getItem('kai_token')||'';
+    const res=await fetch('/api/stats',{headers:{Authorization:`Bearer ${token}`}});
+    if(!res.ok)throw new Error('stats '+res.status);
+    const d=await res.json();
+    el('s-total').textContent   = d.total    ?? '–';
+    el('s-today').textContent   = d.today    ?? '–';
+    el('s-active').textContent  = d.active   ?? '–';
+    el('s-threads').textContent = d.threads  ?? '–';
+    if(d.pages  &&d.pages.length)  renderBarChart('pages-chart', d.pages);
+    // Extra info row
+    const info=document.getElementById('es-stats-content');
+    if(info)info.innerHTML=`<div class="stat-grid">
+      <div class="stat-card"><div class="big-num">${d.comments??'–'}</div><div class="stat-card-label">COMMENTS</div></div>
+      <div class="stat-card"><div class="big-num">${d.vlogs??'–'}</div><div class="stat-card-label">VLOGS</div></div>
+      <div class="stat-card"><div class="big-num">${d.signatures??'–'}</div><div class="stat-card-label">SIGNATURES</div></div>
+    </div>`;
+  }catch(e){
+    // Fallback: count from Supabase directly
+    try{
+      const tt=await db.from('threads');const{data:thr}=await(await tt).select('id').get();
+      el('s-threads').textContent=thr?thr.length:'–';
+      const st=await db.from('iwashere_signatures');const{data:sigs}=await(await st).select('id').get();
+      el('s-total').textContent=(sigs?sigs.length:0)+' signatures logged';
+      ['s-today','s-active'].forEach(id=>el(id).textContent='–');
+    }catch(e2){
+      ['s-total','s-today','s-active','s-threads'].forEach(id=>el(id).textContent='–');
+    }
+  }
+}
+function renderBarChart(elId,items){const el=document.getElementById(elId);if(!el||!items||!items.length)return;const max=Math.max(...items.map(i=>i.count||0));el.innerHTML=items.slice(0,8).map(i=>`<div class="bar-row"><span class="bar-label">${i.label||i.country||i.page||i.device||'?'}</span><div class="bar-track"><div class="bar-fill" style="width:${max>0?(i.count/max*100):0}%"></div></div><span class="bar-val">${i.count}</span></div>`).join('');}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function escapeHtml(str){if(!str)return'';return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function formatDate(iso){if(!iso)return'';try{return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return iso;}}
+function ytEmbed(url){if(!url)return'';const m=url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);const id=m?m[1]:(url.length===11?url:url);return`https://www.youtube.com/embed/${id}`;}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+/* ============================================================
+   /KAI ADMIN ROUTE BYPASS
+   The backend injects window.__KAI_ADMIN__=true when serving /kai.
+   This skips the book gate entirely and opens the login page.
+   ============================================================ */
+(function() {
+  if (window.__KAI_ADMIN__ !== true) return;
+
+  // Hide gate immediately — no animation needed for Kai
+  const gate = document.getElementById('gate');
+  const site = document.getElementById('site');
+  const key  = document.getElementById('key-wrapper');
+  const hint = document.getElementById('drag-hint');
+
+  if (gate) { gate.style.display = 'none'; }
+  if (key)  { key.style.display  = 'none'; }
+  if (hint) { hint.style.display = 'none'; }
+
+  if (site) {
+    site.style.transition = 'none';
+    site.style.opacity    = '1';
+    site.style.pointerEvents = 'all';
+    site.classList.add('visible');
+  }
+
+  // Run site init then navigate straight to login
+  document.addEventListener('DOMContentLoaded', async () => {
+    await initSite();
+    switchPage('kai');
+    // Style the login page for the /kai admin entry point
+    const loginBox = document.querySelector('.login-box');
+    if (loginBox) {
+      loginBox.style.boxShadow = '0 0 60px rgba(255,215,0,0.4), 0 0 120px rgba(139,0,255,0.3)';
+    }
+    // Add a subtle admin label
+    const sub = document.querySelector('.login-sub');
+    if (sub) sub.textContent = '✦ KAI\'S EDIT PORTAL ✦';
+    // Focus the email input
+    setTimeout(() => {
+      const emailEl = document.getElementById('login-email');
+      if (emailEl) emailEl.focus();
+    }, 400);
+  });
+
+  // If DOMContentLoaded already fired (script runs after DOM ready)
+  if (document.readyState !== 'loading') {
+    initSite().then(() => {
+      switchPage('kai');
+      const sub = document.querySelector('.login-sub');
+      if (sub) sub.textContent = '✦ KAI\'S EDIT PORTAL ✦';
+      setTimeout(() => {
+        const emailEl = document.getElementById('login-email');
+        if (emailEl) emailEl.focus();
+      }, 400);
+    });
+  }
+})();
+</script>
+</body>
+</html>
