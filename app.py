@@ -199,13 +199,21 @@ class LoginPayload(BaseModel):
 
 @app.post("/api/auth/login")
 async def auth_login(payload: LoginPayload):
-    """Direct login endpoint for Kai's Lounge."""
-    if not SUPABASE_URL:
-        raise HTTPException(status_code=503, detail="Supabase not configured")
+    """Login using Render env credentials - no Supabase call."""
     
-    # Use the credentials from environment
-    if payload.email != KAI_EMAIL or payload.password != KAI_PASSWORD:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    # These come from Render's environment variables
+    valid_email = os.getenv("KAI_EMAIL")
+    valid_password = os.getenv("KAI_PASSWORD")
+    
+    # Simple check
+    if payload.email == valid_email and payload.password == valid_password:
+        return {
+            "access_token": "success",
+            "token_type": "bearer",
+            "expires_in": 86400
+        }
+    
+    raise HTTPException(status_code=401, detail="Invalid credentials")
     
     # Authenticate with Supabase to get a token
     async with httpx.AsyncClient(timeout=10) as client:
