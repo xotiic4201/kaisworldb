@@ -1,8 +1,7 @@
 fastapi
 uvicorn[standard]
-supabase
-python-dotenv
-bcrypt
-pydantic
-python-multipart
 httpx
+python-multipart
+python-dotenv
+aiofiles
+supabase
