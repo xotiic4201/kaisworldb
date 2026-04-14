@@ -622,31 +622,21 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; h
     </div>
   </div>
 
-  <!-- ============================================================
-       CUTE KEY — proper key shape SVG, draggable
-       ============================================================ -->
+  <!-- CUTE KEY -->
   <div id="key-wrapper">
     <svg id="key-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Gold gradient for key body -->
         <linearGradient id="keyBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%"   stop-color="#FFE066"/>
           <stop offset="40%"  stop-color="#FFD700"/>
           <stop offset="70%"  stop-color="#FFA800"/>
           <stop offset="100%" stop-color="#CC8800"/>
         </linearGradient>
-        <!-- Pink gem gradient -->
         <radialGradient id="gemGrad" cx="35%" cy="30%" r="60%">
           <stop offset="0%"   stop-color="#FFB6D9"/>
           <stop offset="50%"  stop-color="#FF69B4"/>
           <stop offset="100%" stop-color="#CC0077"/>
         </radialGradient>
-        <!-- Highlight gradient -->
-        <linearGradient id="keyHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stop-color="rgba(255,255,255,0.5)"/>
-          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-        </linearGradient>
-        <!-- Glow filter -->
         <filter id="keyGlow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2.5" result="blur"/>
           <feMerge>
@@ -654,57 +644,30 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; h
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <!-- Shadow -->
-        <filter id="keyShadow">
-          <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.5)"/>
-        </filter>
       </defs>
-
-      <!-- Key shadow layer -->
       <g opacity="0.3" transform="translate(1,3)">
-        <!-- Bow ring -->
         <circle cx="22" cy="28" r="16" fill="#000" stroke="none"/>
         <circle cx="22" cy="28" r="9"  fill="transparent" stroke="#000" stroke-width="7"/>
-        <!-- Blade -->
         <rect x="36" y="25" width="50" height="7" rx="3.5" fill="#000"/>
-        <!-- Teeth -->
         <rect x="52" y="30" width="5" height="6" rx="2" fill="#000"/>
         <rect x="63" y="30" width="5" height="8" rx="2" fill="#000"/>
         <rect x="74" y="30" width="5" height="5" rx="2" fill="#000"/>
       </g>
-
-      <!-- Key body group with glow -->
       <g filter="url(#keyGlow)">
-        <!-- Bow (ring part) - outer circle -->
         <circle cx="22" cy="28" r="16" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1.5"/>
-        <!-- Bow inner hole -->
         <circle cx="22" cy="28" r="9"  fill="transparent" stroke="#CC8800" stroke-width="7"/>
         <circle cx="22" cy="28" r="9"  fill="transparent" stroke="url(#keyBodyGrad)" stroke-width="5.5"/>
-        <!-- Hole highlight -->
         <circle cx="19" cy="25" r="3"  fill="rgba(255,255,200,0.2)"/>
-
-        <!-- Blade (shaft) -->
         <rect x="36" y="25" width="50" height="7" rx="3.5" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
-
-        <!-- Teeth (key bits) -->
         <rect x="51" y="30" width="6"  height="7"  rx="2" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
         <rect x="62" y="30" width="6"  height="9"  rx="2" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
         <rect x="73" y="30" width="6"  height="5.5" rx="2" fill="url(#keyBodyGrad)" stroke="#CC8800" stroke-width="1"/>
-
-        <!-- Blade top highlight -->
         <rect x="38" y="25.5" width="46" height="2.5" rx="1.25" fill="rgba(255,255,200,0.4)"/>
-
-        <!-- Bow top arc highlight -->
         <path d="M10,20 Q22,6 34,20" stroke="rgba(255,255,200,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
       </g>
-
-      <!-- Pink gem in bow center -->
       <circle cx="22" cy="28" r="6" fill="url(#gemGrad)" stroke="rgba(255,255,255,0.6)" stroke-width="0.8"/>
-      <!-- Gem highlight sparkle -->
       <circle cx="19.5" cy="25.5" r="1.8" fill="rgba(255,255,255,0.75)"/>
       <circle cx="24"   cy="23"   r="0.9" fill="rgba(255,255,255,0.5)"/>
-
-      <!-- Tiny star sparkles around key -->
       <g fill="#FFD700" opacity="0.9">
         <path d="M4,10 L5,7 L6,10 L9,11 L6,12 L5,15 L4,12 L1,11 Z" transform="scale(0.6) translate(2,0)"/>
         <path d="M88,8  L89,5 L90,8 L93,9 L90,10 L89,13 L88,10 L85,9  Z" transform="scale(0.5) translate(8,-5)"/>
@@ -713,7 +676,6 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; h
     </svg>
   </div>
 
-  <!-- Drag hint label -->
   <div class="drag-hint" id="drag-hint">✦ drag key to lock ✦</div>
 </div>
 
@@ -1130,95 +1092,37 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; h
 /* ============================================================
    CONFIG — Render backend
    ============================================================ */
-// ── Paste your Supabase project URL and anon key here ──────────────────────────
-// Dashboard → Settings → API
 const SUPABASE_URL  = 'SUPABASE_URL';   // e.g. https://xxxx.supabase.co
-const SUPABASE_ANON = 'SUPABASE_ANON_KEY'; // public anon key (safe to expose)
+const SUPABASE_ANON = 'SUPABASE_ANON_KEY';
 const API_URL = 'https://kaisworldb.onrender.com'
 
-
 /* ============================================================
-   SPRITE SYSTEM
+   AUTO-REFRESH FOR MAIN SITE (LIVE UPDATES)
    ============================================================ */
-const SPRITE_URLS = {
-  cat:  { url: null, fw: 32, fh: 32, frames: 4, row: 0 },
-  bird: { url: null, fw: 32, fh: 32, frames: 3, row: 0 },
-  bat:  { url: null, fw: 16, fh: 16, frames: 4, row: 0 },
-  dog:  { url: null, fw: 64, fh: 64, frames: 4, row: 0 },
-};
-const SPRITE_IMGS = {};
+let mainSiteRefreshInterval = null;
 
-function loadSpriteImage(type) {
-  return new Promise((resolve) => {
-    const cfg = SPRITE_URLS[type];
-    if (!cfg || !cfg.url) { resolve(null); return; }
-    if (SPRITE_IMGS[type]) { resolve(SPRITE_IMGS[type]); return; }
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => { SPRITE_IMGS[type] = img; resolve(img); };
-    img.onerror = () => resolve(null);
-    img.src = cfg.url;
-  });
+function refreshMainSiteData() {
+  // Only refresh if the main site is visible (not in edit view)
+  const activePage = document.querySelector('.page.active')?.id;
+  if (activePage && activePage !== 'page-kai' && activePage !== 'page-edit') {
+    const pageName = activePage.replace('page-', '');
+    console.log(`🔄 Auto-refreshing ${pageName}...`);
+    loadPageData(pageName);
+  }
 }
 
-function drawOpenGameArtFrame(ctx, type, frameIndex, x, y, scale, flipped) {
-  const img = SPRITE_IMGS[type]; const cfg = SPRITE_URLS[type];
-  if (!img || !cfg) return false;
-  const fw = cfg.fw, fh = cfg.fh, sx = (frameIndex % cfg.frames) * fw, sy = (cfg.row || 0) * fh;
-  ctx.save(); ctx.translate(x, y);
-  if (flipped) ctx.scale(-1, 1);
-  ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(img, sx, sy, fw, fh, -fw * scale / 2, -fh * scale / 2, fw * scale, fh * scale);
-  ctx.restore(); return true;
+function startMainSiteAutoRefresh() {
+  if (mainSiteRefreshInterval) clearInterval(mainSiteRefreshInterval);
+  mainSiteRefreshInterval = setInterval(refreshMainSiteData, 12000);
+  console.log('✅ Auto-refresh started (every 12 seconds)');
 }
 
-function saveSpriteUrls() {
-  ['cat','bird','bat','dog'].forEach(type => {
-    const urlEl = document.getElementById(`sprite-${type}-url`), fwEl = document.getElementById(`sprite-${type}-fw`), fhEl = document.getElementById(`sprite-${type}-fh`);
-    if (urlEl && urlEl.value.trim()) {
-      SPRITE_URLS[type].url = urlEl.value.trim();
-      if (fwEl) SPRITE_URLS[type].fw = parseInt(fwEl.value) || SPRITE_URLS[type].fw;
-      if (fhEl) SPRITE_URLS[type].fh = parseInt(fhEl.value) || SPRITE_URLS[type].fh;
-      delete SPRITE_IMGS[type]; loadSpriteImage(type);
-    }
-  });
-  localStorage.setItem('kaicore_sprite_urls', JSON.stringify(SPRITE_URLS));
-  showToast('Sprite URLs saved!');
-}
-
-function loadSpriteUrlsFromStorage() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('kaicore_sprite_urls') || '{}');
-    ['cat','bird','bat','dog'].forEach(type => { if (saved[type] && saved[type].url) { Object.assign(SPRITE_URLS[type], saved[type]); loadSpriteImage(type); } });
-  } catch (e) {}
-}
-
-/* ============================================================
-   BUILT-IN FALLBACK PIXEL ART
-   ============================================================ */
-const BUILTIN_SPRITES = {
-  cat: { name:'Pixel Cat', color:'#FF69B4', sounds:['meow'], frames:[
-    { p:[[0,0,1,1,1,1,0,0],[0,1,0,1,1,0,1,0],[0,1,1,1,1,1,1,0],[0,1,2,1,1,2,1,0],[0,1,1,3,3,1,1,0],[1,1,1,1,1,1,1,1],[0,1,0,1,1,0,1,0],[0,0,1,0,0,1,0,0]], c:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s:4 },
-    { p:[[0,0,1,1,1,1,0,0],[0,1,0,1,1,0,1,0],[0,1,1,1,1,1,1,0],[0,1,2,1,1,2,1,0],[0,1,1,3,3,1,1,0],[1,1,1,1,1,1,1,1],[0,1,1,0,0,1,1,0],[0,0,0,1,1,0,0,0]], c:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s:4 }
-  ]},
-  bird: { name:'Pixel Bird', color:'#FFD700', sounds:['chirp'], frames:[
-    { p:[[0,0,0,1,1,0,0,0],[0,0,1,1,1,1,0,0],[0,1,2,1,1,1,1,0],[1,1,1,1,1,1,1,0],[0,1,1,1,3,0,0,0],[0,0,1,1,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s:4 },
-    { p:[[0,0,0,0,0,0,0,0],[0,0,0,1,1,0,0,0],[0,1,1,1,1,1,1,0],[1,1,2,1,1,1,1,0],[0,1,1,1,3,0,0,0],[0,0,1,1,0,0,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s:4 }
-  ]},
-  bat: { name:'Pixel Bat', color:'#8B00FF', sounds:['chirp'], frames:[
-    { p:[[1,0,0,0,0,0,0,1],[1,1,0,0,0,0,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,3,3,1,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#8B00FF',2:'#ff69b4',3:'#ff6600'}, s:4 },
-    { p:[[0,1,0,0,0,0,1,0],[1,1,1,0,0,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,3,3,1,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#8B00FF',2:'#ff69b4',3:'#ff6600'}, s:4 }
-  ]},
-  dog: { name:'German Shepherd', color:'#D2691E', sounds:['meow'], frames:[
-    { p:[[0,0,1,1,0,0,0,0],[0,0,1,1,1,0,0,0],[0,1,2,2,1,1,0,0],[1,1,2,2,2,1,1,0],[0,1,1,1,1,1,1,1],[0,1,0,1,1,0,1,0],[0,1,0,0,0,0,1,0],[0,0,0,0,0,0,0,0]], c:{1:'#D2691E',2:'#8B4513',3:'#111'}, s:4 },
-    { p:[[0,0,1,1,0,0,0,0],[0,0,1,1,1,0,0,0],[0,1,2,2,1,1,0,0],[1,1,2,2,2,1,1,0],[0,1,1,1,1,1,1,0],[0,1,1,0,0,1,1,0],[0,0,1,0,0,1,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#D2691E',2:'#8B4513',3:'#111'}, s:4 }
-  ]}
-};
-
-function drawBuiltinSprite(ctx, type, frame, ox, oy) {
-  const spr = BUILTIN_SPRITES[type]; if (!spr) return;
-  const f = spr.frames[frame % spr.frames.length];
-  f.p.forEach((row, ry) => row.forEach((v, cx) => { if (v && f.c[v]) { ctx.fillStyle = f.c[v]; ctx.fillRect(ox + cx * f.s, oy + ry * f.s, f.s, f.s); } }));
+function stopMainSiteAutoRefresh() {
+  if (mainSiteRefreshInterval) {
+    clearInterval(mainSiteRefreshInterval);
+    mainSiteRefreshInterval = null;
+    console.log('⏹️ Auto-refresh stopped');
+  }
 }
 
 /* ============================================================
@@ -1263,8 +1167,6 @@ function playSound(type){
     else if(type==='key-drag'){const o=ctx.createOscillator();o.type='sawtooth';o.frequency.value=220;o.connect(g);g.gain.setValueAtTime(0.04,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.08);o.start();o.stop(ctx.currentTime+0.08);}
     else if(type==='book-open'){const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(80,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(40,ctx.currentTime+0.8);o.connect(g);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.8);o.start();o.stop(ctx.currentTime+0.8);}
     else if(type==='unlock'){[440,550,660].forEach((f,i)=>{const o=ctx.createOscillator();o.frequency.value=f;const g2=ctx.createGain();g2.gain.setValueAtTime(0.2,ctx.currentTime+i*0.08);g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.08+0.15);o.connect(g2);g2.connect(ctx.destination);o.start(ctx.currentTime+i*0.08);o.stop(ctx.currentTime+i*0.08+0.15);});}
-    else if(type==='meow'){const o=ctx.createOscillator();o.type='sine';o.frequency.setValueAtTime(600,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+0.3);o.connect(g);g.gain.setValueAtTime(0.2,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);o.start();o.stop(ctx.currentTime+0.3);}
-    else if(type==='chirp'){[800,1000].forEach((f,i)=>{const o=ctx.createOscillator();o.frequency.value=f;const g2=ctx.createGain();g2.gain.setValueAtTime(0.15,ctx.currentTime+i*0.12);g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.1);o.connect(g2);g2.connect(ctx.destination);o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+i*0.12+0.1);});}
   }catch(e){}
 }
 
@@ -1297,43 +1199,33 @@ animateParticles();
 })();
 
 /* ============================================================
-   KEY DRAG SYSTEM — complete rewrite, reliable
+   KEY DRAG SYSTEM
    ============================================================ */
 (function() {
   const keyEl    = document.getElementById('key-wrapper');
-  const keySvg   = document.getElementById('key-svg');
   const lockEl   = document.getElementById('lock-container');
   const hintEl   = document.getElementById('drag-hint');
   const gateEl   = document.getElementById('gate');
   const siteEl   = document.getElementById('site');
   const bookCover= document.getElementById('book-cover');
 
-  // ── Position key to the right of the book ──────────────────────
-  // Use a small delay to let layout settle, then place with px
   function positionKey() {
     const vw = window.innerWidth, vh = window.innerHeight;
-    // Place key: 62% from left, 62% from top (right of book)
     keyEl.style.left = Math.round(vw * 0.62) + 'px';
     keyEl.style.top  = Math.round(vh * 0.62) + 'px';
-
     if (hintEl) {
       hintEl.style.left = Math.round(vw * 0.62 - 20) + 'px';
       hintEl.style.top  = Math.round(vh * 0.62 + 96) + 'px';
     }
   }
-  // Run immediately and after fonts/layout
   positionKey();
   window.addEventListener('resize', positionKey);
   setTimeout(positionKey, 200);
 
-  // ── Drag state ──────────────────────────────────────────────────
-  let dragging  = false;
-  let ox = 0, oy = 0; // cursor offset from element top-left
+  let dragging = false, ox = 0, oy = 0;
 
   function getXY(e) {
-    if (e.touches && e.touches.length > 0) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
+    if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
     return { x: e.clientX, y: e.clientY };
   }
 
@@ -1344,16 +1236,13 @@ animateParticles();
     const rect = keyEl.getBoundingClientRect();
     ox = x - rect.left;
     oy = y - rect.top;
-
     keyEl.classList.add('is-dragging');
     if (hintEl) hintEl.style.display = 'none';
     playSound('key-drag');
-
-    document.addEventListener('mousemove',  onPointerMove, { passive: false });
-    document.addEventListener('touchmove',  onPointerMove, { passive: false });
-    document.addEventListener('mouseup',    onPointerUp);
-    document.addEventListener('touchend',   onPointerUp);
-    document.addEventListener('touchcancel',onPointerUp);
+    document.addEventListener('mousemove', onPointerMove, { passive: false });
+    document.addEventListener('touchmove', onPointerMove, { passive: false });
+    document.addEventListener('mouseup', onPointerUp);
+    document.addEventListener('touchend', onPointerUp);
   }
 
   function onPointerMove(e) {
@@ -1362,20 +1251,12 @@ animateParticles();
     const { x, y } = getXY(e);
     keyEl.style.left = (x - ox) + 'px';
     keyEl.style.top  = (y - oy) + 'px';
-
-    // Check proximity to lock
     if (lockEl) {
       const lr = lockEl.getBoundingClientRect();
       const kr = keyEl.getBoundingClientRect();
-      const dist = Math.hypot(
-        (kr.left + kr.width/2)  - (lr.left + lr.width/2),
-        (kr.top  + kr.height/2) - (lr.top  + lr.height/2)
-      );
-      if (dist < 110) {
-        lockEl.classList.add('glowing', 'lock-glow-active');
-      } else {
-        lockEl.classList.remove('glowing', 'lock-glow-active');
-      }
+      const dist = Math.hypot((kr.left+kr.width/2)-(lr.left+lr.width/2), (kr.top+kr.height/2)-(lr.top+lr.height/2));
+      if (dist < 110) lockEl.classList.add('glowing', 'lock-glow-active');
+      else lockEl.classList.remove('glowing', 'lock-glow-active');
     }
   }
 
@@ -1384,28 +1265,16 @@ animateParticles();
     dragging = false;
     keyEl.classList.remove('is-dragging');
     if (lockEl) lockEl.classList.remove('lock-glow-active');
-
-    document.removeEventListener('mousemove',  onPointerMove);
-    document.removeEventListener('touchmove',  onPointerMove);
-    document.removeEventListener('mouseup',    onPointerUp);
-    document.removeEventListener('touchend',   onPointerUp);
-    document.removeEventListener('touchcancel',onPointerUp);
-
-    // Check if dropped on lock
+    document.removeEventListener('mousemove', onPointerMove);
+    document.removeEventListener('touchmove', onPointerMove);
+    document.removeEventListener('mouseup', onPointerUp);
+    document.removeEventListener('touchend', onPointerUp);
     if (lockEl) {
       const lr = lockEl.getBoundingClientRect();
       const kr = keyEl.getBoundingClientRect();
-      const dist = Math.hypot(
-        (kr.left + kr.width/2)  - (lr.left + lr.width/2),
-        (kr.top  + kr.height/2) - (lr.top  + lr.height/2)
-      );
-      if (dist < 110) {
-        doUnlock();
-        return;
-      }
+      const dist = Math.hypot((kr.left+kr.width/2)-(lr.left+lr.width/2), (kr.top+kr.height/2)-(lr.top+lr.height/2));
+      if (dist < 110) { doUnlock(); return; }
     }
-
-    // Snap back with CSS transition
     keyEl.style.transition = 'left 0.5s cubic-bezier(0.34,1.56,0.64,1), top 0.5s cubic-bezier(0.34,1.56,0.64,1)';
     positionKey();
     setTimeout(() => { keyEl.style.transition = ''; if (hintEl) hintEl.style.display = ''; }, 520);
@@ -1415,31 +1284,19 @@ animateParticles();
     playSound('unlock');
     if (lockEl) lockEl.classList.add('shaking', 'glowing');
     if (gateEl) gateEl.classList.add('unlocking');
-
     setTimeout(() => {
-      if (lockEl) {
-        const lr = lockEl.getBoundingClientRect();
-        spawnExplosion(lr.left + lr.width/2, lr.top + lr.height/2, 120);
-        lockEl.style.display = 'none';
-      }
+      if (lockEl) { const lr = lockEl.getBoundingClientRect(); spawnExplosion(lr.left+lr.width/2, lr.top+lr.height/2, 120); lockEl.style.display = 'none'; }
       keyEl.style.display = 'none';
       if (hintEl) hintEl.style.display = 'none';
     }, 350);
-
-    setTimeout(() => {
-      playSound('book-open');
-      if (bookCover) bookCover.classList.add('open');
-    }, 700);
-
+    setTimeout(() => { playSound('book-open'); if (bookCover) bookCover.classList.add('open'); }, 700);
     setTimeout(() => {
       if (gateEl) gateEl.classList.add('hidden');
       if (siteEl) siteEl.classList.add('visible');
       if (typeof initSite === 'function') initSite();
     }, 2200);
   }
-
-  // Attach listeners
-  keyEl.addEventListener('mousedown',  onPointerDown);
+  keyEl.addEventListener('mousedown', onPointerDown);
   keyEl.addEventListener('touchstart', onPointerDown, { passive: false });
 })();
 
@@ -1485,25 +1342,24 @@ let appState={isKai:false,kaiSettings:{},threads:[],vlogs:[],liveStatus:{is_live
 function getOrCreateVid(){let id=localStorage.getItem('kaicore_vid');if(!id){id='v_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('kaicore_vid',id);}return id;}
 async function trackVisit(page='home'){
   appState.visitorId=getOrCreateVid();
-  // Track visit in Supabase visitors table (create if not exists via Supabase dashboard)
-  // Table: visitors (id uuid, visitor_id text, page text, referrer text, ua text, created_at timestamptz)
   try{
     const t=await db.from('visitors');
     await(await t).insert({visitor_id:appState.visitorId,page,referrer:document.referrer||null,ua:navigator.userAgent||null});
-    // Bump visitor count in stats
     const stored=parseInt(localStorage.getItem('kaicore_stat_visitors')||'0');
     const isNew=!localStorage.getItem('kaicore_vid_seen');
     if(isNew){localStorage.setItem('kaicore_vid_seen','1');localStorage.setItem('kaicore_stat_visitors',stored+1);}
-  }catch(e){/* Supabase not configured yet — tracking skipped */}
+  }catch(e){}
 }
 
 /* ============================================================
    INIT SITE
    ============================================================ */
 async function initSite(){
-  createClouds();loadSpriteUrlsFromStorage();
+  createClouds();
   await loadKaiSettings();loadPageData('home');initPetCanvas();startLivePolling();await trackVisit();
   const saved=sessionStorage.getItem('kai_token');if(saved){db.authToken=saved;appState.isKai=true;showAdminControls();}
+  // Start auto-refresh for main site updates!
+  startMainSiteAutoRefresh();
 }
 
 /* ============================================================
@@ -1671,6 +1527,17 @@ function resizePetCanvas(){petCanvas.width=window.innerWidth;petCanvas.height=wi
 resizePetCanvas();window.addEventListener('resize',resizePetCanvas);
 document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
 const PET_TYPES=['cat','bird','bat','dog'];
+const BUILTIN_SPRITES = {
+  cat: { name:'Pixel Cat', color:'#FF69B4', sounds:['meow'], frames:[{p:[[0,0,1,1,1,1,0,0],[0,1,0,1,1,0,1,0],[0,1,1,1,1,1,1,0],[0,1,2,1,1,2,1,0],[0,1,1,3,3,1,1,0],[1,1,1,1,1,1,1,1],[0,1,0,1,1,0,1,0],[0,0,1,0,0,1,0,0]], c:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s:4 }]},
+  bird: { name:'Pixel Bird', color:'#FFD700', sounds:['chirp'], frames:[{p:[[0,0,0,1,1,0,0,0],[0,0,1,1,1,1,0,0],[0,1,2,1,1,1,1,0],[1,1,1,1,1,1,1,0],[0,1,1,1,3,0,0,0],[0,0,1,1,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s:4 }]},
+  bat: { name:'Pixel Bat', color:'#8B00FF', sounds:['chirp'], frames:[{p:[[1,0,0,0,0,0,0,1],[1,1,0,0,0,0,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,2,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,3,3,1,0,0],[0,0,0,1,1,0,0,0],[0,0,0,0,0,0,0,0]], c:{1:'#8B00FF',2:'#ff69b4',3:'#ff6600'}, s:4 }]},
+  dog: { name:'German Shepherd', color:'#D2691E', sounds:['meow'], frames:[{p:[[0,0,1,1,0,0,0,0],[0,0,1,1,1,0,0,0],[0,1,2,2,1,1,0,0],[1,1,2,2,2,1,1,0],[0,1,1,1,1,1,1,1],[0,1,0,1,1,0,1,0],[0,1,0,0,0,0,1,0],[0,0,0,0,0,0,0,0]], c:{1:'#D2691E',2:'#8B4513',3:'#111'}, s:4 }]}
+};
+function drawBuiltinSprite(ctx, type, frame, ox, oy) {
+  const spr = BUILTIN_SPRITES[type]; if (!spr) return;
+  const f = spr.frames[frame % spr.frames.length];
+  f.p.forEach((row, ry) => row.forEach((v, cx) => { if (v && f.c[v]) { ctx.fillStyle = f.c[v]; ctx.fillRect(ox + cx * f.s, oy + ry * f.s, f.s, f.s); } }));
+}
 
 class PixelPet{
   constructor(type,x,y,personality){
@@ -1695,20 +1562,15 @@ class PixelPet{
   draw(ctx){
     if(!appState.petsEnabled)return;
     const s=this.scale;ctx.save();ctx.translate(this.x,this.y);if(this.direction<0)ctx.scale(-1,1);
-    const drawn=drawOpenGameArtFrame(ctx,this.type,this.frame,0,0,s*2,false);
-    if(!drawn){if(this.isCustom&&this.customPixels)drawCustomPixels(ctx,this.customPixels,-16,-16,2);else drawBuiltinSprite(ctx,this.type,this.frame,-16,-16);}
+    drawBuiltinSprite(ctx,this.type,this.frame,-16,-16);
     ctx.restore();
     const color=(BUILTIN_SPRITES[this.type]||{color:'#ff69b4'}).color;
     ctx.save();ctx.globalAlpha=0.12;ctx.fillStyle=color;ctx.beginPath();ctx.arc(this.x,this.y+12,20*s,0,Math.PI*2);ctx.fill();ctx.restore();
   }
 }
-function drawCustomPixels(ctx,pxData,ox,oy,scale){if(!pxData||!pxData.length)return;pxData.forEach((row,ry)=>row.forEach((color,cx)=>{if(color){ctx.fillStyle=color;ctx.fillRect(ox+cx*scale,oy+ry*scale,scale,scale);}}));}
 function spawnPet(){const type=PET_TYPES[Math.floor(Math.random()*PET_TYPES.length)];const personalities=['sleepy','playful','chaotic'];const p=new PixelPet(type,Math.random()*window.innerWidth,100+Math.random()*(window.innerHeight-200),personalities[Math.floor(Math.random()*3)]);pets.push(p);if(pets.length>appState.maxPets)pets.shift();}
-function initPetCanvas(){for(let i=0;i<3;i++)setTimeout(spawnPet,i*800);setInterval(()=>{if(pets.length<appState.maxPets&&appState.petsEnabled)spawnPet();},30000);loadCustomPets();animatePets();}
-async function loadCustomPets(){try{const t=await db.from('custom_pets');const{data}=await(await t).eq('is_active','true').get();if(data)data.forEach(p=>{const pet=new PixelPet('custom',Math.random()*window.innerWidth,200+Math.random()*300,p.personality||'sleepy');pet.isCustom=true;pet.customPixels=p.pixel_data;pet.name=p.name||'Custom Pet';pets.push(pet);});}catch(e){}}
+function initPetCanvas(){for(let i=0;i<3;i++)setTimeout(spawnPet,i*800);setInterval(()=>{if(pets.length<appState.maxPets&&appState.petsEnabled)spawnPet();},30000);animatePets();}
 function animatePets(){petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);pets.forEach(p=>{p.update();p.draw(petCtx);});requestAnimationFrame(animatePets);}
-petCanvas.addEventListener('mousemove',e=>{const tooltip=document.getElementById('pet-tooltip');let found=false;pets.forEach(p=>{if(Math.hypot(e.clientX-p.x,e.clientY-p.y)<24){tooltip.textContent=p.name;tooltip.style.left=(e.clientX+12)+'px';tooltip.style.top=(e.clientY-20)+'px';tooltip.style.opacity='1';found=true;}});if(!found)tooltip.style.opacity='0';});
-petCanvas.addEventListener('click',e=>{pets.forEach(p=>{if(Math.hypot(e.clientX-p.x,e.clientY-p.y)<30){playSound((BUILTIN_SPRITES[p.type]||{sounds:['meow']}).sounds[0]);spawnExplosion(p.x,p.y,20);p.personality='playful';}});});
 
 /* PETSCAPE PAGE */
 function initPetscape(){
@@ -1720,45 +1582,6 @@ function initPetscape(){
   window._scenePets=scenePets;window.petscapeSpawn=(type)=>{scenePets.push(new PixelPet(type,50+Math.random()*(canvas.width-100),100+Math.random()*300,'playful'));};
   (function loop(){ctx.fillStyle='#0a0015';ctx.fillRect(0,0,canvas.width,canvas.height);for(let i=0;i<50;i++){ctx.fillStyle=`rgba(255,255,255,${0.3+Math.random()*0.4})`;ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);}scenePets.forEach(p=>{p.update();p.draw(ctx);});requestAnimationFrame(loop);})();
 }
-
-/* ============================================================
-   PET CREATOR
-   ============================================================ */
-let creatorPixels=Array.from({length:32},()=>Array(32).fill(null)),currentTool='draw',currentColor='#FF69B4',isDrawing=false;
-const PALETTE_COLORS=['#FF69B4','#FFB6C1','#8B00FF','#DDA0DD','#FFD700','#8B0000','#4A0000','#000000','#ffffff','#ff6600','#00ff88','#0088ff','#ff0044','#88ff00','#ff88ff','#00ffff','#663399','#993366','#336699','#669933','#996633','#336666','#663366','#336633','rgba(0,0,0,0)','#aaaaaa','#555555','#222222','#ff2200','#002288','#008822','#880022'];
-function initCreatorPalette(){const el=document.getElementById('creator-palette');if(!el)return;el.innerHTML=PALETTE_COLORS.map(c=>`<div class="palette-color${c===currentColor?' selected':''}" style="background:${c};${c==='rgba(0,0,0,0)'?'border:2px dashed #666;':''}" onclick="selectColor('${c}',this)"></div>`).join('');}
-function selectColor(color,el){currentColor=color;document.querySelectorAll('.palette-color').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');}
-function setTool(tool){currentTool=tool;document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.tool-btn[onclick="setTool('${tool}')"]`)?.classList.add('active');}
-function fillCanvas(){for(let r=0;r<32;r++)for(let c=0;c<32;c++)creatorPixels[r][c]=currentColor;renderCreatorCanvas();}
-function clearCanvas(){creatorPixels=Array.from({length:32},()=>Array(32).fill(null));renderCreatorCanvas();}
-function renderCreatorCanvas(){
-  const canvas=document.getElementById('pixel-canvas');if(!canvas)return;
-  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,320,320);
-  for(let r=0;r<32;r++)for(let c=0;c<32;c++){const cx=c*10,cy=r*10;ctx.fillStyle=(r+c)%2===0?'#1a0020':'#200030';ctx.fillRect(cx,cy,10,10);if(creatorPixels[r][c]){ctx.fillStyle=creatorPixels[r][c];ctx.fillRect(cx,cy,10,10);}}
-  ctx.strokeStyle='rgba(255,105,180,0.1)';ctx.lineWidth=0.5;for(let i=0;i<=32;i++){ctx.beginPath();ctx.moveTo(i*10,0);ctx.lineTo(i*10,320);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*10);ctx.lineTo(320,i*10);ctx.stroke();}
-  renderPreview();
-}
-function renderPreview(){const p=document.getElementById('preview-canvas');if(!p)return;const ctx=p.getContext('2d');ctx.clearRect(0,0,256,256);creatorPixels.forEach((row,r)=>row.forEach((color,c)=>{if(color){ctx.fillStyle=color;ctx.fillRect(c*8,r*8,8,8);}}));}
-function initPixelCanvas(){
-  const canvas=document.getElementById('pixel-canvas');if(!canvas)return;
-  initCreatorPalette();renderCreatorCanvas();
-  function getCell(e){const rect=canvas.getBoundingClientRect(),ev=e.touches?e.touches[0]:e;return[Math.min(31,Math.max(0,Math.floor((ev.clientY-rect.top)/10))),Math.min(31,Math.max(0,Math.floor((ev.clientX-rect.left)/10)))];}
-  function paint(e){const[r,c]=getCell(e);if(currentTool==='draw')creatorPixels[r][c]=currentColor;else if(currentTool==='erase')creatorPixels[r][c]=null;renderCreatorCanvas();}
-  canvas.addEventListener('mousedown',e=>{isDrawing=true;paint(e);});canvas.addEventListener('mousemove',e=>{if(isDrawing)paint(e);});canvas.addEventListener('mouseup',()=>isDrawing=false);canvas.addEventListener('mouseleave',()=>isDrawing=false);
-  canvas.addEventListener('touchstart',e=>{e.preventDefault();isDrawing=true;paint(e);},{passive:false});canvas.addEventListener('touchmove',e=>{e.preventDefault();if(isDrawing)paint(e);},{passive:false});canvas.addEventListener('touchend',()=>isDrawing=false);
-}
-document.querySelector('[data-etab="pets"]').addEventListener('click',()=>setTimeout(initPixelCanvas,100));
-async function savePet(){
-  const name=document.getElementById('pet-name-input').value.trim()||'My Pet',behavior=document.getElementById('pet-behavior').value;
-  try{const t=await db.from('custom_pets');await(await t).insert({name,pixel_data:creatorPixels,personality:behavior,is_active:true});clearCanvas();loadSavedPets();showToast('Pet saved!');}catch(e){showToast('Error saving pet');}
-}
-async function loadSavedPets(){
-  const el=document.getElementById('saved-pets-list');if(!el)return;
-  try{const t=await db.from('custom_pets');const{data}=await(await t).order('created_at',{ascending:false}).get();
-  el.innerHTML=(data||[]).map(p=>`<div class="bubble-card" style="margin-bottom:12px;padding:14px;display:flex;align-items:center;gap:12px;"><canvas width="64" height="64" style="border:1px solid rgba(255,105,180,0.3);border-radius:8px;image-rendering:pixelated;background:#0a0015;" data-pixels="${encodeURIComponent(JSON.stringify(p.pixel_data||[]))}"></canvas><div style="flex:1;"><div style="font-family:'Cinzel Decorative',serif;font-size:13px;color:var(--yellow);">${escapeHtml(p.name||'Pet')}</div><div style="font-size:11px;color:var(--lavender);">${p.personality||''}</div></div><button class="vote-btn" style="color:#ff6060;" onclick="deleteCustomPet('${p.id}')">DEL</button></div>`).join('')||'<div style="font-size:12px;color:var(--lavender);">No custom pets yet</div>';
-  el.querySelectorAll('canvas').forEach(c=>{try{const pixels=JSON.parse(decodeURIComponent(c.dataset.pixels||'[]'));const ctx=c.getContext('2d');drawCustomPixels(ctx,pixels,0,0,2);}catch(e){}});}catch(e){}
-}
-async function deleteCustomPet(id){try{const t=await db.from('custom_pets');await(await t).eq('id',id).delete();loadSavedPets();}catch(e){}}
 
 /* ============================================================
    KAI LOGIN
@@ -1774,128 +1597,32 @@ function showAdminControls(){document.getElementById('admin-nav-btn').style.disp
 /* ============================================================
    EDIT VIEW
    ============================================================ */
-function openEditView(){if(!appState.isKai){switchPage('kai');return;}document.getElementById('edit-view').classList.add('open');initEditView();}
-function closeEditView(){document.getElementById('edit-view').classList.remove('open');}
+function openEditView(){if(!appState.isKai){switchPage('kai');return;}document.getElementById('edit-view').classList.add('open');stopMainSiteAutoRefresh();initEditView();}
+function closeEditView(){document.getElementById('edit-view').classList.remove('open');startMainSiteAutoRefresh();}
 document.querySelectorAll('.edit-tab').forEach(tab=>tab.addEventListener('click',()=>{
   document.querySelectorAll('.edit-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.edit-panel').forEach(p=>p.classList.remove('active'));
   tab.classList.add('active');const panel=document.getElementById('etab-'+tab.dataset.etab);if(panel)panel.classList.add('active');loadEditTabData(tab.dataset.etab);
 }));
-function initEditView(){
-  loadEditTabData('threads');
-  const s=appState.kaiSettings;
-  if(s){setValue('ep-pic',s.profile_pic_url);setValue('ep-cover',s.cover_image_url);setValue('ep-mood',s.mood_emoji);setValue('ep-location',s.location);setValue('ep-zodiac',s.zodiac);setValue('ep-bio',s.bio);setValue('el-instagram',s.social_instagram);setValue('el-tiktok',s.social_tiktok);setValue('el-spotify',s.social_spotify);if(s.kai_online_status)document.getElementById('ep-online').checked=true;}
-  const fe=document.getElementById('facts-editor');fe.innerHTML=Array.from({length:8},(_,i)=>`<div class="form-group"><label class="form-label">Fact ${i+1}</label><input class="form-input" id="ef-fact-${i+1}" placeholder="Fun fact..."></div>`).join('');
-  (appState.funFacts||[]).forEach(f=>{const el=document.getElementById(`ef-fact-${f.slot_number}`);if(el)el.value=f.fact_text||'';});
-  const live=appState.liveStatus;if(live){document.getElementById('el-live-status').checked=live.is_live||false;setValue('el-stream-url',live.stream_url);setValue('el-offline-img',live.offline_image_url);}
-  document.getElementById('ej-date').value=new Date().toISOString().split('T')[0];
-  ['cat','bird','bat','dog'].forEach(type=>{const el=document.getElementById(`sprite-${type}-url`);if(el&&SPRITE_URLS[type].url)el.value=SPRITE_URLS[type].url;});
-  document.getElementById('ep-pet-max').value=appState.maxPets;document.getElementById('ep-pet-max-val').textContent=appState.maxPets;
-}
-function setValue(id,val){const el=document.getElementById(id);if(el&&val)el.value=val;}
-async function loadEditTabData(tab){
-  if(tab==='threads')loadAdminThreads();else if(tab==='vlog'){loadVlogs();loadAdminVlogs();}else if(tab==='journal')loadAdminJournal();else if(tab==='signatures')loadAdminSignatures();else if(tab==='stats')loadStats();else if(tab==='pets')loadSavedPets();
-}
-async function loadAdminThreads(){
-  const el=document.getElementById('et-threads-list');
-  try{const t=await db.from('threads');const{data}=await(await t).order('created_at',{ascending:false}).get();
-  el.innerHTML=(data||[]).map(t=>`<div class="bubble-card" style="margin-bottom:12px;padding:16px;"><div style="font-size:12px;color:var(--lavender);margin-bottom:6px;">${formatDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;margin-bottom:10px;">${(t.content||'').substr(0,150)}…</div><div style="display:flex;gap:8px;"><button class="tool-btn" onclick="toggleHideThread('${t.id}',${t.is_hidden})">${t.is_hidden?'UNHIDE':'HIDE'}</button><button class="tool-btn" style="border-color:rgba(255,0,0,0.5);color:#ff9090;" onclick="deleteThread('${t.id}');loadAdminThreads()">DELETE</button></div></div>`).join('')||'<div class="empty-state">No threads</div>';}
-  catch(e){el.innerHTML='<div class="empty-state">Configure Supabase</div>';}
-}
-async function toggleHideThread(id,hidden){try{const t=await db.from('threads');await(await t).eq('id',id).update({is_hidden:!hidden});loadAdminThreads();loadThreads();}catch(e){}}
-async function loadAdminVlogs(){
-  const el=document.getElementById('ev-vlog-list');
-  try{const t=await db.from('vlogs');const{data}=await(await t).order('created_at',{ascending:false}).get();
-  el.innerHTML=(data||[]).map(v=>`<div class="bubble-card" style="margin-bottom:12px;padding:16px;"><div style="font-size:14px;color:var(--yellow);">${escapeHtml(v.title||'')}</div><button class="tool-btn" style="border-color:rgba(255,0,0,0.5);color:#ff9090;margin-top:8px;" onclick="deleteVlog('${v.id}');loadAdminVlogs()">DELETE</button></div>`).join('')||'<div class="empty-state">No vlogs</div>';}
-  catch(e){}
-}
-async function loadAdminJournal(){
-  const el=document.getElementById('ej-entries-list');
-  try{const t=await db.from('journal_entries');const{data}=await(await t).order('created_at',{ascending:false}).get();
-  el.innerHTML=(data||[]).map(e=>`<div class="journal-entry-card" style="margin-bottom:12px;"><div class="journal-date">${e.date}</div><div class="journal-mood">${e.mood||''}</div><div class="journal-title">${escapeHtml(e.title||'')}</div><div class="journal-content">${escapeHtml((e.content||'').substr(0,200))}…</div><button class="vote-btn" style="color:#ff6060;margin-top:10px;" onclick="deleteJournalEntry('${e.id}')">DELETE</button></div>`).join('')||'<div class="empty-state">No journal entries</div>';}
-  catch(e){}
-}
-async function loadAdminSignatures(){
-  const el=document.getElementById('es-sigs-list');
-  try{const t=await db.from('iwashere_signatures');const{data}=await(await t).order('created_at',{ascending:false}).get();
-  el.innerHTML=(data||[]).map(s=>`<div class="signature-bubble" style="margin-bottom:12px;"><div class="sig-name">${escapeHtml(s.name||'')}</div><div class="sig-message">${escapeHtml(s.message||'')}</div><div class="sig-date">${formatDate(s.created_at)}</div><button class="vote-btn" style="color:#ff6060;margin-top:8px;" onclick="deleteSignature('${s.id}');loadAdminSignatures()">DELETE</button></div>`).join('')||'<div class="empty-state">No signatures</div>';}
-  catch(e){}
-}
-async function createThread(){
-  const content=document.getElementById('et-content').value.trim(),image_url=document.getElementById('et-image').value.trim(),video_url=document.getElementById('et-video').value.trim();
-  if(!content){showToast('Write something!');return;}
-  try{const t=await db.from('threads');await(await t).insert({content,image_url:image_url||null,video_url:video_url||null});document.getElementById('et-content').value='';document.getElementById('et-image').value='';document.getElementById('et-video').value='';loadAdminThreads();loadThreads();showToast('Thread posted!');}
-  catch(e){showToast('Error posting thread');}
-}
-async function addVlog(){
-  const title=document.getElementById('ev-title').value.trim(),video_url=document.getElementById('ev-url').value.trim(),description=document.getElementById('ev-desc').value.trim();
-  if(!title||!video_url){showToast('Fill in title and URL!');return;}
-  try{const t=await db.from('vlogs');await(await t).insert({title,video_url,description});document.getElementById('ev-title').value='';document.getElementById('ev-url').value='';document.getElementById('ev-desc').value='';loadAdminVlogs();loadVlogs();showToast('Vlog added!');}
-  catch(e){showToast('Error');}
-}
-async function saveProfile(){
-  const settings={profile_pic_url:document.getElementById('ep-pic').value.trim()||null,cover_image_url:document.getElementById('ep-cover').value.trim()||null,mood_emoji:document.getElementById('ep-mood').value.trim()||null,location:document.getElementById('ep-location').value.trim()||null,zodiac:document.getElementById('ep-zodiac').value.trim()||null,bio:document.getElementById('ep-bio').value.trim()||null,kai_online_status:document.getElementById('ep-online').checked,social_instagram:document.getElementById('el-instagram').value.trim()||null,social_tiktok:document.getElementById('el-tiktok').value.trim()||null,social_spotify:document.getElementById('el-spotify').value.trim()||null};
-  try{const t=await db.from('kai_settings');const existing=appState.kaiSettings;if(existing&&existing.id){await(await t).eq('id',existing.id).update(settings);}else{await(await t).insert(settings);}appState.kaiSettings={...appState.kaiSettings,...settings};applyKaiSettings(appState.kaiSettings);showToast('Profile saved!');}
-  catch(e){showToast('Error saving profile');}
-}
+function initEditView(){loadEditTabData('threads');}
+function loadEditTabData(tab){if(tab==='threads')loadAdminThreads();else if(tab==='vlog')loadAdminVlogs();}
+async function loadAdminThreads(){const el=document.getElementById('et-threads-list');try{const t=await db.from('threads');const{data}=await(await t).order('created_at',{ascending:false}).get();el.innerHTML=(data||[]).map(t=>`<div class="bubble-card" style="margin-bottom:12px;padding:16px;"><div style="font-size:12px;color:var(--lavender);margin-bottom:6px;">${formatDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;margin-bottom:10px;">${(t.content||'').substr(0,150)}…</div><button class="tool-btn" style="border-color:rgba(255,0,0,0.5);color:#ff9090;" onclick="deleteThread('${t.id}');loadAdminThreads()">DELETE</button></div>`).join('')||'<div class="empty-state">No threads</div>';}catch(e){}}
+async function loadAdminVlogs(){const el=document.getElementById('ev-vlog-list');try{const t=await db.from('vlogs');const{data}=await(await t).order('created_at',{ascending:false}).get();el.innerHTML=(data||[]).map(v=>`<div class="bubble-card" style="margin-bottom:12px;padding:16px;"><div style="font-size:14px;color:var(--yellow);">${escapeHtml(v.title||'')}</div><button class="tool-btn" style="border-color:rgba(255,0,0,0.5);color:#ff9090;margin-top:8px;" onclick="deleteVlog('${v.id}');loadAdminVlogs()">DELETE</button></div>`).join('')||'<div class="empty-state">No vlogs</div>';}catch(e){}}
+async function createThread(){const content=document.getElementById('et-content').value.trim(),image_url=document.getElementById('et-image').value.trim(),video_url=document.getElementById('et-video').value.trim();if(!content){showToast('Write something!');return;}try{const t=await db.from('threads');await(await t).insert({content,image_url:image_url||null,video_url:video_url||null});document.getElementById('et-content').value='';document.getElementById('et-image').value='';document.getElementById('et-video').value='';loadAdminThreads();loadThreads();showToast('Thread posted!');}catch(e){showToast('Error posting thread');}}
+async function addVlog(){const title=document.getElementById('ev-title').value.trim(),video_url=document.getElementById('ev-url').value.trim(),description=document.getElementById('ev-desc').value.trim();if(!title||!video_url){showToast('Fill in title and URL!');return;}try{const t=await db.from('vlogs');await(await t).insert({title,video_url,description});document.getElementById('ev-title').value='';document.getElementById('ev-url').value='';document.getElementById('ev-desc').value='';loadAdminVlogs();loadVlogs();showToast('Vlog added!');}catch(e){showToast('Error');}}
+async function saveProfile(){const settings={profile_pic_url:document.getElementById('ep-pic').value.trim()||null,mood_emoji:document.getElementById('ep-mood').value.trim()||null,location:document.getElementById('ep-location').value.trim()||null,zodiac:document.getElementById('ep-zodiac').value.trim()||null,bio:document.getElementById('ep-bio').value.trim()||null,kai_online_status:document.getElementById('ep-online').checked,social_instagram:document.getElementById('el-instagram').value.trim()||null,social_tiktok:document.getElementById('el-tiktok').value.trim()||null,social_spotify:document.getElementById('el-spotify').value.trim()||null};try{const t=await db.from('kai_settings');const existing=appState.kaiSettings;if(existing&&existing.id){await(await t).eq('id',existing.id).update(settings);}else{await(await t).insert(settings);}appState.kaiSettings={...appState.kaiSettings,...settings};applyKaiSettings(appState.kaiSettings);showToast('Profile saved!');}catch(e){showToast('Error saving profile');}}
 async function saveLinks(){await saveProfile();}
-async function saveFacts(){
-  try{for(let i=1;i<=8;i++){const el=document.getElementById(`ef-fact-${i}`);if(!el)continue;const t=await db.from('fun_facts');await(await t).upsert({slot_number:i,fact_text:el.value,updated_at:new Date().toISOString()},{onConflict:'slot_number'});}await loadAbout();showToast('Fun facts saved!');}
-  catch(e){showToast('Error saving facts');}
-}
-async function saveJournalEntry(){
-  const entry={date:document.getElementById('ej-date').value,mood:document.getElementById('ej-mood').value.trim(),title:document.getElementById('ej-title').value.trim(),content:document.getElementById('ej-content').value.trim()};
-  if(!entry.content){showToast('Write something!');return;}
-  try{const t=await db.from('journal_entries');await(await t).insert(entry);document.getElementById('ej-content').value='';document.getElementById('ej-title').value='';loadAdminJournal();showToast('Journal saved ✦');}
-  catch(e){showToast('Error');}
-}
+async function saveFacts(){try{for(let i=1;i<=8;i++){const el=document.getElementById(`ef-fact-${i}`);if(!el)continue;const t=await db.from('fun_facts');await(await t).upsert({slot_number:i,fact_text:el.value,updated_at:new Date().toISOString()},{onConflict:'slot_number'});}await loadAbout();showToast('Fun facts saved!');}catch(e){showToast('Error saving facts');}}
+async function saveJournalEntry(){const entry={date:document.getElementById('ej-date').value,mood:document.getElementById('ej-mood').value.trim(),title:document.getElementById('ej-title').value.trim(),content:document.getElementById('ej-content').value.trim()};if(!entry.content){showToast('Write something!');return;}try{const t=await db.from('journal_entries');await(await t).insert(entry);document.getElementById('ej-content').value='';document.getElementById('ej-title').value='';loadAdminJournal();showToast('Journal saved ✦');}catch(e){showToast('Error');}}
 async function deleteJournalEntry(id){try{const t=await db.from('journal_entries');await(await t).eq('id',id).delete();loadAdminJournal();}catch(e){}}
-async function saveLiveSettings(){
-  const is_live=document.getElementById('el-live-status').checked,stream_url=document.getElementById('el-stream-url').value.trim(),offline_image_url=document.getElementById('el-offline-img').value.trim();
-  try{const t=await db.from('live_status');const{data:existing}=await(await t).limit(1).get();const t2=await db.from('live_status');
-  if(existing&&existing.length){await(await t2).eq('id',existing[0].id).update({is_live,stream_url,offline_image_url,updated_at:new Date().toISOString(),started_at:is_live?new Date().toISOString():null});}else{await(await t2).insert({is_live,stream_url,offline_image_url});}
-  appState.liveStatus={is_live,stream_url,offline_image_url};renderLiveStage({is_live,stream_url,offline_image_url});showToast(is_live?'You are LIVE!':'Stream ended');}
-  catch(e){showToast('Error');}
-}
+async function saveLiveSettings(){const is_live=document.getElementById('el-live-status').checked,stream_url=document.getElementById('el-stream-url').value.trim(),offline_image_url=document.getElementById('el-offline-img').value.trim();try{const t=await db.from('live_status');const{data:existing}=await(await t).limit(1).get();const t2=await db.from('live_status');if(existing&&existing.length){await(await t2).eq('id',existing[0].id).update({is_live,stream_url,offline_image_url,updated_at:new Date().toISOString(),started_at:is_live?new Date().toISOString():null});}else{await(await t2).insert({is_live,stream_url,offline_image_url});}appState.liveStatus={is_live,stream_url,offline_image_url};renderLiveStage({is_live,stream_url,offline_image_url});showToast(is_live?'You are LIVE!':'Stream ended');}catch(e){showToast('Error');}}
 async function clearChat(){if(!confirm('Clear all chat messages?'))return;try{const t=await db.from('live_chat');await(await t).neq('id','00000000-0000-0000-0000-000000000000').delete();document.getElementById('chat-messages').innerHTML='';showToast('Chat cleared');}catch(e){}}
 function savePetSettings(){appState.petsEnabled=document.getElementById('ep-pets-enabled').checked;appState.maxPets=parseInt(document.getElementById('ep-pet-max').value)||6;showToast('Pet settings saved!');}
 function updateThemePreview(){const p=document.getElementById('tc-primary').value,s=document.getElementById('tc-secondary').value,y=document.getElementById('tc-yellow').value;document.getElementById('theme-preview').style.background=`linear-gradient(135deg,${p}33,${s}33,${y}22)`;document.getElementById('theme-preview').style.borderColor=`${y}88`;}
 function updateScanlines(){document.getElementById('scanlines').style.opacity=document.getElementById('ts-scan').value/100;}
 async function saveTheme(){const p=document.getElementById('tc-primary').value,s=document.getElementById('tc-secondary').value;document.documentElement.style.setProperty('--pink',p);document.documentElement.style.setProperty('--purple',s);try{const t=await db.from('theme_settings');await(await t).insert({primary_color:p,secondary_color:s,is_active:true});}catch(e){}showToast('Theme applied!');}
 
-/* STATS — fetched from backend /api/stats (auth required) */
-async function loadStats(){
-  const el=id=>document.getElementById(id);
-  try{
-    // Call backend stats endpoint with Kai's Supabase token
-    const token=db.authToken||sessionStorage.getItem('kai_token')||'';
-    const res=await fetch('/api/stats',{headers:{Authorization:`Bearer ${token}`}});
-    if(!res.ok)throw new Error('stats '+res.status);
-    const d=await res.json();
-    el('s-total').textContent   = d.total    ?? '–';
-    el('s-today').textContent   = d.today    ?? '–';
-    el('s-active').textContent  = d.active   ?? '–';
-    el('s-threads').textContent = d.threads  ?? '–';
-    if(d.pages  &&d.pages.length)  renderBarChart('pages-chart', d.pages);
-    // Extra info row
-    const info=document.getElementById('es-stats-content');
-    if(info)info.innerHTML=`<div class="stat-grid">
-      <div class="stat-card"><div class="big-num">${d.comments??'–'}</div><div class="stat-card-label">COMMENTS</div></div>
-      <div class="stat-card"><div class="big-num">${d.vlogs??'–'}</div><div class="stat-card-label">VLOGS</div></div>
-      <div class="stat-card"><div class="big-num">${d.signatures??'–'}</div><div class="stat-card-label">SIGNATURES</div></div>
-    </div>`;
-  }catch(e){
-    // Fallback: count from Supabase directly
-    try{
-      const tt=await db.from('threads');const{data:thr}=await(await tt).select('id').get();
-      el('s-threads').textContent=thr?thr.length:'–';
-      const st=await db.from('iwashere_signatures');const{data:sigs}=await(await st).select('id').get();
-      el('s-total').textContent=(sigs?sigs.length:0)+' signatures logged';
-      ['s-today','s-active'].forEach(id=>el(id).textContent='–');
-    }catch(e2){
-      ['s-total','s-today','s-active','s-threads'].forEach(id=>el(id).textContent='–');
-    }
-  }
-}
+/* STATS — fetched from backend /api/stats */
+async function loadStats(){const el=id=>document.getElementById(id);try{const token=db.authToken||sessionStorage.getItem('kai_token')||'';const res=await fetch(`${API_URL}/api/stats`,{headers:{Authorization:`Bearer ${token}`}});if(!res.ok)throw new Error('stats '+res.status);const d=await res.json();el('s-total').textContent=d.total??'–';el('s-today').textContent=d.today??'–';el('s-active').textContent=d.active??'–';el('s-threads').textContent=d.threads??'–';if(d.pages&&d.pages.length)renderBarChart('pages-chart',d.pages);}catch(e){try{const tt=await db.from('threads');const{data:thr}=await(await tt).select('id').get();el('s-threads').textContent=thr?thr.length:'–';}catch(e2){['s-total','s-today','s-active','s-threads'].forEach(id=>el(id).textContent='–');}}}
 function renderBarChart(elId,items){const el=document.getElementById(elId);if(!el||!items||!items.length)return;const max=Math.max(...items.map(i=>i.count||0));el.innerHTML=items.slice(0,8).map(i=>`<div class="bar-row"><span class="bar-label">${i.label||i.country||i.page||i.device||'?'}</span><div class="bar-track"><div class="bar-fill" style="width:${max>0?(i.count/max*100):0}%"></div></div><span class="bar-val">${i.count}</span></div>`).join('');}
 
 /* ============================================================
@@ -1908,58 +1635,37 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 
 /* ============================================================
    /KAI ADMIN ROUTE BYPASS
-   The backend injects window.__KAI_ADMIN__=true when serving /kai.
-   This skips the book gate entirely and opens the login page.
    ============================================================ */
 (function() {
   if (window.__KAI_ADMIN__ !== true) return;
-
-  // Hide gate immediately — no animation needed for Kai
   const gate = document.getElementById('gate');
   const site = document.getElementById('site');
   const key  = document.getElementById('key-wrapper');
   const hint = document.getElementById('drag-hint');
-
   if (gate) { gate.style.display = 'none'; }
   if (key)  { key.style.display  = 'none'; }
   if (hint) { hint.style.display = 'none'; }
-
   if (site) {
     site.style.transition = 'none';
     site.style.opacity    = '1';
     site.style.pointerEvents = 'all';
     site.classList.add('visible');
   }
-
-  // Run site init then navigate straight to login
   document.addEventListener('DOMContentLoaded', async () => {
     await initSite();
     switchPage('kai');
-    // Style the login page for the /kai admin entry point
     const loginBox = document.querySelector('.login-box');
-    if (loginBox) {
-      loginBox.style.boxShadow = '0 0 60px rgba(255,215,0,0.4), 0 0 120px rgba(139,0,255,0.3)';
-    }
-    // Add a subtle admin label
+    if (loginBox) loginBox.style.boxShadow = '0 0 60px rgba(255,215,0,0.4), 0 0 120px rgba(139,0,255,0.3)';
     const sub = document.querySelector('.login-sub');
     if (sub) sub.textContent = '✦ KAI\'S EDIT PORTAL ✦';
-    // Focus the email input
-    setTimeout(() => {
-      const emailEl = document.getElementById('login-email');
-      if (emailEl) emailEl.focus();
-    }, 400);
+    setTimeout(() => { const emailEl = document.getElementById('login-email'); if (emailEl) emailEl.focus(); }, 400);
   });
-
-  // If DOMContentLoaded already fired (script runs after DOM ready)
   if (document.readyState !== 'loading') {
     initSite().then(() => {
       switchPage('kai');
       const sub = document.querySelector('.login-sub');
       if (sub) sub.textContent = '✦ KAI\'S EDIT PORTAL ✦';
-      setTimeout(() => {
-        const emailEl = document.getElementById('login-email');
-        if (emailEl) emailEl.focus();
-      }, 400);
+      setTimeout(() => { const emailEl = document.getElementById('login-email'); if (emailEl) emailEl.focus(); }, 400);
     });
   }
 })();
