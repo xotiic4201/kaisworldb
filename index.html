@@ -1094,7 +1094,7 @@ input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; h
    ============================================================ */
 const SUPABASE_URL  = 'SUPABASE_URL';   // e.g. https://xxxx.supabase.co
 const SUPABASE_ANON = 'SUPABASE_ANON_KEY';
-const API_URL = 'https://kaisworldb.onrender.com'
+const API_URL = window.location.origin
 
 /* ============================================================
    AUTO-REFRESH FOR MAIN SITE (LIVE UPDATES)
@@ -1343,11 +1343,9 @@ function getOrCreateVid(){let id=localStorage.getItem('kaicore_vid');if(!id){id=
 async function trackVisit(page='home'){
   appState.visitorId=getOrCreateVid();
   try{
-    const t=await db.from('visitors');
-    await(await t).insert({visitor_id:appState.visitorId,page,referrer:document.referrer||null,ua:navigator.userAgent||null});
-    const stored=parseInt(localStorage.getItem('kaicore_stat_visitors')||'0');
+    await fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor_id:appState.visitorId,page,referrer:document.referrer||null,ua:navigator.userAgent||null})});
     const isNew=!localStorage.getItem('kaicore_vid_seen');
-    if(isNew){localStorage.setItem('kaicore_vid_seen','1');localStorage.setItem('kaicore_stat_visitors',stored+1);}
+    if(isNew){localStorage.setItem('kaicore_vid_seen','1');}
   }catch(e){}
 }
 
@@ -1589,7 +1587,17 @@ function initPetscape(){
 async function kaiLogin(){
   const email=document.getElementById('login-email').value,pass=document.getElementById('login-password').value;
   document.getElementById('login-error').style.display='none';
-  try{const{data,error}=await db.signIn(email,pass);if(error||!data.access_token)throw new Error('bad');sessionStorage.setItem('kai_token',data.access_token);appState.isKai=true;showAdminControls();switchPage('home');showToast('Welcome back, Kai ✦');}
+  try{
+    const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const data=await res.json();
+    if(!res.ok||!data.access_token)throw new Error('bad');
+    sessionStorage.setItem('kai_token',data.access_token);
+    db.authToken=data.access_token;
+    appState.isKai=true;
+    showAdminControls();
+    switchPage('home');
+    showToast('Welcome back, Kai ✦');
+  }
   catch(e){document.getElementById('login-error').style.display='block';}
 }
 function showAdminControls(){document.getElementById('admin-nav-btn').style.display='block';}
