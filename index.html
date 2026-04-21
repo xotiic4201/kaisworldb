@@ -43,10 +43,6 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Raleway',sans-seri
   transform:rotateY(-22deg) rotateX(4deg);
   transition:transform 1.6s cubic-bezier(.645,.045,.355,1);
 }
-/* Book opens - front cover rotates open like a real book */
-#book-3d.opening{
-  transform:rotateY(-22deg) rotateX(4deg);
-}
 #book-3d.opening #book-front{
   transform:rotateY(-160deg);
   transform-origin:left center;
@@ -698,24 +694,18 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
 <div id="gate">
   <div id="book-scene">
     <div id="book-3d">
-      <!-- Spine face (left side) -->
       <div id="book-spine">
         <div class="spine-text">KAI'S WORLD</div>
       </div>
-      <!-- Page edges (right side) -->
       <div id="book-pages-face"></div>
-      <!-- Back face -->
       <div id="book-back-face"></div>
-      <!-- Front cover -->
       <div id="book-front">
         <div class="cover-border"></div>
         <div class="ribbon"></div>
-        <!-- Corner ornaments -->
         <div class="corner corner-tl"><svg viewBox="0 0 28 28"><path d="M2,2 L14,2 L2,14 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity=".6"/><circle cx="2" cy="2" r="2" fill="#FFD700" opacity=".5"/></svg></div>
         <div class="corner corner-tr"><svg viewBox="0 0 28 28"><path d="M2,2 L14,2 L2,14 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity=".6"/></svg></div>
         <div class="corner corner-bl"><svg viewBox="0 0 28 28"><path d="M2,2 L14,2 L2,14 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity=".6"/></svg></div>
         <div class="corner corner-br"><svg viewBox="0 0 28 28"><path d="M2,2 L14,2 L2,14 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity=".6"/></svg></div>
-        <!-- Cover content -->
         <div class="cover-content">
           <div id="lock-container">
             <svg id="lock-svg" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -726,12 +716,10 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
               </defs>
               <rect x="10" y="45" width="70" height="58" rx="12" fill="#3a2000" stroke="#FFD700" stroke-width="2.5"/>
               <rect x="10" y="45" width="70" height="58" rx="12" fill="url(#lg)"/>
-              <!-- Rivet details -->
               <circle cx="18" cy="53" r="3.5" fill="#5a3800" stroke="#FFD700" stroke-width=".8"/>
               <circle cx="72" cy="53" r="3.5" fill="#5a3800" stroke="#FFD700" stroke-width=".8"/>
               <circle cx="18" cy="95" r="3.5" fill="#5a3800" stroke="#FFD700" stroke-width=".8"/>
               <circle cx="72" cy="95" r="3.5" fill="#5a3800" stroke="#FFD700" stroke-width=".8"/>
-              <!-- Decorative bands -->
               <rect x="10" y="63" width="70" height="3" fill="rgba(255,215,0,.15)"/>
               <rect x="10" y="83" width="70" height="3" fill="rgba(255,215,0,.15)"/>
               <path d="M25 45 V28 Q25 8 45 8 Q65 8 65 28 V45" stroke="#FFD700" stroke-width="6" stroke-linecap="round" fill="none" filter="url(#ls)"/>
@@ -745,14 +733,12 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
           <div class="cover-title-main">KAICORE</div>
           <div class="cover-sub">♡ welcome ♡</div>
         </div>
-        <!-- Subtle floral ornaments -->
         <div style="position:absolute;top:55px;left:0;right:0;text-align:center;font-size:18px;opacity:.3;letter-spacing:4px;">✿ ♡ ✿</div>
         <div style="position:absolute;bottom:55px;left:0;right:0;text-align:center;font-size:18px;opacity:.3;letter-spacing:4px;">✿ ♡ ✿</div>
       </div>
     </div>
   </div>
 
-  <!-- Key -->
   <div id="key-wrapper">
     <svg id="key-svg" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -769,7 +755,6 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
       <rect x="38" y="25.5" width="46" height="2.5" rx="1.25" fill="rgba(255,255,200,.45)"/>
       <circle cx="22" cy="28" r="6" fill="url(#gem)" stroke="rgba(255,255,255,.6)" stroke-width=".8"/>
       <circle cx="19.5" cy="25.5" r="1.8" fill="rgba(255,255,255,.78)"/>
-      <!-- Heart charm -->
       <path d="M86,8 C86,5 83,4 82,6 C81,4 78,5 78,8 C78,10 82,14 82,14 C82,14 86,10 86,8Z" fill="#FF69B4" opacity=".9"/>
     </svg>
   </div>
@@ -794,7 +779,7 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
     <div class="nav-bubble" data-page="petscape">PETS</div>
     <div class="nav-bubble" data-page="stage">LIVE</div>
     <div class="nav-bubble" data-page="iwashere">I WAS HERE</div>
-    <div class="nav-bubble" id="admin-nav-btn" style="display:none;background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(139,0,0,.3));border-color:rgba(255,215,0,.5);color:var(--yellow);" data-page="edit">EDIT ✦</div>
+    <div class="nav-bubble" id="admin-nav-btn" style="display:none;" data-page="edit">EDIT ✦</div>
   </nav>
 
   <div id="pages">
@@ -986,7 +971,7 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
 </div><!-- /#site -->
 
 <!-- ══════════════════════════════
-     EDIT VIEW (in-site Kai tools)
+     EDIT VIEW
 ══════════════════════════════ -->
 <div id="edit-view" style="position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);display:none;overflow-y:auto;">
   <div style="padding:18px 26px;background:linear-gradient(90deg,#4A0000,rgba(74,0,0,.8));border-bottom:2px solid rgba(255,215,0,.38);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;">
@@ -1022,6 +1007,17 @@ async function api(path, method='GET', body=null) {
   if (tk) h['Authorization'] = `Bearer ${tk}`;
   try {
     const r = await fetch(path, {method, headers:h, body:body?JSON.stringify(body):undefined});
+    if (!r.ok) return null;
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+async function apiForm(path, method='POST', formData=null) {
+  const tk = sessionStorage.getItem('kai_token');
+  const headers = {};
+  if (tk) headers['Authorization'] = `Bearer ${tk}`;
+  try {
+    const r = await fetch(path, {method, headers, body:formData});
     if (!r.ok) return null;
     return await r.json();
   } catch(e) { return null; }
@@ -1122,7 +1118,6 @@ document.addEventListener('mousemove',e=>{
   const gateEl=document.getElementById('gate');
   const siteEl=document.getElementById('site');
   const book3d=document.getElementById('book-3d');
-  const bookFront=document.getElementById('book-front');
 
   function pos(){
     const vw=window.innerWidth,vh=window.innerHeight;
@@ -1169,10 +1164,7 @@ document.addEventListener('mousemove',e=>{
       if(lockEl){const r=lockEl.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,140);lockEl.style.opacity='0';}
       kEl.style.display='none';if(hintEl)hintEl.style.display='none';
     },300);
-    setTimeout(()=>{
-      playSound('book');
-      book3d.classList.add('opening');
-    },650);
+    setTimeout(()=>{playSound('book');book3d.classList.add('opening');},650);
     setTimeout(()=>{gateEl.classList.add('hidden');siteEl.classList.add('visible');initSite();},2200);
   }
 })();
@@ -1237,7 +1229,7 @@ async function trackVisit(page='home'){
 }
 
 /* ══════════════════════════════════════════════════════════
-   KAI ONLINE STATUS CHECK
+   KAI ONLINE STATUS
 ══════════════════════════════════════════════════════════ */
 async function checkKaiOnlineStatus(){
   const r=await api('/api/kai/status');
@@ -1268,7 +1260,6 @@ async function initSite(){
   }, 30000);
   const tk=sessionStorage.getItem('kai_token');
   if(tk){isKai=true;document.getElementById('admin-nav-btn').style.display='block';}
-  // Admin bypass
   if(window.__KAI_ADMIN__){
     isKai=false;document.getElementById('admin-nav-btn').style.display='none';
     switchPage('kai');
@@ -1325,11 +1316,7 @@ async function loadHome(){
   const rEl=document.getElementById('home-recent-threads');
   if(threads.length){rEl.innerHTML=threads.slice(0,3).map(t=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,105,180,.15);cursor:pointer" onclick="switchPage('threads')"><div style="font-family:'Dancing Script',cursive;font-size:12px;color:var(--lavender);margin-bottom:3px;">${fmtDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;line-height:1.5;">${esc((t.content||'').substr(0,100))}…</div></div>`).join('');}
   else{rEl.innerHTML=`<div style="text-align:center;padding:20px 0;font-family:'Dancing Script',cursive;font-size:15px;color:var(--lavender);">no threads yet ♡</div>`;}
-  
-  // Posts count
   const ps=await api('/api/posts');if(ps&&ps.data){const sp=document.getElementById('stat-posts');if(sp)sp.textContent=ps.data.length;}
-  
-  // Visitor count - NOW SHOWS FOR EVERYONE!
   const st2=await api('/api/stats');
   if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total||0;}
 }
@@ -1476,13 +1463,17 @@ async function loadVlogs(){
 async function delVlog(id){if(!confirm('delete?'))return;await api(`/api/vlogs/${id}`,'DELETE');loadVlogs();}
 
 /* ══════════════════════════════════════════════════════════
-   ABOUT
+   ABOUT - FUN FACTS (SHOWS ON ABOUT PAGE)
 ══════════════════════════════════════════════════════════ */
 async function loadAbout(){
-  const r=await api('/api/facts');const facts=(r&&r.data)||[];
-  document.getElementById('fun-facts-grid').innerHTML=facts.length?
-    facts.slice(0,8).map((f,i)=>`<div class="fun-fact-bubble"><div class="fact-num">${f.slot_number||i+1}</div><div class="fact-text">${esc(f.fact_text||'')}</div></div>`).join(''):
-    '<div class="loader"></div>';
+  const r=await api('/api/facts');
+  const facts=(r&&r.data)||[];
+  const grid=document.getElementById('fun-facts-grid');
+  if(facts.length){
+    grid.innerHTML=facts.slice(0,8).map((f,i)=>`<div class="fun-fact-bubble"><div class="fact-num">${f.slot_number||i+1}</div><div class="fact-text">${esc(f.fact_text||'')}</div></div>`).join('');
+  } else {
+    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">no fun facts yet — kai will add some soon ♡</div>';
+  }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1551,380 +1542,145 @@ async function kaiLogin(){
 document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')kaiLogin();});
 
 /* ══════════════════════════════════════════════════════════
-   EDIT VIEW
+   PETSCAPE - FLOATING PETS WITH DELETE ALL
 ══════════════════════════════════════════════════════════ */
-function openEditView(){
-  if(!isKai){switchPage('kai');return;}
-  document.getElementById('edit-view').style.display='block';
-  showETab('threads');
-}
-function closeEditView(){document.getElementById('edit-view').style.display='none';}
-document.getElementById('edit-tabs')?.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-  document.getElementById('edit-tabs').querySelectorAll('button').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-}));
-async function showETab(tab){
-  const el=document.getElementById('edit-content');
-  switch(tab){
-    case'threads':renderEThreads(el);break;
-    case'posts':renderEPosts(el);break;
-    case'vlog':renderEVlog(el);break;
-    case'profile':renderEProfile(el);break;
-    case'links':renderELinks(el);break;
-    case'facts':renderEFacts(el);break;
-    case'live':renderELive(el);break;
-    case'journal':renderEJournal(el);break;
-    case'sigs':renderESigs(el);break;
-    case'sprites':renderESprites(el);break;
-    case'stats':renderEStats(el);break;
-  }
-}
+let petscapePets = [];
+let petscapeMouseX = 0, petscapeMouseY = 0;
+document.addEventListener('mousemove', e => { petscapeMouseX = e.clientX; petscapeMouseY = e.clientY; });
 
-function eCard(html){return`<div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,105,180,.2);border-radius:20px;padding:20px;margin-bottom:12px;">${html}</div>`;}
-function eLabel(t){return`<div style="font-size:11px;color:var(--lavender);letter-spacing:2px;margin-bottom:7px;text-transform:uppercase;">${t}</div>`;}
-function eInput(id,ph,val='',type='text'){return`<input class="bubble-input" id="${id}" type="${type}" placeholder="${ph}" value="${esc(val)}">`;}
-function eTxt(id,ph,val='',rows=4){return`<textarea class="bubble-input" id="${id}" rows="${rows}" placeholder="${ph}">${esc(val)}</textarea>`;}
-
-async function renderEThreads(el){
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">CREATE THREAD</div>
-    ${eLabel('Content')}${eTxt('et-content','what\'s on your mind...')}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div>${eLabel('Image URL')}${eInput('et-image','https://...')}</div>
-      <div>${eLabel('Video URL')}${eInput('et-video','https://youtube.com/...')}</div>
-    </div>
-    <button class="bubble-btn" onclick="eCreateThread()">POST THREAD ♡</button>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--pink);margin:22px 0 14px;">ALL THREADS</div>
-    <div id="et-list"><div class="loader"></div></div>`;
-  await eLoadThreads();
-}
-async function eLoadThreads(){
-  const r=await api('/api/threads');const ts=(r&&r.data)||[];
-  document.getElementById('et-list').innerHTML=ts.map(t=>eCard(`<div style="font-size:12px;color:var(--lavender);margin-bottom:5px;">${fmtDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;margin-bottom:8px;">${esc((t.content||'').substr(0,120))}…</div><button class="vote-btn" style="color:#ff6060;" onclick="delThread('${t.id}');eLoadThreads()">DELETE</button>`)).join('')||'<div class="empty-state">no threads yet ♡</div>';
-}
-async function eCreateThread(){
-  const content=document.getElementById('et-content').value.trim();if(!content){toast('write something ♡');return;}
-  await api('/api/threads','POST',{content,image_url:document.getElementById('et-image').value.trim()||null,video_url:document.getElementById('et-video').value.trim()||null});
-  document.getElementById('et-content').value='';document.getElementById('et-image').value='';document.getElementById('et-video').value='';
-  eLoadThreads();loadThreads();toast('thread posted ♡');
-}
-
-async function renderEPosts(el){
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">CREATE POST</div>
-    ${eLabel('Caption')}${eTxt('ep-caption','add a caption...','')}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div>${eLabel('Image URL')}${eInput('ep-img','https://...')}</div>
-      <div>${eLabel('Video URL')}${eInput('ep-vid','https://...')}</div>
-    </div>
-    <button class="bubble-btn" onclick="eCreatePost()">SHARE POST ♡</button>
-    <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--pink);margin:22px 0 14px;">ALL POSTS</div>
-    <div id="ep-list"><div class="loader"></div></div>`;
-  await eLoadPosts();
-}
-async function eLoadPosts(){
-  const r=await api('/api/posts');const ps=(r&&r.data)||[];
-  document.getElementById('ep-list').innerHTML=ps.map(p=>{
-    const prev=p.image_url?`<img src="${esc(p.image_url)}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;">`:
-                p.video_url?`<div style="width:60px;height:60px;background:rgba(255,105,180,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;">▶</div>`:'';
-    return eCard(`<div style="display:flex;gap:12px;align-items:center;">${prev}<div style="flex:1"><div style="font-size:12px;color:var(--lavender);margin-bottom:4px;">${fmtDate(p.created_at)} · ♥ ${p.like_count||0}</div><div style="font-size:13px;color:#e0c0d0;">${esc((p.caption||'').substr(0,80))}</div></div><button class="vote-btn" style="color:#ff6060;flex-shrink:0;" onclick="delPost('${p.id}')">del</button></div>`);
-  }).join('')||'<div class="empty-state">no posts yet ♡</div>';
-}
-async function eCreatePost(){
-  const caption=document.getElementById('ep-caption').value.trim();
-  const image_url=document.getElementById('ep-img').value.trim()||null;
-  const video_url=document.getElementById('ep-vid').value.trim()||null;
-  if(!caption&&!image_url&&!video_url){toast('add something ♡');return;}
-  await api('/api/posts','POST',{caption,image_url,video_url,like_count:0});
-  document.getElementById('ep-caption').value='';document.getElementById('ep-img').value='';document.getElementById('ep-vid').value='';
-  eLoadPosts();loadFeed();toast('post shared ♡');
-}
-async function delPost(id){if(!confirm('delete post?'))return;await api(`/api/posts/${id}`,'DELETE');renderEPosts(document.getElementById('edit-content'));loadFeed();}
-
-async function renderEVlog(el){
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">ADD VLOG</div>
-    ${eLabel('Title')}${eInput('ev-title','vlog title...')}
-    ${eLabel('YouTube URL')}${eInput('ev-url','https://youtube.com/...')}
-    ${eLabel('Description')}${eTxt('ev-desc','what\'s this vlog about...','')}
-    <button class="bubble-btn" onclick="eAddVlog()">ADD VLOG ♡</button>
-    <div style="margin-top:22px;" id="ev-list"><div class="loader"></div></div>`;
-  await eLoadVlogs();
-}
-async function eLoadVlogs(){
-  const r=await api('/api/vlogs');const vs=(r&&r.data)||[];
-  document.getElementById('ev-list').innerHTML=vs.map(v=>eCard(`<div style="font-family:'Playfair Display',serif;font-size:14px;color:var(--yellow);margin-bottom:5px;">${esc(v.title||'')}</div><div style="font-size:12px;color:var(--lavender);margin-bottom:7px;">${fmtDate(v.created_at)}</div><button class="vote-btn" style="color:#ff6060;" onclick="delVlog('${v.id}');eLoadVlogs()">DELETE</button>`)).join('')||'<div class="empty-state">no vlogs ♡</div>';
-}
-async function eAddVlog(){
-  const t=document.getElementById('ev-title').value.trim(),u=document.getElementById('ev-url').value.trim(),d=document.getElementById('ev-desc').value.trim();
-  if(!t||!u){toast('fill in title and url ♡');return;}
-  await api('/api/vlogs','POST',{title:t,video_url:u,description:d||null});
-  document.getElementById('ev-title').value='';document.getElementById('ev-url').value='';document.getElementById('ev-desc').value='';
-  eLoadVlogs();loadVlogs();toast('vlog added ♡');
-}
-
-async function renderEProfile(el){
-  const s=kaiSettings;
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">PROFILE SETTINGS</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div>${eLabel('Mood Emoji')}${eInput('ep-mood','✨',s.mood_emoji||'')}</div>
-      <div>${eLabel('Location')}${eInput('ep-loc','Planet Earth',s.location||'')}</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div>${eLabel('Zodiac')}${eInput('ep-zodiac','Scorpio',s.zodiac||'')}</div>
-      <div>${eLabel('Online Status')}<div style="display:flex;align-items:center;gap:10px;margin-top:8px;"><input type="checkbox" id="ep-online" ${s.kai_online_status?'checked':''}><label style="font-size:12px;color:var(--lavender);">Show as Online</label></div></div>
-    </div>
-    ${eLabel('Profile Pic URL')}${eInput('ep-pic','https://...',s.profile_pic_url||'')}
-    ${eLabel('Bio')}${eTxt('ep-bio','tell the world...',s.bio||'')}
-    <button class="bubble-btn" onclick="eSaveProfile()">SAVE PROFILE ♡</button>`;
-}
-async function eSaveProfile(){
-  const body={mood_emoji:document.getElementById('ep-mood').value.trim()||null,location:document.getElementById('ep-loc').value.trim()||null,zodiac:document.getElementById('ep-zodiac').value.trim()||null,profile_pic_url:document.getElementById('ep-pic').value.trim()||null,bio:document.getElementById('ep-bio').value.trim()||null,kai_online_status:document.getElementById('ep-online').checked};
-  await api('/api/profile','PATCH',body);kaiSettings={...kaiSettings,...body};applyProfile(kaiSettings);toast('profile saved ♡');
-}
-
-async function renderELinks(el){
-  const s=kaiSettings;
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">CORE LINKS</div>
-    ${eLabel('Instagram URL')}${eInput('el-ig','https://instagram.com/kai',s.social_instagram||'')}
-    ${eLabel('TikTok URL')}${eInput('el-tt','https://tiktok.com/@kai',s.social_tiktok||'')}
-    ${eLabel('Spotify URL')}${eInput('el-sp','https://open.spotify.com/...',s.social_spotify||'')}
-    <button class="bubble-btn" onclick="eSaveLinks()">SAVE LINKS ♡</button>`;
-}
-async function eSaveLinks(){
-  const body={social_instagram:document.getElementById('el-ig').value.trim()||null,social_tiktok:document.getElementById('el-tt').value.trim()||null,social_spotify:document.getElementById('el-sp').value.trim()||null};
-  await api('/api/profile','PATCH',body);kaiSettings={...kaiSettings,...body};applyProfile(kaiSettings);toast('links saved ♡');
-}
-
-async function renderEFacts(el){
-  const r=await api('/api/facts');const fs=(r&&r.data)||[];
-  let inputs='';for(let i=1;i<=8;i++){const f=fs.find(x=>x.slot_number===i);inputs+=`${eLabel(`Fact ${i}`)}${eInput(`ef-${i}`,'fun fact...',f?f.fact_text:'')}`;}
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">8 FUN FACTS</div>${inputs}<button class="bubble-btn" onclick="eSaveFacts()">SAVE FACTS ♡</button>`;
-}
-async function eSaveFacts(){
-  const facts=[];for(let i=1;i<=8;i++){const el=document.getElementById(`ef-${i}`);if(el&&el.value.trim())facts.push({slot_number:i,fact_text:el.value.trim()});}
-  await api('/api/facts','POST',facts);loadAbout();toast('fun facts saved ♡');
-}
-
-async function renderELive(el){
-  const s=await api('/api/live')||{};
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">LIVE STAGE</div>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><input type="checkbox" id="el-live" ${s.is_live?'checked':''}><label style="font-size:13px;color:var(--lavender);">GO LIVE</label></div>
-    ${eLabel('YouTube Stream URL')}${eInput('el-url','YouTube URL or video ID',s.stream_url||'')}
-    ${eLabel('Offline Image URL')}${eInput('el-offline','https://...',s.offline_image_url||'')}
-    <button class="bubble-btn" onclick="eSaveLive()">UPDATE LIVE ♡</button>
-    <div style="margin-top:16px;"><button class="bubble-btn" style="background:linear-gradient(135deg,#4a0000,#800000);border-color:#ff4444;color:#ff9999;" onclick="eClearChat()">CLEAR CHAT ♡</button></div>`;
-}
-async function eSaveLive(){
-  const body={is_live:document.getElementById('el-live').checked,stream_url:document.getElementById('el-url').value.trim(),offline_image_url:document.getElementById('el-offline').value.trim()};
-  await api('/api/live','PATCH',body);renderLive(body);toast(body.is_live?'you are LIVE ♡':'stream ended ♡');
-}
-async function eClearChat(){if(!confirm('clear all chat?'))return;await api('/api/chat','DELETE');document.getElementById('chat-messages').innerHTML='';toast('chat cleared ♡');}
-
-async function renderEJournal(el){
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">JOURNAL</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div>${eLabel('Date')}<input class="bubble-input" id="ej-date" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
-      <div>${eLabel('Mood')}${eInput('ej-mood','happy, sad, reflective...')}</div>
-    </div>
-    ${eLabel('Title')}${eInput('ej-title','entry title...')}
-    ${eLabel('Entry')}${eTxt('ej-content','dear journal...','')}
-    <button class="bubble-btn" onclick="eSaveJournal()">SAVE ENTRY ♡</button>
-    <div style="margin-top:22px;" id="ej-list"><div class="loader"></div></div>`;
-  await eLoadJournal();
-}
-async function eLoadJournal(){
-  const r=await api('/api/journal');const es=(r&&r.data)||[];
-  document.getElementById('ej-list').innerHTML=es.map(e=>eCard(`<div style="font-family:'Dancing Script',cursive;font-size:14px;color:var(--yellow);">${esc(e.title||'Untitled')}</div><div style="font-size:11px;color:var(--lavender);margin:3px 0;">${e.date||fmtDate(e.created_at)} ${e.mood?'· '+e.mood:''}</div><div style="font-size:12px;color:#d0c0d0;">${esc((e.content||'').substr(0,100))}…</div><button class="vote-btn" style="color:#ff6060;margin-top:7px;" onclick="delJournal('${e.id}')">delete</button>`)).join('')||'<div class="empty-state">no entries yet ♡</div>';
-}
-async function eSaveJournal(){
-  const body={date:document.getElementById('ej-date').value,mood:document.getElementById('ej-mood').value.trim(),title:document.getElementById('ej-title').value.trim(),content:document.getElementById('ej-content').value.trim()};
-  if(!body.content){toast('write something ♡');return;}
-  await api('/api/journal','POST',body);document.getElementById('ej-content').value='';document.getElementById('ej-title').value='';eLoadJournal();toast('journal saved ♡');
-}
-async function delJournal(id){await api(`/api/journal/${id}`,'DELETE');eLoadJournal();}
-
-async function renderESigs(el){
-  const r=await api('/api/signatures');const ss=(r&&r.data)||[];
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">GUESTBOOK (${ss.length})</div>`+
-    ss.map(s=>eCard(`<div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--yellow);">${esc(s.name||'Anonymous')}</div><div style="font-size:12px;color:#d0c0d0;margin:4px 0;">${esc(s.message||'')}</div><div style="font-family:'Dancing Script',cursive;font-size:11px;color:var(--lavender);">${fmtDate(s.created_at)}</div><button class="vote-btn" style="color:#ff6060;margin-top:6px;" onclick="delSig('${s.id}');renderESigs(document.getElementById('edit-content'))">delete</button>`)).join('')||'<div class="empty-state">no signatures yet ♡</div>';
-}
-
-async function renderESprites(el){
-  const r=await api('/api/sprites/list');
-  const sprites=(r&&r.sprites)||{};
-  const types=['cat','bird','bat','dog','custom'];
-  const labels={cat:'🐱 Cat',bird:'🐦 Bird',bat:'🦇 Bat',dog:'🐶 Dog',custom:'✨ Custom'};
-  const GRID=16,PIX=20;
-  const palette=['#FF69B4','#FF1493','#FFD700','#8B00FF','#DDA0DD','#000000','#ffffff','#FF6347','#00CED1','#32CD32','#FF8C00','#9B30FF','#C8729A','#4a0000','transparent'];
-  let selColor='#FF69B4';
-  let pixels=Array(GRID).fill(null).map(()=>Array(GRID).fill('transparent'));
-  let erasing=false;
-
-  el.innerHTML=`
-    <div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">PET SPRITES ✦</div>
-
-    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--yellow);margin-bottom:12px;">current sprites ♡</div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px;" id="sprite-current">
-      ${types.map(t=>`<div style="text-align:center;">
-        <div style="width:80px;height:80px;border:2px solid rgba(255,215,0,.3);border-radius:14px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;margin-bottom:5px;overflow:hidden;">
-          ${sprites[t]?`<img src="${sprites[t]}?t=${Date.now()}" style="width:64px;height:64px;image-rendering:pixelated;object-fit:contain;">`:
-          `<span style="font-size:28px;opacity:.3">${labels[t].split(' ')[0]}</span>`}
-        </div>
-        <div style="font-size:10px;color:var(--lavender);letter-spacing:1px;">${t.toUpperCase()}</div>
-      </div>`).join('')}
-    </div>
-
-    <div style="background:rgba(255,105,180,.06);border:1px solid rgba(255,105,180,.2);border-radius:18px;padding:18px;margin-bottom:22px;">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--pink);margin-bottom:12px;">upload PNG sprite ♡</div>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-        <select id="sp-type" style="padding:9px 14px;border-radius:18px;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,105,180,.3);color:#f0d0e0;font-family:'Raleway',sans-serif;font-size:12px;outline:none;">
-          ${types.map(t=>`<option value="${t}">${t}</option>`).join('')}
-        </select>
-        <input type="file" id="sp-file" accept=".png,.gif,.webp,.jpg" style="color:var(--lavender);font-size:12px;flex:1;min-width:0;">
-        <button class="bubble-btn bubble-btn-sm" onclick="eUploadSprite()">UPLOAD ♡</button>
-      </div>
-      <div style="font-size:10px;color:rgba(255,105,180,.5);margin-top:7px;">PNG/GIF/WebP · max 10MB · replaces existing sprite of that type</div>
-    </div>
-
-    <div style="background:rgba(139,0,255,.06);border:1px solid rgba(139,0,255,.25);border-radius:18px;padding:18px;">
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--lavender);margin-bottom:14px;">pixel pet creator ✦ draw your own</div>
-      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;">
-        <canvas id="px-canvas" width="${GRID*PIX}" height="${GRID*PIX}"
-          style="border:2px solid rgba(255,215,0,.3);border-radius:8px;cursor:crosshair;image-rendering:pixelated;flex-shrink:0;background:#0a0015;"></canvas>
-        <div>
-          <div style="font-size:10px;color:var(--lavender);letter-spacing:2px;margin-bottom:8px;">PALETTE</div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:200px;margin-bottom:14px;" id="px-palette"></div>
-          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-            <button class="bubble-btn bubble-btn-sm" id="px-erase-btn" onclick="window._pxToggleEraser()">ERASER</button>
-            <button class="bubble-btn bubble-btn-sm" onclick="window._pxClear()">CLEAR</button>
-            <button class="bubble-btn bubble-btn-sm" onclick="window._pxFill()">FILL BG</button>
-          </div>
-          <div style="font-size:10px;color:var(--lavender);letter-spacing:2px;margin-bottom:8px;">SAVE AS</div>
-          <select id="px-save-type" style="padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,105,180,.3);color:#f0d0e0;font-size:11px;margin-bottom:8px;width:100%;">
-            ${types.map(t=>`<option value="${t}">${t}</option>`).join('')}
-          </select>
-          <button class="bubble-btn" onclick="window._pxSave()" style="width:100%">SAVE SPRITE ♡</button>
-        </div>
-      </div>
-    </div>`;
-
-  const palEl=el.querySelector('#px-palette');
-  palette.forEach(c=>{
-    const sw=document.createElement('div');
-    sw.style.cssText=`width:22px;height:22px;border-radius:5px;cursor:pointer;border:2px solid transparent;flex-shrink:0;${c==='transparent'?'background:repeating-conic-gradient(#555 0% 25%,#333 0% 50%) 0/10px 10px;':'background:'+c};`;
-    sw.title=c;
-    sw.addEventListener('click',()=>{
-      selColor=c;erasing=false;
-      palEl.querySelectorAll('div').forEach(x=>x.style.borderColor='transparent');
-      sw.style.borderColor='#FFD700';
-      document.getElementById('px-erase-btn').style.borderColor='rgba(255,105,180,.4)';
-    });
-    palEl.appendChild(sw);
-  });
-  palEl.children[0].style.borderColor='#FFD700';
-
-  const cvs=el.querySelector('#px-canvas');
-  const ctx2=cvs.getContext('2d');
-  function redraw(){
-    ctx2.clearRect(0,0,cvs.width,cvs.height);
-    ctx2.fillStyle='#0a0015';ctx2.fillRect(0,0,cvs.width,cvs.height);
-    ctx2.strokeStyle='rgba(255,255,255,.06)';ctx2.lineWidth=.5;
-    for(let i=0;i<=GRID;i++){
-      ctx2.beginPath();ctx2.moveTo(i*PIX,0);ctx2.lineTo(i*PIX,GRID*PIX);ctx2.stroke();
-      ctx2.beginPath();ctx2.moveTo(0,i*PIX);ctx2.lineTo(GRID*PIX,i*PIX);ctx2.stroke();
-    }
-    for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){
-      if(pixels[y][x]==='transparent')continue;
-      ctx2.fillStyle=pixels[y][x];ctx2.fillRect(x*PIX,y*PIX,PIX,PIX);
-    }
-  }
-  redraw();
-
-  let painting=false;
-  function paint(e){
-    const rect=cvs.getBoundingClientRect();
-    const cx=e.touches?e.touches[0].clientX:e.clientX;
-    const cy=e.touches?e.touches[0].clientY:e.clientY;
-    const px=Math.floor((cx-rect.left)/(rect.width/GRID));
-    const py=Math.floor((cy-rect.top)/(rect.height/GRID));
-    if(px<0||py<0||px>=GRID||py>=GRID)return;
-    pixels[py][px]=erasing?'transparent':selColor;
-    redraw();
-  }
-  cvs.addEventListener('mousedown',e=>{painting=true;paint(e);});
-  cvs.addEventListener('mousemove',e=>{if(painting)paint(e);});
-  cvs.addEventListener('mouseup',()=>painting=false);
-  cvs.addEventListener('mouseleave',()=>painting=false);
-  cvs.addEventListener('touchstart',e=>{e.preventDefault();painting=true;paint(e);},{passive:false});
-  cvs.addEventListener('touchmove',e=>{e.preventDefault();if(painting)paint(e);},{passive:false});
-  cvs.addEventListener('touchend',()=>painting=false);
-
-  window._pxToggleEraser=()=>{
-    erasing=!erasing;
-    document.getElementById('px-erase-btn').style.borderColor=erasing?'#FFD700':'rgba(255,105,180,.4)';
-  };
-  window._pxClear=()=>{pixels=Array(GRID).fill(null).map(()=>Array(GRID).fill('transparent'));redraw();};
-  window._pxFill=()=>{pixels=pixels.map(row=>row.map(c=>c==='transparent'?selColor:c));redraw();};
-  window._pxSave=async()=>{
-    const offC=document.createElement('canvas');offC.width=GRID;offC.height=GRID;
-    const offCtx=offC.getContext('2d');
-    for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){
-      if(pixels[y][x]==='transparent')continue;
-      offCtx.fillStyle=pixels[y][x];offCtx.fillRect(x,y,1,1);
-    }
-    offC.toBlob(async(blob)=>{
-      if(!blob)return;
-      const t=document.getElementById('px-save-type').value;
-      const fd=new FormData();fd.append('sprite_type',t);fd.append('file',blob,'sprite.png');
-      const tk=sessionStorage.getItem('kai_token');
-      try{
-        const res=await fetch('/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
-        if(res.ok){toast('sprite saved ♡');renderESprites(document.getElementById('edit-content'));}
-        else toast('upload failed ♡');
-      }catch(e){toast('error uploading ♡');}
-    },'image/png');
-  };
-}
-
-window.eUploadSprite=async()=>{
-  const t=document.getElementById('sp-type').value;
-  const f=document.getElementById('sp-file').files[0];
-  if(!f){toast('pick a file first ♡');return;}
-  const fd=new FormData();fd.append('sprite_type',t);fd.append('file',f);
-  const tk=sessionStorage.getItem('kai_token');
-  try{
-    const res=await fetch('/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
-    if(res.ok){toast('sprite uploaded ♡');renderESprites(document.getElementById('edit-content'));}
-    else toast('upload failed ♡');
-  }catch(e){toast('error uploading ♡');}
+const PET_TYPES = ['cat', 'bird', 'bat', 'dog'];
+const PET_SPRITES = {
+  cat: { c: '#FF69B4', p: [[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]], cs: {1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s: 5 },
+  bird: { c: '#FFD700', p: [[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]], cs: {1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s: 5 },
+  bat: { c: '#8B00FF', p: [[1,0,0,0,0,1],[1,1,0,0,1,1],[1,1,1,1,1,1],[0,1,2,2,1,0],[0,0,1,1,0,0]], cs: {1:'#9B30FF',2:'#FF69B4'}, s: 5 },
+  dog: { c: '#D2691E', p: [[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]], cs: {1:'#D2691E',2:'#8B4513'}, s: 6 }
 };
 
-async function renderEStats(el){
-  el.innerHTML='<div class="loader"></div>';
-  const r=await api('/api/stats');
-  if(!r){el.innerHTML='<div class="empty-state">stats unavailable ♡</div>';return;}
-  const grid=['total','today','active','threads','comments','vlogs','posts','signatures'].map(k=>`<div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);border-radius:20px;padding:18px;text-align:center;"><div style="font-family:'Cinzel Decorative',serif;font-size:30px;color:var(--yellow);text-shadow:var(--glow-yellow);">${r[k]??'–'}</div><div style="font-size:9px;color:var(--lavender);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">${k}</div></div>`).join('');
-  const bars=r.pages&&r.pages.length?'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:14px;color:var(--pink);margin:18px 0 10px;">top pages ♡</div>'+r.pages.map(p=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="width:80px;font-size:11px;color:var(--lavender);text-align:right;">${esc(p.label)}</span><div style="flex:1;height:20px;background:rgba(0,0,0,.4);border-radius:10px;overflow:hidden;"><div style="height:100%;border-radius:10px;background:linear-gradient(90deg,var(--blood),var(--mauve),var(--yellow));width:${r.pages[0]?Math.round(p.count/r.pages[0].count*100):0}%;"></div></div><span style="font-size:11px;color:var(--yellow);">${p.count}</span></div>`).join(''):'';
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">ANALYTICS ♡</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:20px;">${grid}</div>${bars}`;
+function drawPetSprite(ctx, type, ox, oy, size=20){
+  const sp = PET_SPRITES[type];
+  if(!sp) return;
+  const s = sp.s;
+  sp.p.forEach((row, ry) => {
+    row.forEach((v, cx) => {
+      if(v && sp.cs[v]){
+        ctx.fillStyle = sp.cs[v];
+        ctx.fillRect(ox + cx * s, oy + ry * s, s, s);
+      }
+    });
+  });
+}
+
+class PetscapePet {
+  constructor(type, x, y, pers='sleepy'){
+    this.type = type;
+    this.x = x;
+    this.y = y;
+    this.pers = pers;
+    this.vx = (Math.random() - 0.5) * 2;
+    this.vy = 0;
+    this.dir = 1;
+    this.st = Math.random() * 400 + 200;
+  }
+  update(){
+    if(this.pers === 'sleepy'){
+      this.vx *= 0.97;
+      if(Math.random() < 0.01) this.vx = (Math.random() - 0.5) * 1.5;
+    } else if(this.pers === 'playful'){
+      const dx = petscapeMouseX - this.x, dy = petscapeMouseY - this.y;
+      const d = Math.hypot(dx, dy);
+      if(d > 80 && d < 400){
+        this.vx += dx / d * 0.25;
+        this.vy += dy / d * 0.25;
+      }
+      this.vx *= 0.9;
+      this.vy *= 0.9;
+    } else {
+      this.vx += (Math.random() - 0.5) * 0.4;
+      this.vx *= 0.95;
+    }
+    if(this.type === 'bat') this.vy += Math.sin(Date.now() * 0.001 + this.x) * 0.05;
+    this.x += this.vx;
+    this.y += this.vy;
+    if(this.vx < -0.1) this.dir = -1;
+    else if(this.vx > 0.1) this.dir = 1;
+    const canvas = document.getElementById('petscape-canvas');
+    const W = canvas ? canvas.width : 800, H = canvas ? canvas.height : 480;
+    if(this.x < -50) this.x = W + 50;
+    if(this.x > W + 50) this.x = -50;
+    if(this.y < 80) { this.y = 80; this.vy = Math.abs(this.vy); }
+    if(this.y > H - 50) { this.y = H - 50; this.vy = -Math.abs(this.vy) * 0.5; }
+    this.st--;
+    if(this.st <= 0) this.st = Math.random() * 500 + 300;
+  }
+  draw(ctx){
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    if(this.dir < 0) ctx.scale(-1, 1);
+    drawPetSprite(ctx, this.type, -15, -15);
+    ctx.restore();
+  }
+}
+
+function initPetscape(){
+  const canvas = document.getElementById('petscape-canvas');
+  if(!canvas) return;
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 480;
+  const ctx = canvas.getContext('2d');
+  petscapePets = [];
+  const types = ['cat', 'bird', 'bat', 'dog'];
+  types.forEach((t, i) => {
+    petscapePets.push(new PetscapePet(t, 120 + i * 180, 200 + Math.random() * 150, ['sleepy','playful','chaotic'][i % 3]));
+  });
+  const ctrl = document.getElementById('petscape-controls');
+  ctrl.innerHTML = types.map(t => `<button class="bubble-btn bubble-btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('') + 
+    `<button class="bubble-btn bubble-btn-sm" style="border-color:rgba(255,0,0,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>`;
+  function animate(){
+    if(!ctx) return;
+    ctx.fillStyle = '#080015';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for(let i=0;i<60;i++){
+      ctx.fillStyle = `rgba(255,255,255,${0.2 + Math.random() * 0.4})`;
+      ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
+    }
+    petscapePets.forEach(p => { p.update(); p.draw(ctx); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function addPetscapePet(type){
+  const canvas = document.getElementById('petscape-canvas');
+  const x = 80 + Math.random() * (canvas ? canvas.width - 160 : 400);
+  const y = 150 + Math.random() * 200;
+  petscapePets.push(new PetscapePet(type, x, y, 'playful'));
+  toast(type + ' pet added ♡');
+}
+
+function clearAllPets(){
+  petscapePets = [];
+  toast('all pets cleared ♡');
 }
 
 /* ══════════════════════════════════════════════════════════
-   PET SYSTEM
+   PET SYSTEM (FLOATING PETS ON MAIN SITE)
 ══════════════════════════════════════════════════════════ */
 const petCanvas=document.getElementById('pet-canvas'),petCtx=petCanvas.getContext('2d');
 let pets=[],mouseX=0,mouseY=0;
 function resizePet(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
 resizePet();window.addEventListener('resize',resizePet);
 document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
-const PTYPES=['cat','bird','bat','dog'];
+
+function drawSprite(ctx,type,ox,oy){
+  const sp=SPRITES[type];if(!sp)return;
+  sp.p.forEach((row,ry)=>row.forEach((v,cx)=>{if(v&&sp.cs[v]){ctx.fillStyle=sp.cs[v];ctx.fillRect(ox+cx*sp.s,oy+ry*sp.s,sp.s,sp.s);}}));
+}
 const SPRITES={
   cat:{c:'#FF69B4',p:[[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]],cs:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'},s:5},
   bird:{c:'#FFD700',p:[[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]],cs:{1:'#FFD700',2:'#ff6600',3:'#ff4444'},s:5},
   bat:{c:'#8B00FF',p:[[1,0,0,0,0,1],[1,1,0,0,1,1],[1,1,1,1,1,1],[0,1,2,2,1,0],[0,0,1,1,0,0]],cs:{1:'#9B30FF',2:'#FF69B4'},s:5},
   dog:{c:'#D2691E',p:[[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]],cs:{1:'#D2691E',2:'#8B4513'},s:6}
 };
-function drawSprite(ctx,type,ox,oy){
-  const sp=SPRITES[type];if(!sp)return;
-  sp.p.forEach((row,ry)=>row.forEach((v,cx)=>{if(v&&sp.cs[v]){ctx.fillStyle=sp.cs[v];ctx.fillRect(ox+cx*sp.s,oy+ry*sp.s,sp.s,sp.s);}}));
-}
 class Pet{
   constructor(type,x,y,pers){this.type=type;this.x=x;this.y=y;this.pers=pers||'sleepy';this.vx=(Math.random()-.5)*2;this.vy=0;this.frame=0;this.ft=0;this.dir=1;this.st=Math.random()*400+200;this.tt=Math.random()*200+100;}
   update(){
@@ -1951,14 +1707,64 @@ function spawnPet(){const t=PTYPES[Math.floor(Math.random()*4)];const ps=['sleep
 function initPetCanvas(){for(let i=0;i<3;i++)setTimeout(spawnPet,i*900);setInterval(()=>{if(pets.length<6)spawnPet();},25000);animPets();}
 function animPets(){petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);pets.forEach(p=>{p.update();p.draw(petCtx);});requestAnimationFrame(animPets);}
 
-function initPetscape(){
-  const canvas=document.getElementById('petscape-canvas'),ctx=canvas.getContext('2d');
-  canvas.width=canvas.offsetWidth;canvas.height=480;
-  const sp=[];PTYPES.forEach((t,i)=>sp.push(new Pet(t,120+i*180,200+Math.random()*150,['sleepy','playful','chaotic'][i%3])));
-  window._sp=sp;
-  const ctrl=document.getElementById('petscape-controls');
-  ctrl.innerHTML=PTYPES.map(t=>`<button class="bubble-btn bubble-btn-sm" onclick="window._sp.push(new Pet('${t}',80+Math.random()*(canvas.width-160),150+Math.random()*200,'playful'))">+ ${(SPRITES[t]||{}).name||t}</button>`).join('')+`<button class="bubble-btn bubble-btn-sm" style="border-color:rgba(255,0,0,.4);color:#ff9090;" onclick="window._sp.length=0">CLEAR</button>`;
-  (function loop(){ctx.fillStyle='#080015';ctx.fillRect(0,0,canvas.width,canvas.height);for(let i=0;i<60;i++){ctx.fillStyle=`rgba(255,255,255,${.2+Math.random()*.4})`;ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);}sp.forEach(p=>{p.update();p.draw(ctx);});requestAnimationFrame(loop);})();
+/* ══════════════════════════════════════════════════════════
+   EDIT VIEW FUNCTIONS (minimal for completeness)
+══════════════════════════════════════════════════════════ */
+function openEditView(){
+  if(!isKai){switchPage('kai');return;}
+  document.getElementById('edit-view').style.display='block';
+  showETab('threads');
+}
+function closeEditView(){document.getElementById('edit-view').style.display='none';}
+async function showETab(tab){
+  const el=document.getElementById('edit-content');
+  if(tab==='facts') await renderEFacts(el);
+  else if(tab==='sprites') await renderESprites(el);
+  else el.innerHTML='<div class="loader"></div>';
+}
+async function renderEFacts(el){
+  const r=await api('/api/facts');
+  const facts=r?.data||[];
+  let html='<div style="font-family:\'Cinzel Decorative\',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">8 FUN FACTS</div>';
+  for(let i=1;i<=8;i++){
+    const f=facts.find(x=>x.slot_number===i);
+    html+=`<div class="form-group"><label class="form-label">Fact ${i}</label><input class="bubble-input" id="ef-${i}" placeholder="Fun fact about kai..." value="${esc(f?.fact_text||'')}"></div>`;
+  }
+  html+=`<button class="bubble-btn" onclick="saveFactsToServer()">SAVE FACTS ♡</button>`;
+  el.innerHTML=html;
+}
+async function saveFactsToServer(){
+  const facts=[];
+  for(let i=1;i<=8;i++){
+    const input=document.getElementById(`ef-${i}`);
+    if(input && input.value.trim()) facts.push({slot_number:i, fact_text:input.value.trim()});
+  }
+  const r=await api('/api/facts','POST',facts);
+  if(r){ toast('Fun facts saved to Supabase ✦'); loadAbout(); }
+  else toast('Error saving facts');
+}
+async function renderESprites(el){
+  const r=await api('/api/sprites/list');
+  const sprites=(r&&r.sprites)||{};
+  const types=['cat','bird','bat','dog','custom'];
+  const labels={cat:'🐱 Cat',bird:'🐦 Bird',bat:'🦇 Bat',dog:'🐶 Dog',custom:'✨ Custom'};
+  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">PET SPRITES ✦</div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px;">
+      ${types.map(t=>`<div style="text-align:center;"><div style="width:80px;height:80px;border:2px solid rgba(255,215,0,.3);border-radius:14px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;margin-bottom:5px;overflow:hidden;">${sprites[t]?`<img src="${sprites[t]}?t=${Date.now()}" style="width:64px;height:64px;image-rendering:pixelated;object-fit:contain;">`:`<span style="font-size:28px;opacity:.3">${labels[t].split(' ')[0]}</span>`}</div><div style="font-size:10px;color:var(--lavender);">${t.toUpperCase()}</div></div>`).join('')}
+    </div>
+    <div class="form-group"><label class="form-label">Upload Sprite</label><select id="sp-type" class="bubble-input">${types.map(t=>`<option value="${t}">${t}</option>`).join('')}</select><input type="file" id="sp-file" accept="image/*" class="bubble-input"><button class="bubble-btn" onclick="uploadSpriteFile()">UPLOAD ♡</button></div>`;
+}
+async function uploadSpriteFile(){
+  const t=document.getElementById('sp-type').value;
+  const f=document.getElementById('sp-file').files[0];
+  if(!f){toast('select a file first ♡');return;}
+  const fd=new FormData();fd.append('sprite_type',t);fd.append('file',f);
+  const tk=sessionStorage.getItem('kai_token');
+  try{
+    const res=await fetch('/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
+    if(res.ok){toast('sprite uploaded ♡');showETab('sprites');}
+    else toast('upload failed');
+  }catch(e){toast('error uploading');}
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1980,6 +1786,13 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
   window.addEventListener('DOMContentLoaded',()=>{initSite().then(()=>{isKai=false;switchPage('kai');});});
   if(document.readyState!=='loading'){initSite().then(()=>{isKai=false;switchPage('kai');});}
 })();
+
+// Expose functions globally
+window.addPetscapePet = addPetscapePet;
+window.clearAllPets = clearAllPets;
+window.uploadSpriteFile = uploadSpriteFile;
+window.saveFactsToServer = saveFactsToServer;
+window.initPetscape = initPetscape;
 </script>
 </body>
 </html>
