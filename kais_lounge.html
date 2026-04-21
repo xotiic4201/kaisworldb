@@ -5,1212 +5,912 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>✦ KAI'S LOUNGE ✦</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --pink: #FF69B4;
-  --softpink: #FFB6C1;
-  --purple: #8B00FF;
-  --lavender: #DDA0DD;
+  --pink: #FF69B4; --rose: #FF1493; --blush: #FFB6C1;
+  --mauve: #C8729A; --lavender: #DDA0DD;
+  --purple: #8B00FF; --plum: #6B3FA0;
   --yellow: #FFD700;
-  --blood: #8B0000;
+  --blood: #8B0000; --crimson: #4A0000;
+  --glow-pink: 0 0 20px rgba(255,105,180,.7), 0 0 40px rgba(255,105,180,.4);
+  --glow-yellow: 0 0 20px rgba(255,215,0,.8), 0 0 40px rgba(255,215,0,.5);
+  --glow-purple: 0 0 20px rgba(139,0,255,.7), 0 0 40px rgba(139,0,255,.4);
 }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: 'Raleway', sans-serif;
-  background: radial-gradient(ellipse at 20% 0%, #2a0030 0%, #0d0015 40%, #000 100%);
-  color: #e0d0f0;
-  min-height: 100vh;
-}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:100%; height:100%; font-family:'Raleway',sans-serif; background:#000; color:#e0d0f0; overflow:hidden; }
 
-/* Login Screen */
+/* ══ LOGIN ══ */
 #login-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: radial-gradient(ellipse at 50% 30%, #2a0020 0%, #0d0015 50%, #000 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position:fixed; inset:0; z-index:9999;
+  background:radial-gradient(ellipse at 50% 30%, #3a0015 0%, #1a0010 40%, #000 100%);
+  display:flex; align-items:center; justify-content:center;
 }
-#login-screen.hidden { display: none; }
+#login-screen.gone { display:none; }
 .login-box {
-  background: radial-gradient(circle at 30% 20%, rgba(255,105,180,0.15), rgba(74,0,0,0.3));
-  border: 2px solid rgba(255,215,0,0.4);
-  border-radius: 50px;
-  padding: 52px;
-  max-width: 420px;
-  width: 90%;
-  backdrop-filter: blur(20px);
-  text-align: center;
-  box-shadow: 0 0 20px rgba(139,0,255,0.7);
+  background:radial-gradient(circle at 30% 20%, rgba(255,105,180,.15), rgba(74,0,0,.3));
+  border:2px solid rgba(255,215,0,.4); border-radius:50px; padding:52px;
+  max-width:420px; width:90%; backdrop-filter:blur(20px); text-align:center;
+  box-shadow:var(--glow-purple);
 }
-.login-logo {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 28px;
-  color: #FFD700;
-  text-shadow: 0 0 20px #FFD700;
-  margin-bottom: 4px;
-}
-.login-sub {
-  font-size: 11px;
-  color: #DDA0DD;
-  letter-spacing: 3px;
-  margin-bottom: 36px;
-}
+.login-title { font-family:'Cinzel Decorative',serif; font-size:26px; color:var(--yellow); text-shadow:var(--glow-yellow); margin-bottom:4px; }
+.login-sub { font-size:10px; color:var(--lavender); letter-spacing:3px; margin-bottom:36px; }
 .form-input {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.5);
-  border: 2px solid rgba(255,105,180,0.3);
-  color: #f0d0e0;
-  font-family: 'Raleway', sans-serif;
-  font-size: 13px;
-  outline: none;
-  margin-bottom: 14px;
+  width:100%; padding:14px 18px; border-radius:20px;
+  background:rgba(0,0,0,.5); border:2px solid rgba(255,105,180,.3);
+  color:#f0d0e0; font-family:'Raleway',sans-serif; font-size:13px;
+  outline:none; margin-bottom:14px; transition:all .3s;
 }
-.form-input:focus {
-  border-color: #FF69B4;
-  box-shadow: 0 0 20px rgba(255,105,180,0.7);
-}
-.bubble-btn {
-  padding: 13px 28px;
-  border-radius: 40px;
-  background: linear-gradient(135deg, #8B0000, #8B00FF);
-  border: 2px solid #FF69B4;
-  color: #FFD700;
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 12px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.bubble-btn:hover {
-  background: linear-gradient(135deg, #8B00FF, #FF69B4);
-  transform: translateY(-2px);
-}
-.login-error {
-  color: #ff6060;
-  font-size: 12px;
-  margin-top: 12px;
-  display: none;
-}
+.form-input:focus { border-color:var(--pink); box-shadow:var(--glow-pink); }
+.form-input::placeholder { color:rgba(255,182,193,.4); }
+textarea.form-input { resize:vertical; border-radius:16px; }
+.login-error { color:#ff6060; font-size:12px; margin-top:12px; display:none; }
 
-/* Main App */
-#app {
-  display: none;
-  min-height: 100vh;
-}
-#app.visible { display: block; }
+/* ══ APP SHELL ══ */
+#app { display:none; height:100vh; overflow:hidden; flex-direction:column; }
+#app.visible { display:flex; }
 
 /* Header */
 #header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: linear-gradient(90deg, #2a0010 0%, #1a0030 50%, #2a0010 100%);
-  border-bottom: 2px solid rgba(255,215,0,0.4);
-  padding: 14px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-shrink:0; padding:14px 24px;
+  background:linear-gradient(90deg, #2a0010, #1a0030, #2a0010);
+  border-bottom:2px solid rgba(255,215,0,.4);
+  display:flex; align-items:center; justify-content:space-between;
+  z-index:100;
 }
-.header-logo {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 20px;
-  color: #FFD700;
-  text-shadow: 0 0 20px #FFD700;
-  letter-spacing: 4px;
+.header-logo { font-family:'Cinzel Decorative',serif; font-size:18px; color:var(--yellow); text-shadow:var(--glow-yellow); letter-spacing:4px; }
+.header-sub { font-size:9px; color:var(--lavender); letter-spacing:3px; margin-top:2px; }
+.header-right { display:flex; align-items:center; gap:10px; }
+.online-badge {
+  display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:30px;
+  background:rgba(0,255,100,.1); border:1.5px solid rgba(0,255,100,.4);
+  font-size:10px; color:#00ff64; font-weight:700; letter-spacing:2px;
 }
-.header-sub {
-  font-size: 10px;
-  color: #DDA0DD;
-  letter-spacing: 3px;
-  margin-top: 2px;
+.online-dot { width:7px; height:7px; border-radius:50%; background:#00ff64; animation:blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+.hdr-btn {
+  padding:8px 16px; border-radius:30px; font-family:'Cinzel Decorative',serif; font-size:9px;
+  letter-spacing:2px; cursor:pointer; transition:all .3s; border:2px solid;
 }
-.kai-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 30px;
-  background: rgba(0,255,100,0.1);
-  border: 1px solid rgba(0,255,100,0.4);
-  font-size: 10px;
-  color: #00ff64;
-  font-weight: 700;
-}
-.kai-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #00ff64;
-  animation: blink 1.5s infinite;
-}
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+.hdr-btn-site  { background:rgba(255,215,0,.1); border-color:rgba(255,215,0,.4); color:var(--yellow); }
+.hdr-btn-site:hover  { background:rgba(255,215,0,.2); box-shadow:var(--glow-yellow); }
+.hdr-btn-out   { background:rgba(255,0,0,.1); border-color:rgba(255,0,0,.4); color:#ff9090; }
+.hdr-btn-out:hover   { background:rgba(255,0,0,.2); }
+
+/* Body layout */
+#body-wrap { flex:1; display:flex; overflow:hidden; }
 
 /* Sidebar */
 #sidebar {
-  position: fixed;
-  left: 0;
-  top: 73px;
-  bottom: 0;
-  width: 220px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255,215,0,0.2);
-  overflow-y: auto;
-  padding: 16px 12px;
+  width:210px; flex-shrink:0; background:rgba(0,0,0,.6); backdrop-filter:blur(20px);
+  border-right:1px solid rgba(255,215,0,.2); overflow-y:auto; padding:14px 10px;
 }
-.sidebar-section {
-  font-size: 9px;
-  color: rgba(255,215,0,0.5);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  padding: 12px 8px 6px;
+.sb-section { font-size:9px; color:rgba(255,215,0,.5); letter-spacing:3px; text-transform:uppercase; padding:14px 8px 6px; }
+.sb-btn {
+  width:100%; padding:10px 14px; border-radius:14px; border:none; background:transparent;
+  color:#DDA0DD; font-family:'Raleway',sans-serif; font-size:12px; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:8px; margin-bottom:3px;
+  transition:all .2s; text-align:left;
 }
-.sidebar-btn {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  border: none;
-  text-align: left;
-  background: transparent;
-  color: #DDA0DD;
-  font-family: 'Raleway', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 3px;
-}
-.sidebar-btn:hover {
-  background: rgba(255,105,180,0.15);
-  color: #FFB6C1;
-}
-.sidebar-btn.active {
-  background: linear-gradient(135deg, rgba(139,0,0,0.5), rgba(139,0,255,0.3));
-  color: #FFD700;
-  border: 1px solid rgba(255,215,0,0.3);
-}
+.sb-btn:hover { background:rgba(255,105,180,.15); color:var(--blush); }
+.sb-btn.active { background:linear-gradient(135deg,rgba(139,0,0,.5),rgba(139,0,255,.3)); color:var(--yellow); border:1px solid rgba(255,215,0,.3); }
 
-/* Main Content */
-#main {
-  margin-left: 220px;
-  padding: 28px;
-  min-height: calc(100vh - 73px);
-}
-.panel {
-  display: none;
-}
-.panel.active {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.panel-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 22px;
-  color: #FFD700;
-  text-shadow: 0 0 20px #FFD700;
-  margin-bottom: 4px;
-}
-.panel-sub {
-  font-size: 11px;
-  color: #DDA0DD;
-  letter-spacing: 2px;
-  margin-bottom: 24px;
-}
+/* Main content */
+#main { flex:1; overflow-y:auto; padding:28px; }
+#main::-webkit-scrollbar { width:4px; }
+#main::-webkit-scrollbar-thumb { background:var(--mauve); border-radius:2px; }
+
+/* Panels */
+.panel { display:none; animation:fadeIn .3s ease; }
+.panel.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.panel-title { font-family:'Cinzel Decorative',serif; font-size:22px; color:var(--yellow); text-shadow:var(--glow-yellow); margin-bottom:4px; }
+.panel-sub { font-family:'Dancing Script',cursive; font-size:14px; color:var(--lavender); margin-bottom:24px; }
 
 /* Cards */
 .card {
-  background: radial-gradient(circle at 30% 20%, rgba(255,105,180,0.1), rgba(74,0,0,0.2));
-  border: 2px solid rgba(255,215,0,0.25);
-  border-radius: 24px;
-  padding: 24px;
-  margin-bottom: 20px;
-  backdrop-filter: blur(12px);
+  background:radial-gradient(circle at 30% 20%, rgba(255,105,180,.1), rgba(74,0,0,.2));
+  border:2px solid rgba(255,215,0,.25); border-radius:24px; padding:24px; margin-bottom:20px;
+  backdrop-filter:blur(12px);
 }
-.card-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 14px;
-  color: #FF69B4;
-  margin-bottom: 18px;
-  letter-spacing: 2px;
-}
-.form-group {
-  margin-bottom: 18px;
-}
-.form-label {
-  display: block;
-  font-size: 11px;
-  color: #DDA0DD;
-  letter-spacing: 2px;
-  margin-bottom: 7px;
-  text-transform: uppercase;
-}
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 600px) {
-  .form-row { grid-template-columns: 1fr; }
-}
+.card-title { font-family:'Cinzel Decorative',serif; font-size:13px; color:var(--pink); margin-bottom:18px; letter-spacing:2px; }
 
-/* Lists */
+/* Form helpers */
+.form-group { margin-bottom:16px; }
+.form-label { display:block; font-size:10px; color:var(--lavender); letter-spacing:2px; margin-bottom:7px; text-transform:uppercase; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:600px) { .form-row { grid-template-columns:1fr; } }
+
+/* Bubble button */
+.bubble-btn {
+  padding:11px 26px; border-radius:40px;
+  background:linear-gradient(135deg, var(--blood), var(--plum));
+  border:2px solid var(--pink); color:var(--yellow);
+  font-family:'Cinzel Decorative',serif; font-size:11px; letter-spacing:2px;
+  cursor:pointer; transition:all .3s; box-shadow:var(--glow-purple);
+}
+.bubble-btn:hover { background:linear-gradient(135deg,var(--plum),var(--pink)); border-color:var(--yellow); transform:translateY(-2px); box-shadow:var(--glow-yellow); }
+.bubble-btn-danger { background:linear-gradient(135deg,#4a0000,#800000); border-color:#ff4444; color:#ff9090; }
+.bubble-btn-danger:hover { background:rgba(255,0,0,.2); }
+
+/* List items */
 .list-item {
-  background: rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,105,180,0.2);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 10px;
+  background:rgba(0,0,0,.35); border:1px solid rgba(255,105,180,.2);
+  border-radius:18px; padding:16px; margin-bottom:10px;
 }
-.list-item-title {
-  font-size: 13px;
-  color: #FFD700;
-  margin-bottom: 4px;
-  font-weight: 600;
+.list-item-title { font-family:'Playfair Display',serif; font-size:14px; color:var(--yellow); margin-bottom:4px; }
+.list-item-meta { font-family:'Dancing Script',cursive; font-size:12px; color:var(--lavender); margin-bottom:6px; }
+.list-item-text { font-size:12px; color:#c0a0c0; line-height:1.6; }
+.list-item-actions { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.act-btn {
+  padding:5px 13px; border-radius:14px; font-size:10px; font-weight:700;
+  cursor:pointer; background:transparent; border:1.5px solid; font-family:'Raleway',sans-serif;
+  transition:all .2s;
 }
-.list-item-meta {
-  font-size: 11px;
-  color: #DDA0DD;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-.list-item-text {
-  font-size: 12px;
-  color: #c0a0c0;
-  line-height: 1.5;
-}
-.list-item-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-.action-btn {
-  padding: 6px 14px;
-  border-radius: 16px;
-  font-size: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid;
-}
-.action-btn-hide {
-  border-color: rgba(255,215,0,0.4);
-  color: #FFD700;
-}
-.action-btn-del {
-  border-color: rgba(255,0,0,0.4);
-  color: #ff9090;
-}
-.action-btn-del:hover {
-  background: rgba(255,0,0,0.15);
-}
+.act-del { border-color:rgba(255,0,0,.4); color:#ff9090; }
+.act-del:hover { background:rgba(255,0,0,.15); }
 
-/* Stats Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 14px;
-  margin-bottom: 24px;
-}
-.stat-box {
-  background: rgba(255,215,0,0.06);
-  border: 1px solid rgba(255,215,0,0.3);
-  border-radius: 20px;
-  padding: 20px;
-  text-align: center;
-}
-.stat-num {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 38px;
-  color: #FFD700;
-  text-shadow: 0 0 20px #FFD700;
-}
-.stat-lbl {
-  font-size: 10px;
-  color: #DDA0DD;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-top: 4px;
-}
+/* Stats */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
+.stat-box { background:rgba(255,215,0,.06); border:1.5px solid rgba(255,215,0,.3); border-radius:20px; padding:20px; text-align:center; }
+.stat-num { font-family:'Cinzel Decorative',serif; font-size:34px; color:var(--yellow); text-shadow:var(--glow-yellow); }
+.stat-lbl { font-size:9px; color:var(--lavender); letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
 
-/* Bar Chart */
-.bar-chart {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.bar-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.bar-label {
-  width: 100px;
-  font-size: 11px;
-  color: #DDA0DD;
-  text-align: right;
-  flex-shrink: 0;
-}
-.bar-track {
-  flex: 1;
-  height: 20px;
-  background: rgba(0,0,0,0.4);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.bar-fill {
-  height: 100%;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #8B0000, #FF69B4, #FFD700);
-  transition: width 1.5s ease;
-  width: 0%;
-}
-.bar-val {
-  width: 40px;
-  font-size: 11px;
-  color: #FFD700;
-}
+/* Bar chart */
+.bar-chart { display:flex; flex-direction:column; gap:8px; }
+.bar-row { display:flex; align-items:center; gap:10px; }
+.bar-label { width:90px; font-size:11px; color:var(--lavender); text-align:right; flex-shrink:0; }
+.bar-track { flex:1; height:20px; background:rgba(0,0,0,.4); border-radius:10px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,var(--blood),var(--mauve),var(--yellow)); transition:width 1.2s ease; }
+.bar-val { width:40px; font-size:11px; color:var(--yellow); }
 
-.loader {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 3px solid rgba(255,105,180,0.2);
-  border-top-color: #FF69B4;
-  animation: spin 0.8s linear infinite;
-  margin: 30px auto;
+/* Toggle */
+.toggle-row { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.toggle { position:relative; display:inline-block; width:52px; height:28px; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider {
+  position:absolute; cursor:pointer; inset:0; background:rgba(255,105,180,.2);
+  border-radius:28px; border:2px solid rgba(255,105,180,.4); transition:.3s;
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.toggle-slider::before {
+  content:''; position:absolute; width:20px; height:20px; border-radius:50%;
+  left:2px; bottom:2px; background:var(--lavender); transition:.3s;
 }
-.empty-msg {
-  text-align: center;
-  padding: 40px;
-  color: #DDA0DD;
-  font-size: 13px;
-}
+input:checked + .toggle-slider { background:rgba(255,20,147,.3); border-color:var(--rose); }
+input:checked + .toggle-slider::before { transform:translateX(24px); background:var(--rose); box-shadow:0 0 10px var(--rose); }
+.toggle-label { font-size:12px; color:var(--lavender); font-weight:600; letter-spacing:2px; }
 
-#toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: rgba(0,0,0,0.9);
-  border: 2px solid #FF69B4;
-  border-radius: 30px;
-  padding: 12px 26px;
-  z-index: 99999;
-  color: #FF69B4;
-  font-size: 13px;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.4s;
+/* Misc */
+.loader { width:32px; height:32px; border-radius:50%; border:3px solid rgba(255,105,180,.2); border-top-color:var(--pink); animation:spin .8s linear infinite; margin:30px auto; }
+@keyframes spin { to{transform:rotate(360deg);} }
+.empty-msg { text-align:center; padding:40px; color:var(--lavender); font-family:'Dancing Script',cursive; font-size:15px; }
+#toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:rgba(0,0,0,.9); border:2px solid var(--pink); border-radius:30px; padding:12px 26px; z-index:99999; color:var(--pink); font-family:'Dancing Script',cursive; font-size:15px; opacity:0; pointer-events:none; transition:all .4s; }
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+@media(max-width:768px) {
+  #sidebar { position:fixed; top:73px; bottom:0; left:-210px; z-index:200; transition:left .3s; }
+  #sidebar.open { left:0; }
+  #menu-toggle { display:flex !important; }
+  .header-logo { font-size:14px; }
 }
-#toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-@media (max-width: 768px) {
-  #sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-  }
-  #sidebar.open {
-    transform: translateX(0);
-  }
-  #main {
-    margin-left: 0;
-    padding: 16px;
-  }
-  #menu-toggle {
-    display: block !important;
-  }
-}
-#menu-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: #FFD700;
-  font-size: 22px;
-  cursor: pointer;
-}
+#menu-toggle { display:none; background:transparent; border:none; color:var(--yellow); font-size:22px; cursor:pointer; align-items:center; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- ══ LOGIN ══ -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">✦ KAI'S LOUNGE ✦</div>
-    <div class="login-sub">EDIT PORTAL — AUTHORIZED ACCESS ONLY</div>
-    <input class="form-input" type="email" id="login-email" placeholder="kaianna@kaicore.com">
+    <div class="login-title">✦ KAI'S LOUNGE ✦</div>
+    <div class="login-sub">CONTROL CENTER — AUTHORIZED ACCESS ONLY</div>
+    <input class="form-input" type="email" id="login-email" placeholder="kai@kaicore.com" autocomplete="email">
     <input class="form-input" type="password" id="login-password" placeholder="password...">
-    <button class="bubble-btn" onclick="doLogin()" style="width:100%">ENTER THE LOUNGE</button>
-    <div class="login-error" id="login-error">✗ Invalid credentials. Try again.</div>
+    <button class="bubble-btn" onclick="doLogin()" style="width:100%">ENTER THE LOUNGE ♡</button>
+    <div class="login-error" id="login-error">✗ Invalid credentials — try again ♡</div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ══ APP ══ -->
 <div id="app">
   <div id="header">
     <div>
       <div class="header-logo">✦ KAI'S LOUNGE ✦</div>
       <div class="header-sub">WEBSITE CONTROL CENTER</div>
     </div>
-    <div class="header-actions">
-      <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
-      <div class="kai-badge"><span class="kai-dot"></span>KAI ONLINE</div>
-      <button class="bubble-btn bubble-btn-sm" onclick="viewSite()">VIEW SITE</button>
-      <button class="bubble-btn bubble-btn-sm bubble-btn-danger" onclick="doLogout()">LOGOUT</button>
+    <div class="header-right">
+      <button id="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div class="online-badge"><div class="online-dot"></div>KAI ONLINE</div>
+      <button class="hdr-btn hdr-btn-site" onclick="window.open('/','_blank')">VIEW SITE</button>
+      <button class="hdr-btn hdr-btn-out" onclick="doLogout()">LOGOUT</button>
     </div>
   </div>
 
-  <div id="sidebar">
-    <div class="sidebar-section">CONTENT</div>
-    <button class="sidebar-btn active" onclick="showPanel('threads')">📝 THREADS</button>
-    <button class="sidebar-btn" onclick="showPanel('vlogs')">▶ VLOGS</button>
-    <button class="sidebar-btn" onclick="showPanel('journal')">📖 JOURNAL</button>
-    <div class="sidebar-section">PROFILE</div>
-    <button class="sidebar-btn" onclick="showPanel('profile')">✨ PROFILE</button>
-    <button class="sidebar-btn" onclick="showPanel('links')">🔗 CORE LINKS</button>
-    <button class="sidebar-btn" onclick="showPanel('facts')">⭐ FUN FACTS</button>
-    <div class="sidebar-section">ANALYTICS</div>
-    <button class="sidebar-btn" onclick="showPanel('stats')">📊 STATS</button>
-    <div class="sidebar-section">LIVE</div>
-    <button class="sidebar-btn" onclick="showPanel('live')">📡 LIVE STAGE</button>
-    <button class="sidebar-btn" onclick="showPanel('guestbook')">✍ GUESTBOOK</button>
-  </div>
+  <div id="body-wrap">
+    <div id="sidebar">
+      <div class="sb-section">CONTENT</div>
+      <button class="sb-btn active" data-panel="threads">📝 THREADS</button>
+      <button class="sb-btn" data-panel="posts">📸 FEED POSTS</button>
+      <button class="sb-btn" data-panel="vlogs">▶ VLOGS</button>
+      <button class="sb-btn" data-panel="journal">📖 JOURNAL</button>
+      <div class="sb-section">PROFILE</div>
+      <button class="sb-btn" data-panel="profile">✨ PROFILE</button>
+      <button class="sb-btn" data-panel="links">🔗 CORE LINKS</button>
+      <button class="sb-btn" data-panel="facts">⭐ FUN FACTS</button>
+      <div class="sb-section">INTERACTIVE</div>
+      <button class="sb-btn" data-panel="live">📡 LIVE STAGE</button>
+      <button class="sb-btn" data-panel="guestbook">✍ GUESTBOOK</button>
+      <div class="sb-section">ANALYTICS</div>
+      <button class="sb-btn" data-panel="stats">📊 STATS</button>
+    </div>
 
-  <div id="main">
+    <div id="main">
 
-    <!-- THREADS PANEL -->
-    <div class="panel active" id="panel-threads">
-      <div class="panel-title">THREADS</div>
-      <div class="panel-sub">✦ POST & MANAGE THOUGHTS ✦</div>
-      <div class="card">
-        <div class="card-title">CREATE NEW THREAD</div>
-        <div class="form-group"><label class="form-label">Content</label><textarea class="form-input" id="et-content" rows="5" placeholder="What's on your mind..."></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="et-image" placeholder="https://..."></div>
-          <div class="form-group"><label class="form-label">YouTube URL</label><input class="form-input" id="et-video" placeholder="https://youtube.com/..."></div>
+      <!-- THREADS -->
+      <div class="panel active" id="panel-threads">
+        <div class="panel-title">THREADS</div>
+        <div class="panel-sub">post & manage kai's thoughts ♡</div>
+        <div class="card">
+          <div class="card-title">CREATE NEW THREAD</div>
+          <div class="form-group"><label class="form-label">Content</label><textarea class="form-input" id="et-content" rows="5" placeholder="What's on your mind..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="et-image" placeholder="https://..."></div>
+            <div class="form-group"><label class="form-label">YouTube URL</label><input class="form-input" id="et-video" placeholder="https://youtube.com/..."></div>
+          </div>
+          <button class="bubble-btn" onclick="createThread()">POST THREAD ✦</button>
         </div>
-        <button class="bubble-btn" onclick="createThread()">POST THREAD ✦</button>
-      </div>
-      <div class="card">
-        <div class="card-title">ALL THREADS</div>
-        <div id="threads-list"><div class="loader"></div></div>
-      </div>
-    </div>
-
-    <!-- VLOGS PANEL -->
-    <div class="panel" id="panel-vlogs">
-      <div class="panel-title">VLOGS</div>
-      <div class="panel-sub">▶ VIDEO DIARY MANAGER ▶</div>
-      <div class="card">
-        <div class="card-title">ADD VLOG ENTRY</div>
-        <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ev-title" placeholder="Vlog title..."></div>
-        <div class="form-group"><label class="form-label">YouTube URL</label><input class="form-input" id="ev-url" placeholder="https://youtube.com/..."></div>
-        <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ev-desc" rows="3" placeholder="What's this vlog about..."></textarea></div>
-        <button class="bubble-btn" onclick="addVlog()">ADD VLOG ✦</button>
-      </div>
-      <div class="card">
-        <div class="card-title">ALL VLOGS</div>
-        <div id="vlogs-list"><div class="loader"></div></div>
-      </div>
-    </div>
-
-    <!-- JOURNAL PANEL -->
-    <div class="panel" id="panel-journal">
-      <div class="panel-title">JOURNAL</div>
-      <div class="panel-sub">📖 PRIVATE ENTRIES</div>
-      <div class="card">
-        <div class="card-title">NEW ENTRY</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="ej-date"></div>
-          <div class="form-group"><label class="form-label">Mood</label><input class="form-input" id="ej-mood" placeholder="✨ Vibing"></div>
+        <div class="card">
+          <div class="card-title">ALL THREADS</div>
+          <div id="threads-list"><div class="loader"></div></div>
         </div>
-        <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ej-title" placeholder="Entry title..."></div>
-        <div class="form-group"><label class="form-label">Entry</label><textarea class="form-input" id="ej-content" rows="6" placeholder="Dear journal..."></textarea></div>
-        <button class="bubble-btn" onclick="saveJournalEntry()">SAVE ENTRY ✦</button>
       </div>
-      <div class="card">
-        <div class="card-title">ALL ENTRIES</div>
-        <div id="journal-list"><div class="loader"></div></div>
-      </div>
-    </div>
 
-    <!-- PROFILE PANEL -->
-    <div class="panel" id="panel-profile">
-      <div class="panel-title">PROFILE</div>
-      <div class="panel-sub">✨ MANAGE PUBLIC PROFILE ✨</div>
-      <div class="card">
-        <div class="card-title">PROFILE SETTINGS</div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="ep-name" placeholder="KAI"></div>
-          <div class="form-group"><label class="form-label">Mood Emoji</label><input class="form-input" id="ep-mood" placeholder="✨"></div>
+      <!-- FEED POSTS -->
+      <div class="panel" id="panel-posts">
+        <div class="panel-title">FEED POSTS</div>
+        <div class="panel-sub">instagram-style photo & video posts ♡</div>
+        <div class="card">
+          <div class="card-title">CREATE POST</div>
+          <div class="form-group"><label class="form-label">Caption</label><textarea class="form-input" id="ep-caption" rows="3" placeholder="Add a caption..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Image URL</label><input class="form-input" id="ep-image" placeholder="https://..."></div>
+            <div class="form-group"><label class="form-label">Video URL</label><input class="form-input" id="ep-video" placeholder="https://..."></div>
+          </div>
+          <button class="bubble-btn" onclick="createPost()">SHARE POST ✦</button>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ep-location" placeholder="Planet Earth"></div>
-          <div class="form-group"><label class="form-label">Zodiac</label><input class="form-input" id="ep-zodiac" placeholder="Scorpio"></div>
+        <div class="card">
+          <div class="card-title">ALL POSTS</div>
+          <div id="posts-list"><div class="loader"></div></div>
         </div>
-        <div class="form-group"><label class="form-label">Profile Picture URL</label><input class="form-input" id="ep-pic" placeholder="https://..."></div>
-        <div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" id="ep-bio" rows="4" placeholder="Tell the world..."></textarea></div>
-        <button class="bubble-btn" onclick="saveProfile()">SAVE PROFILE ✦</button>
       </div>
-    </div>
 
-    <!-- LINKS PANEL -->
-    <div class="panel" id="panel-links">
-      <div class="panel-title">CORE LINKS</div>
-      <div class="panel-sub">🔗 SOCIAL MEDIA LINKS</div>
-      <div class="card">
-        <div class="card-title">SOCIAL LINKS</div>
-        <div class="form-group"><label class="form-label">Instagram URL</label><input class="form-input" id="el-instagram" placeholder="https://instagram.com/kai"></div>
-        <div class="form-group"><label class="form-label">TikTok URL</label><input class="form-input" id="el-tiktok" placeholder="https://tiktok.com/@kai"></div>
-        <div class="form-group"><label class="form-label">Spotify URL</label><input class="form-input" id="el-spotify" placeholder="https://open.spotify.com/..."></div>
-        <button class="bubble-btn" onclick="saveLinks()">SAVE LINKS ✦</button>
+      <!-- VLOGS -->
+      <div class="panel" id="panel-vlogs">
+        <div class="panel-title">VLOGS</div>
+        <div class="panel-sub">▶ video diary manager ▶</div>
+        <div class="card">
+          <div class="card-title">ADD VLOG ENTRY</div>
+          <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ev-title" placeholder="Vlog title..."></div>
+          <div class="form-group"><label class="form-label">YouTube URL</label><input class="form-input" id="ev-url" placeholder="https://youtube.com/..."></div>
+          <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="ev-desc" rows="3" placeholder="What's this vlog about..."></textarea></div>
+          <button class="bubble-btn" onclick="addVlog()">ADD VLOG ✦</button>
+        </div>
+        <div class="card">
+          <div class="card-title">ALL VLOGS</div>
+          <div id="vlogs-list"><div class="loader"></div></div>
+        </div>
       </div>
-    </div>
 
-    <!-- FUN FACTS PANEL -->
-    <div class="panel" id="panel-facts">
-      <div class="panel-title">FUN FACTS</div>
-      <div class="panel-sub">⭐ 8 FACTS ABOUT KAI</div>
-      <div class="card">
-        <div class="card-title">EDIT ALL 8 FACTS</div>
-        <div id="facts-editor"></div>
-        <button class="bubble-btn" onclick="saveFacts()">SAVE ALL FACTS ✦</button>
+      <!-- JOURNAL -->
+      <div class="panel" id="panel-journal">
+        <div class="panel-title">JOURNAL</div>
+        <div class="panel-sub">📖 private entries — only you can see these ♡</div>
+        <div class="card">
+          <div class="card-title">NEW ENTRY</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="ej-date"></div>
+            <div class="form-group"><label class="form-label">Mood</label><input class="form-input" id="ej-mood" placeholder="✨ Vibing..."></div>
+          </div>
+          <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ej-title" placeholder="Entry title..."></div>
+          <div class="form-group"><label class="form-label">Entry</label><textarea class="form-input" id="ej-content" rows="7" placeholder="Dear journal..."></textarea></div>
+          <button class="bubble-btn" onclick="saveJournal()">SAVE ENTRY ✦</button>
+        </div>
+        <div class="card">
+          <div class="card-title">ALL ENTRIES</div>
+          <div id="journal-list"><div class="loader"></div></div>
+        </div>
       </div>
-    </div>
 
-    <!-- STATS PANEL -->
-    <div class="panel" id="panel-stats">
-      <div class="panel-title">ANALYTICS</div>
-      <div class="panel-sub">📊 VISITOR STATS & CONTENT OVERVIEW</div>
-      <div class="stats-grid">
-        <div class="stat-box"><div class="stat-num" id="s-total">–</div><div class="stat-lbl">TOTAL VISITORS</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-today">–</div><div class="stat-lbl">TODAY</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-active">–</div><div class="stat-lbl">ACTIVE NOW</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-threads">–</div><div class="stat-lbl">THREADS</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-comments">–</div><div class="stat-lbl">COMMENTS</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-vlogs">–</div><div class="stat-lbl">VLOGS</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-sigs">–</div><div class="stat-lbl">SIGNATURES</div></div>
+      <!-- PROFILE -->
+      <div class="panel" id="panel-profile">
+        <div class="panel-title">PROFILE</div>
+        <div class="panel-sub">✨ manage your public presence ✨</div>
+        <div class="card">
+          <div class="card-title">PROFILE SETTINGS</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="ep-name" placeholder="KAI"></div>
+            <div class="form-group"><label class="form-label">Mood Emoji</label><input class="form-input" id="ep-mood" placeholder="✨"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ep-location" placeholder="Planet Earth"></div>
+            <div class="form-group"><label class="form-label">Zodiac</label><input class="form-input" id="ep-zodiac" placeholder="Scorpio ♏"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Profile Picture URL</label><input class="form-input" id="ep-pic" placeholder="https://..."></div>
+          <div class="form-group"><label class="form-label">Bio</label><textarea class="form-input" id="ep-bio" rows="4" placeholder="Tell the world about yourself..."></textarea></div>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="ep-online"><span class="toggle-slider"></span></label>
+            <div class="toggle-label">SHOW AS ONLINE</div>
+          </div>
+          <button class="bubble-btn" onclick="saveProfile()">SAVE PROFILE ✦</button>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">TOP PAGES</div>
-        <div class="bar-chart" id="pages-chart"></div>
-      </div>
-    </div>
 
-    <!-- LIVE STAGE PANEL -->
-    <div class="panel" id="panel-live">
-      <div class="panel-title">LIVE STAGE</div>
-      <div class="panel-sub">📡 STREAMING CONTROL</div>
-      <div class="card">
-        <div class="card-title">LIVE STATUS</div>
-        <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="el-live-status"><span class="toggle-slider"></span></label><span class="toggle-label" id="live-status-label">OFFLINE</span></div>
-        <div class="form-group"><label class="form-label">YouTube Stream URL</label><input class="form-input" id="el-stream-url" placeholder="https://youtube.com/..."></div>
-        <div class="form-group"><label class="form-label">Offline Image URL</label><input class="form-input" id="el-offline-img" placeholder="https://..."></div>
-        <button class="bubble-btn" onclick="saveLiveSettings()">UPDATE LIVE STATUS ✦</button>
+      <!-- LINKS -->
+      <div class="panel" id="panel-links">
+        <div class="panel-title">CORE LINKS</div>
+        <div class="panel-sub">🔗 social media links shown on your site</div>
+        <div class="card">
+          <div class="card-title">SOCIAL LINKS</div>
+          <div class="form-group"><label class="form-label">Instagram URL</label><input class="form-input" id="el-instagram" placeholder="https://instagram.com/kai"></div>
+          <div class="form-group"><label class="form-label">TikTok URL</label><input class="form-input" id="el-tiktok" placeholder="https://tiktok.com/@kai"></div>
+          <div class="form-group"><label class="form-label">Spotify URL</label><input class="form-input" id="el-spotify" placeholder="https://open.spotify.com/..."></div>
+          <button class="bubble-btn" onclick="saveLinks()">SAVE LINKS ✦</button>
+        </div>
       </div>
-    </div>
 
-    <!-- GUESTBOOK PANEL -->
-    <div class="panel" id="panel-guestbook">
-      <div class="panel-title">GUESTBOOK</div>
-      <div class="panel-sub">✍ SIGNATURES FROM VISITORS</div>
-      <div class="card">
-        <div id="sigs-list"><div class="loader"></div></div>
+      <!-- FUN FACTS -->
+      <div class="panel" id="panel-facts">
+        <div class="panel-title">FUN FACTS</div>
+        <div class="panel-sub">⭐ 8 facts shown on your about page</div>
+        <div class="card">
+          <div class="card-title">EDIT ALL 8 FACTS</div>
+          <div id="facts-editor"><div class="loader"></div></div>
+          <button class="bubble-btn" onclick="saveFacts()" style="margin-top:8px">SAVE ALL FACTS ✦</button>
+        </div>
       </div>
-    </div>
 
-  </div>
-</div>
+      <!-- LIVE STAGE -->
+      <div class="panel" id="panel-live">
+        <div class="panel-title">LIVE STAGE</div>
+        <div class="panel-sub">📡 streaming control — go live from here</div>
+        <div class="card">
+          <div class="card-title">LIVE STATUS</div>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="el-live-status" onchange="updateLiveLabel()"><span class="toggle-slider"></span></label>
+            <div class="toggle-label" id="live-status-label">OFFLINE</div>
+          </div>
+          <div class="form-group"><label class="form-label">YouTube Stream URL or Video ID</label><input class="form-input" id="el-stream-url" placeholder="https://youtube.com/watch?v=..."></div>
+          <div class="form-group"><label class="form-label">Offline Image URL (background when not live)</label><input class="form-input" id="el-offline-img" placeholder="https://..."></div>
+          <button class="bubble-btn" onclick="saveLive()">UPDATE LIVE STATUS ✦</button>
+          <button class="bubble-btn bubble-btn-danger" onclick="clearChat()" style="margin-top:10px">CLEAR LIVE CHAT ✦</button>
+        </div>
+      </div>
+
+      <!-- GUESTBOOK -->
+      <div class="panel" id="panel-guestbook">
+        <div class="panel-title">GUESTBOOK</div>
+        <div class="panel-sub">✍ signatures from visitors</div>
+        <div class="card">
+          <div id="sigs-list"><div class="loader"></div></div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="panel" id="panel-stats">
+        <div class="panel-title">ANALYTICS</div>
+        <div class="panel-sub">📊 visitor stats & content overview</div>
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-num" id="s-total">–</div><div class="stat-lbl">TOTAL VISITORS</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-today">–</div><div class="stat-lbl">TODAY</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-active">–</div><div class="stat-lbl">ACTIVE NOW</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-threads">–</div><div class="stat-lbl">THREADS</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-comments">–</div><div class="stat-lbl">COMMENTS</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-vlogs">–</div><div class="stat-lbl">VLOGS</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-posts">–</div><div class="stat-lbl">POSTS</div></div>
+          <div class="stat-box"><div class="stat-num" id="s-sigs">–</div><div class="stat-lbl">SIGNATURES</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">TOP PAGES</div>
+          <div class="bar-chart" id="pages-chart"><div class="empty-msg">loading...</div></div>
+        </div>
+        <button class="bubble-btn" onclick="loadStats()">REFRESH STATS ✦</button>
+      </div>
+
+    </div><!-- /#main -->
+  </div><!-- /#body-wrap -->
+</div><!-- /#app -->
 
 <div id="toast"></div>
 
 <script>
-// ============================================================
-// CONFIGURATION - UPDATE THESE WITH YOUR SUPABASE CREDENTIALS!
-// ============================================================
-const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';  // ← UPDATE THIS
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';  // ← UPDATE THIS
-const API_URL = window.location.origin;
-
+/* ═══════════════════════════════════════════════════════════
+   CONFIG — injected by server at runtime
+═══════════════════════════════════════════════════════════ */
+const API = 'https://kaisworldb.onrender.com'  // same origin as the FastAPI backend
 let authToken = null;
 
-// ============================================================
-// HELPER FUNCTIONS
-// ============================================================
+/* ═══════════════════════════════════════════════════════════
+   API HELPER
+═══════════════════════════════════════════════════════════ */
+async function api(path, method = 'GET', body = null) {
+  const h = { 'Content-Type': 'application/json' };
+  if (authToken) h['Authorization'] = `Bearer ${authToken}`;
+  try {
+    const r = await fetch(API + path, {
+      method,
+      headers: h,
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (r.status === 401) { doLogout(); return null; }
+    if (!r.ok) { console.error('API error', r.status, path); return null; }
+    return await r.json();
+  } catch (e) {
+    console.error('fetch error', e);
+    return null;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════════════ */
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
-
-function esc(s) { 
-  if (!s) return ''; 
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); 
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+  catch(e) { return iso; }
 }
 
-function fmtDate(iso) { 
-  if (!iso) return ''; 
-  try { 
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); 
-  } catch(e) { 
-    return iso; 
-  } 
-}
-
-// ============================================================
-// DIRECT SUPABASE QUERIES (using anon key)
-// ============================================================
-async function supabaseQuery(table, method = 'GET', body = null, filter = null) {
-  const headers = {
-    'apikey': SUPABASE_ANON_KEY,
-    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-    'Content-Type': 'application/json'
-  };
-  
-  let url = `${SUPABASE_URL}/rest/v1/${table}`;
-  
-  if (method === 'GET') {
-    url += `?select=*`;
-    if (filter) url += `&${filter}`;
-  } else if (method === 'PATCH' && filter) {
-    url += `?${filter}`;
-  } else if (method === 'DELETE' && filter) {
-    url += `?${filter}`;
-  }
-  
-  try {
-    const res = await fetch(url, {
-      method: method,
-      headers: headers,
-      body: body ? JSON.stringify(body) : undefined
-    });
-    
-    if (!res.ok) {
-      console.error(`Supabase error ${res.status}:`, await res.text());
-      return { data: [], error: `HTTP ${res.status}` };
-    }
-    
-    const data = await res.json();
-    return { data: data || [], error: null };
-  } catch (err) {
-    console.error('Supabase fetch error:', err);
-    return { data: [], error: err.message };
-  }
-}
-
-// ============================================================
-// LOGIN (simple - just check credentials)
-// ============================================================
+/* ═══════════════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════════════ */
 async function doLogin() {
-  const email = document.getElementById('login-email').value;
-  const pass = document.getElementById('login-password').value;
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
   document.getElementById('login-error').style.display = 'none';
-  
-  // For now, just check if it matches the env vars
-  // In production, you'd call your backend
-  if (email === 'kaianna@kaicore.com' && pass === 'nirf8jf4f84jf84nff48fn8g338nff8nnfie8eei639204ksmdf') {
-    authToken = 'kai_authenticated';
+  if (!email || !pass) { toast('Fill in your details ♡'); return; }
+  const r = await fetch(API + '/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password: pass })
+  });
+  if (r.ok) {
+    const data = await r.json();
+    authToken = data.access_token;
     sessionStorage.setItem('lounge_token', authToken);
     enterLounge();
   } else {
     document.getElementById('login-error').style.display = 'block';
-    toast('Invalid credentials');
   }
-}
-
-function enterLounge() {
-  document.getElementById('login-screen').classList.add('hidden');
-  document.getElementById('app').classList.add('visible');
-  showPanel('threads');
-  loadAllData();
 }
 
 function doLogout() {
   authToken = null;
   sessionStorage.removeItem('lounge_token');
-  location.reload();
+  stopHeartbeat();
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-screen').classList.remove('gone');
 }
 
-function viewSite() { 
-  window.open('/', '_blank'); 
+/* ═══════════════════════════════════════════════════════════
+   ENTER LOUNGE
+═══════════════════════════════════════════════════════════ */
+function enterLounge() {
+  document.getElementById('login-screen').classList.add('gone');
+  document.getElementById('app').classList.add('visible');
+  showPanel('threads');
+  startHeartbeat();
+  loadProfile();  // pre-load profile for links panel
+  loadFacts();    // pre-load facts
 }
 
-function toggleSidebar() { 
-  document.getElementById('sidebar').classList.toggle('open'); 
+/* ═══════════════════════════════════════════════════════════
+   HEARTBEAT — keeps Kai's online status alive
+═══════════════════════════════════════════════════════════ */
+let heartbeatTimer = null;
+
+async function sendHeartbeat() {
+  await api('/api/kai/heartbeat', 'POST');
 }
 
-// ============================================================
-// PANEL NAVIGATION
-// ============================================================
+function startHeartbeat() {
+  sendHeartbeat();  // immediate
+  heartbeatTimer = setInterval(sendHeartbeat, 60000);  // every 60s
+  window.addEventListener('beforeunload', stopHeartbeat);
+}
+
+function stopHeartbeat() {
+  if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PANEL NAVIGATION
+═══════════════════════════════════════════════════════════ */
 function showPanel(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + id)?.classList.add('active');
-  
-  const btns = document.querySelectorAll('.sidebar-btn');
-  for (let btn of btns) {
-    if (btn.innerText.toLowerCase().includes(id)) {
-      btn.classList.add('active');
-      break;
-    }
-  }
-  
-  loadPanelData(id);
-}
-
-function loadPanelData(id) {
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  document.querySelector(`.sb-btn[data-panel="${id}"]`)?.classList.add('active');
+  // Load data for panel
   switch(id) {
-    case 'threads': loadThreads(); break;
-    case 'vlogs': loadVlogs(); break;
-    case 'journal': loadJournal(); break;
-    case 'profile': loadProfile(); break;
-    case 'links': loadProfile(); break;
-    case 'facts': loadFacts(); break;
-    case 'stats': loadStats(); break;
+    case 'threads':   loadThreads(); break;
+    case 'posts':     loadPosts(); break;
+    case 'vlogs':     loadVlogs(); break;
+    case 'journal':   loadJournal(); break;
+    case 'profile':   loadProfile(); break;
+    case 'links':     loadProfile(); break;
+    case 'facts':     loadFacts(); break;
+    case 'live':      loadLive(); break;
     case 'guestbook': loadGuestbook(); break;
-    case 'live': loadLiveSettings(); break;
+    case 'stats':     loadStats(); break;
   }
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
 }
 
-function loadAllData() {
-  loadThreads();
-  loadVlogs();
-  loadJournal();
-  loadProfile();
-  loadFacts();
-  loadStats();
-  loadGuestbook();
-  loadLiveSettings();
-}
+document.querySelectorAll('.sb-btn').forEach(btn => {
+  btn.addEventListener('click', () => showPanel(btn.dataset.panel));
+});
 
-// ============================================================
-// THREADS
-// ============================================================
+/* ═══════════════════════════════════════════════════════════
+   THREADS
+═══════════════════════════════════════════════════════════ */
 async function createThread() {
-  const content = document.getElementById('et-content').value.trim();
-  const image_url = document.getElementById('et-image').value.trim();
-  const video_url = document.getElementById('et-video').value.trim();
-  
-  if (!content) { toast('Write something first!'); return; }
-  
-  const { error } = await supabaseQuery('threads', 'POST', {
-    content: content,
-    image_url: image_url || null,
-    video_url: video_url || null
-  });
-  
-  if (error) { toast('Error posting thread'); return; }
-  
-  document.getElementById('et-content').value = '';
-  document.getElementById('et-image').value = '';
-  document.getElementById('et-video').value = '';
-  toast('Thread posted! ✦');
-  loadThreads();
+  const content   = document.getElementById('et-content').value.trim();
+  const image_url = document.getElementById('et-image').value.trim() || null;
+  const video_url = document.getElementById('et-video').value.trim() || null;
+  if (!content) { toast('Write something first ♡'); return; }
+  const r = await api('/api/threads', 'POST', { content, image_url, video_url });
+  if (r) {
+    document.getElementById('et-content').value = '';
+    document.getElementById('et-image').value   = '';
+    document.getElementById('et-video').value   = '';
+    toast('Thread posted ✦');
+    loadThreads();
+  } else { toast('Error posting thread'); }
 }
 
 async function loadThreads() {
   const el = document.getElementById('threads-list');
   el.innerHTML = '<div class="loader"></div>';
-  
-  const { data, error } = await supabaseQuery('threads', 'GET', null, 'order=created_at.desc');
-  
-  if (error || !data || !data.length) {
-    el.innerHTML = '<div class="empty-msg">No threads yet — post your first one!</div>';
-    return;
-  }
-  
-  el.innerHTML = data.map(t => `
+  const r = await api('/api/threads');
+  const threads = r?.data || [];
+  if (!threads.length) { el.innerHTML = '<div class="empty-msg">no threads yet — post your first one ♡</div>'; return; }
+  el.innerHTML = threads.map(t => `
     <div class="list-item">
-      <div class="list-item-meta">${fmtDate(t.created_at)} · 👁 ${t.view_count || 0} views · ${t.comment_count || 0} comments</div>
-      <div class="list-item-text">${esc((t.content || '').substring(0, 200))}</div>
+      <div class="list-item-meta">${fmtDate(t.created_at)} · 👁 ${t.view_count||0} · 💬 ${t.comment_count||0}</div>
+      <div class="list-item-text">${esc((t.content||'').substring(0,200))}</div>
+      ${t.image_url ? `<div style="margin-top:8px"><img src="${esc(t.image_url)}" style="max-height:80px;border-radius:10px;object-fit:cover;"></div>` : ''}
       <div class="list-item-actions">
-        <button class="action-btn action-btn-del" onclick="deleteThread('${t.id}')">DELETE</button>
+        <button class="act-btn act-del" onclick="deleteThread('${t.id}')">DELETE</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 async function deleteThread(id) {
-  if (!confirm('Delete this thread? This cannot be undone.')) return;
-  const { error } = await supabaseQuery('threads', 'DELETE', null, `id=eq.${id}`);
-  if (!error) {
-    toast('Thread deleted');
-    loadThreads();
-  } else {
-    toast('Error deleting thread');
+  if (!confirm('Delete this thread? Cannot be undone.')) return;
+  const r = await api('/api/threads/' + id, 'DELETE');
+  if (r) { toast('Thread deleted'); loadThreads(); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   POSTS
+═══════════════════════════════════════════════════════════ */
+async function createPost() {
+  const caption   = document.getElementById('ep-caption').value.trim() || null;
+  const image_url = document.getElementById('ep-image').value.trim()   || null;
+  const video_url = document.getElementById('ep-video').value.trim()   || null;
+  if (!caption && !image_url && !video_url) { toast('Add something first ♡'); return; }
+  const r = await api('/api/posts', 'POST', { caption, image_url, video_url });
+  if (r) {
+    document.getElementById('ep-caption').value = '';
+    document.getElementById('ep-image').value   = '';
+    document.getElementById('ep-video').value   = '';
+    toast('Post shared ✦');
+    loadPosts();
   }
 }
 
-// ============================================================
-// VLOGS
-// ============================================================
+async function loadPosts() {
+  const el = document.getElementById('posts-list');
+  el.innerHTML = '<div class="loader"></div>';
+  const r = await api('/api/posts');
+  const posts = r?.data || [];
+  if (!posts.length) { el.innerHTML = '<div class="empty-msg">no posts yet ♡</div>'; return; }
+  el.innerHTML = posts.map(p => `
+    <div class="list-item" style="display:flex;gap:14px;align-items:center;">
+      ${p.image_url ? `<img src="${esc(p.image_url)}" style="width:64px;height:64px;object-fit:cover;border-radius:12px;flex-shrink:0;">` :
+        p.video_url ? `<div style="width:64px;height:64px;background:rgba(255,105,180,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">▶</div>` :
+        `<div style="width:64px;height:64px;background:rgba(255,105,180,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">✦</div>`}
+      <div style="flex:1;min-width:0;">
+        <div class="list-item-meta">${fmtDate(p.created_at)} · ♥ ${p.like_count||0} likes</div>
+        <div class="list-item-text">${esc((p.caption||'').substring(0,100))}</div>
+      </div>
+      <button class="act-btn act-del" onclick="deletePost('${p.id}')">DEL</button>
+    </div>`).join('');
+}
+
+async function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  const r = await api('/api/posts/' + id, 'DELETE');
+  if (r) { toast('Post deleted'); loadPosts(); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VLOGS
+═══════════════════════════════════════════════════════════ */
 async function addVlog() {
-  const title = document.getElementById('ev-title').value.trim();
-  const url = document.getElementById('ev-url').value.trim();
-  const desc = document.getElementById('ev-desc').value.trim();
-  
-  if (!title || !url) { toast('Fill in title and URL!'); return; }
-  
-  const { error } = await supabaseQuery('vlogs', 'POST', {
-    title: title,
-    video_url: url,
-    description: desc || null
-  });
-  
-  if (error) { toast('Error adding vlog'); return; }
-  
-  document.getElementById('ev-title').value = '';
-  document.getElementById('ev-url').value = '';
-  document.getElementById('ev-desc').value = '';
-  toast('Vlog added! ✦');
-  loadVlogs();
+  const title       = document.getElementById('ev-title').value.trim();
+  const video_url   = document.getElementById('ev-url').value.trim();
+  const description = document.getElementById('ev-desc').value.trim() || null;
+  if (!title || !video_url) { toast('Fill in title and URL ♡'); return; }
+  const r = await api('/api/vlogs', 'POST', { title, video_url, description });
+  if (r) {
+    document.getElementById('ev-title').value = '';
+    document.getElementById('ev-url').value   = '';
+    document.getElementById('ev-desc').value  = '';
+    toast('Vlog added ✦');
+    loadVlogs();
+  }
 }
 
 async function loadVlogs() {
   const el = document.getElementById('vlogs-list');
   el.innerHTML = '<div class="loader"></div>';
-  
-  const { data, error } = await supabaseQuery('vlogs', 'GET', null, 'order=created_at.desc');
-  
-  if (error || !data || !data.length) {
-    el.innerHTML = '<div class="empty-msg">No vlogs yet</div>';
-    return;
-  }
-  
-  el.innerHTML = data.map(v => `
+  const r = await api('/api/vlogs');
+  const vlogs = r?.data || [];
+  if (!vlogs.length) { el.innerHTML = '<div class="empty-msg">no vlogs yet ♡</div>'; return; }
+  el.innerHTML = vlogs.map(v => `
     <div class="list-item">
-      <div class="list-item-title">${esc(v.title || 'Untitled')}</div>
+      <div class="list-item-title">${esc(v.title||'Untitled')}</div>
       <div class="list-item-meta">${fmtDate(v.created_at)}</div>
-      <div class="list-item-text">${esc((v.description || '').substring(0, 120))}</div>
+      <div class="list-item-text">${esc((v.description||'').substring(0,120))}</div>
       <div class="list-item-actions">
-        <button class="action-btn action-btn-del" onclick="deleteVlog('${v.id}')">DELETE</button>
+        <button class="act-btn act-del" onclick="deleteVlog('${v.id}')">DELETE</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 async function deleteVlog(id) {
   if (!confirm('Delete this vlog?')) return;
-  const { error } = await supabaseQuery('vlogs', 'DELETE', null, `id=eq.${id}`);
-  if (!error) {
-    toast('Vlog deleted');
-    loadVlogs();
-  }
+  const r = await api('/api/vlogs/' + id, 'DELETE');
+  if (r) { toast('Vlog deleted'); loadVlogs(); }
 }
 
-// ============================================================
-// JOURNAL
-// ============================================================
-async function saveJournalEntry() {
-  const entry = {
-    date: document.getElementById('ej-date').value,
-    mood: document.getElementById('ej-mood').value.trim(),
-    title: document.getElementById('ej-title').value.trim(),
-    content: document.getElementById('ej-content').value.trim()
+/* ═══════════════════════════════════════════════════════════
+   JOURNAL
+═══════════════════════════════════════════════════════════ */
+async function saveJournal() {
+  const content = document.getElementById('ej-content').value.trim();
+  if (!content) { toast('Write something first ♡'); return; }
+  const body = {
+    date:    document.getElementById('ej-date').value   || null,
+    mood:    document.getElementById('ej-mood').value.trim() || null,
+    title:   document.getElementById('ej-title').value.trim() || null,
+    content,
   };
-  
-  if (!entry.content) { toast('Write something first!'); return; }
-  
-  const { error } = await supabaseQuery('journal_entries', 'POST', entry);
-  
-  if (error) { toast('Error saving entry'); return; }
-  
-  document.getElementById('ej-content').value = '';
-  document.getElementById('ej-title').value = '';
-  document.getElementById('ej-mood').value = '';
-  toast('Journal saved ✦');
-  loadJournal();
+  const r = await api('/api/journal', 'POST', body);
+  if (r) {
+    document.getElementById('ej-content').value = '';
+    document.getElementById('ej-title').value   = '';
+    document.getElementById('ej-mood').value    = '';
+    toast('Journal saved ♡');
+    loadJournal();
+  }
 }
 
 async function loadJournal() {
   const el = document.getElementById('journal-list');
   el.innerHTML = '<div class="loader"></div>';
-  
-  const { data, error } = await supabaseQuery('journal_entries', 'GET', null, 'order=created_at.desc');
-  
-  if (error || !data || !data.length) {
-    el.innerHTML = '<div class="empty-msg">No journal entries yet</div>';
-    return;
-  }
-  
-  el.innerHTML = data.map(e => `
+  const r = await api('/api/journal');
+  const entries = r?.data || [];
+  if (!entries.length) { el.innerHTML = '<div class="empty-msg">no journal entries yet ♡</div>'; return; }
+  el.innerHTML = entries.map(e => `
     <div class="list-item">
-      <div class="list-item-title">${esc(e.title || 'Untitled Entry')} ${e.mood ? '· ' + esc(e.mood) : ''}</div>
+      <div class="list-item-title">${esc(e.title||'Untitled Entry')} ${e.mood ? '<span style="font-size:13px;">· '+esc(e.mood)+'</span>' : ''}</div>
       <div class="list-item-meta">${e.date || fmtDate(e.created_at)}</div>
-      <div class="list-item-text">${esc((e.content || '').substring(0, 150))}...</div>
+      <div class="list-item-text">${esc((e.content||'').substring(0,200))}...</div>
       <div class="list-item-actions">
-        <button class="action-btn action-btn-del" onclick="deleteJournalEntry('${e.id}')">DELETE</button>
+        <button class="act-btn act-del" onclick="deleteJournal('${e.id}')">DELETE</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-async function deleteJournalEntry(id) {
-  const { error } = await supabaseQuery('journal_entries', 'DELETE', null, `id=eq.${id}`);
-  if (!error) {
-    toast('Entry deleted');
-    loadJournal();
-  }
+async function deleteJournal(id) {
+  const r = await api('/api/journal/' + id, 'DELETE');
+  if (r) { toast('Entry deleted'); loadJournal(); }
 }
 
-// ============================================================
-// PROFILE & LINKS
-// ============================================================
+/* ═══════════════════════════════════════════════════════════
+   PROFILE
+═══════════════════════════════════════════════════════════ */
+let profileLoaded = false;
 async function loadProfile() {
-  const { data, error } = await supabaseQuery('kai_settings', 'GET', null, 'limit=1');
-  
-  if (error || !data || !data.length) return;
-  
-  const s = data[0];
-  document.getElementById('ep-name').value = s.name || 'KAI';
-  document.getElementById('ep-mood').value = s.mood_emoji || '✨';
+  const r = await api('/api/profile');
+  if (!r) return;
+  profileLoaded = true;
+  const s = r;
+  document.getElementById('ep-name').value     = s.name || 'KAI';
+  document.getElementById('ep-mood').value     = s.mood_emoji || '';
   document.getElementById('ep-location').value = s.location || '';
-  document.getElementById('ep-zodiac').value = s.zodiac || '';
-  document.getElementById('ep-pic').value = s.profile_pic_url || '';
-  document.getElementById('ep-bio').value = s.bio || '';
-  document.getElementById('el-instagram').value = s.social_instagram || '';
-  document.getElementById('el-tiktok').value = s.social_tiktok || '';
-  document.getElementById('el-spotify').value = s.social_spotify || '';
+  document.getElementById('ep-zodiac').value   = s.zodiac || '';
+  document.getElementById('ep-pic').value      = s.profile_pic_url || '';
+  document.getElementById('ep-bio').value      = s.bio || '';
+  document.getElementById('ep-online').checked = !!s.kai_online_status;
+  if (document.getElementById('el-instagram'))
+    document.getElementById('el-instagram').value = s.social_instagram || '';
+  if (document.getElementById('el-tiktok'))
+    document.getElementById('el-tiktok').value    = s.social_tiktok || '';
+  if (document.getElementById('el-spotify'))
+    document.getElementById('el-spotify').value   = s.social_spotify || '';
 }
 
 async function saveProfile() {
-  const settings = {
-    name: document.getElementById('ep-name').value.trim() || 'KAI',
-    mood_emoji: document.getElementById('ep-mood').value.trim() || null,
-    location: document.getElementById('ep-location').value.trim() || null,
-    zodiac: document.getElementById('ep-zodiac').value.trim() || null,
-    profile_pic_url: document.getElementById('ep-pic').value.trim() || null,
-    bio: document.getElementById('ep-bio').value.trim() || null,
-    social_instagram: document.getElementById('el-instagram').value.trim() || null,
-    social_tiktok: document.getElementById('el-tiktok').value.trim() || null,
-    social_spotify: document.getElementById('el-spotify').value.trim() || null
+  const body = {
+    name:              document.getElementById('ep-name').value.trim()     || 'KAI',
+    mood_emoji:        document.getElementById('ep-mood').value.trim()     || null,
+    location:          document.getElementById('ep-location').value.trim() || null,
+    zodiac:            document.getElementById('ep-zodiac').value.trim()   || null,
+    profile_pic_url:   document.getElementById('ep-pic').value.trim()      || null,
+    bio:               document.getElementById('ep-bio').value.trim()      || null,
+    kai_online_status: document.getElementById('ep-online').checked,
   };
-  
-  const { data: existing } = await supabaseQuery('kai_settings', 'GET', null, 'limit=1');
-  
-  if (existing && existing.length) {
-    await supabaseQuery('kai_settings', 'PATCH', settings, `id=eq.${existing[0].id}`);
-  } else {
-    await supabaseQuery('kai_settings', 'POST', settings);
-  }
-  
-  toast('Profile saved! ✦');
+  const r = await api('/api/profile', 'PATCH', body);
+  if (r) toast('Profile saved ✦');
+  else    toast('Error saving profile');
 }
 
 async function saveLinks() {
-  await saveProfile();
+  const body = {
+    social_instagram: document.getElementById('el-instagram').value.trim() || null,
+    social_tiktok:    document.getElementById('el-tiktok').value.trim()    || null,
+    social_spotify:   document.getElementById('el-spotify').value.trim()   || null,
+  };
+  const r = await api('/api/profile', 'PATCH', body);
+  if (r) toast('Links saved ✦');
+  else    toast('Error saving links');
 }
 
-// ============================================================
-// FUN FACTS
-// ============================================================
+/* ═══════════════════════════════════════════════════════════
+   FUN FACTS
+═══════════════════════════════════════════════════════════ */
+let existingFacts = [];
 async function loadFacts() {
   const el = document.getElementById('facts-editor');
   if (!el) return;
-  
+  const r = await api('/api/facts');
+  existingFacts = r?.data || [];
   el.innerHTML = '';
-  
-  const { data, error } = await supabaseQuery('fun_facts', 'GET', null, 'order=slot_number.asc');
-  
   for (let i = 1; i <= 8; i++) {
-    const fact = data?.find(f => f.slot_number === i);
-    el.innerHTML += `
-      <div class="form-group">
-        <label class="form-label">Fact ${i}</label>
-        <input class="form-input" id="ef-${i}" placeholder="Fun fact..." value="${esc(fact?.fact_text || '')}">
-      </div>
-    `;
+    const fact = existingFacts.find(f => f.slot_number === i);
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = `<label class="form-label">Fact ${i}</label><input class="form-input" id="ef-${i}" placeholder="Fun fact about kai..." value="${esc(fact?.fact_text||'')}">`;
+    el.appendChild(div);
   }
 }
 
 async function saveFacts() {
+  const facts = [];
   for (let i = 1; i <= 8; i++) {
     const el = document.getElementById(`ef-${i}`);
-    if (!el) continue;
-    
-    const factText = el.value.trim();
-    if (factText) {
-      await supabaseQuery('fun_facts', 'POST', {
-        slot_number: i,
-        fact_text: factText,
-        updated_at: new Date().toISOString()
-      });
-    }
+    if (el && el.value.trim()) facts.push({ slot_number: i, fact_text: el.value.trim() });
   }
-  toast('Fun facts saved! ✦');
-  loadFacts();
+  const r = await api('/api/facts', 'POST', facts);
+  if (r) toast('Fun facts saved ✦');
+  else    toast('Error saving facts');
 }
 
-// ============================================================
-// STATS
-// ============================================================
-async function loadStats() {
-  // Get counts from Supabase
-  const [threadsRes, commentsRes, vlogsRes, sigsRes, visitorsRes] = await Promise.all([
-    supabaseQuery('threads', 'GET', null, 'select=id'),
-    supabaseQuery('comments', 'GET', null, 'select=id'),
-    supabaseQuery('vlogs', 'GET', null, 'select=id'),
-    supabaseQuery('iwashere_signatures', 'GET', null, 'select=id'),
-    supabaseQuery('visitors', 'GET', null, 'select=visitor_id,page,created_at')
-  ]);
-  
-  const threads = threadsRes.data || [];
-  const comments = commentsRes.data || [];
-  const vlogs = vlogsRes.data || [];
-  const sigs = sigsRes.data || [];
-  const visitors = visitorsRes.data || [];
-  
-  // Calculate stats
-  const uniqueVisitors = new Set(visitors.map(v => v.visitor_id)).size;
-  const today = new Date().toISOString().split('T')[0];
-  const todayVisits = visitors.filter(v => (v.created_at || '').startsWith(today)).length;
-  
-  // Page counts
-  const pageCounts = {};
-  visitors.forEach(v => {
-    const page = v.page || 'home';
-    pageCounts[page] = (pageCounts[page] || 0) + 1;
-  });
-  const topPages = Object.entries(pageCounts)
-    .map(([label, count]) => ({ label, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10);
-  
-  // Update UI
-  document.getElementById('s-total').textContent = uniqueVisitors;
-  document.getElementById('s-today').textContent = todayVisits;
-  document.getElementById('s-active').textContent = '?';
-  document.getElementById('s-threads').textContent = threads.length;
-  document.getElementById('s-comments').textContent = comments.length;
-  document.getElementById('s-vlogs').textContent = vlogs.length;
-  document.getElementById('s-sigs').textContent = sigs.length;
-  
-  // Render chart
-  if (topPages.length) {
-    const maxCount = Math.max(...topPages.map(p => p.count));
-    document.getElementById('pages-chart').innerHTML = topPages.map(p => `
-      <div class="bar-row">
-        <span class="bar-label">${esc(p.label)}</span>
-        <div class="bar-track"><div class="bar-fill" style="width: ${maxCount > 0 ? (p.count / maxCount * 100) : 0}%"></div></div>
-        <span class="bar-val">${p.count}</span>
-      </div>
-    `).join('');
-  }
+/* ═══════════════════════════════════════════════════════════
+   LIVE
+═══════════════════════════════════════════════════════════ */
+function updateLiveLabel() {
+  const live = document.getElementById('el-live-status').checked;
+  document.getElementById('live-status-label').textContent = live ? '🔴 LIVE NOW' : 'OFFLINE';
 }
 
-// ============================================================
-// GUESTBOOK
-// ============================================================
+async function loadLive() {
+  const r = await api('/api/live');
+  if (!r) return;
+  document.getElementById('el-live-status').checked = !!r.is_live;
+  document.getElementById('el-stream-url').value    = r.stream_url || '';
+  document.getElementById('el-offline-img').value   = r.offline_image_url || '';
+  updateLiveLabel();
+}
+
+async function saveLive() {
+  const body = {
+    is_live:           document.getElementById('el-live-status').checked,
+    stream_url:        document.getElementById('el-stream-url').value.trim()  || null,
+    offline_image_url: document.getElementById('el-offline-img').value.trim() || null,
+  };
+  const r = await api('/api/live', 'PATCH', body);
+  if (r) { toast(body.is_live ? '🔴 You are LIVE ♡' : 'Stream ended ♡'); }
+  else    { toast('Error updating live status'); }
+}
+
+async function clearChat() {
+  if (!confirm('Clear all live chat messages?')) return;
+  const r = await api('/api/chat', 'DELETE');
+  if (r) toast('Chat cleared ♡');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GUESTBOOK
+═══════════════════════════════════════════════════════════ */
 async function loadGuestbook() {
   const el = document.getElementById('sigs-list');
   el.innerHTML = '<div class="loader"></div>';
-  
-  const { data, error } = await supabaseQuery('iwashere_signatures', 'GET', null, 'order=created_at.desc');
-  
-  if (error || !data || !data.length) {
-    el.innerHTML = '<div class="empty-msg">No signatures yet</div>';
-    return;
-  }
-  
-  el.innerHTML = data.map(s => `
+  const r = await api('/api/signatures');
+  const sigs = r?.data || [];
+  if (!sigs.length) { el.innerHTML = '<div class="empty-msg">no signatures yet ♡</div>'; return; }
+  el.innerHTML = sigs.map(s => `
     <div class="list-item">
-      <div class="list-item-title">${esc(s.name || 'Anonymous')}</div>
+      <div class="list-item-title">${esc(s.name||'Anonymous')}</div>
       <div class="list-item-meta">${fmtDate(s.created_at)}</div>
-      <div class="list-item-text">${esc(s.message || '')}</div>
+      <div class="list-item-text">${esc(s.message||'')}</div>
       <div class="list-item-actions">
-        <button class="action-btn action-btn-del" onclick="deleteSignature('${s.id}')">DELETE</button>
+        <button class="act-btn act-del" onclick="deleteSig('${s.id}')">DELETE</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-async function deleteSignature(id) {
-  const { error } = await supabaseQuery('iwashere_signatures', 'DELETE', null, `id=eq.${id}`);
-  if (!error) {
-    toast('Signature deleted');
-    loadGuestbook();
-  }
+async function deleteSig(id) {
+  const r = await api('/api/signatures/' + id, 'DELETE');
+  if (r) { toast('Signature deleted'); loadGuestbook(); }
 }
 
-// ============================================================
-// LIVE SETTINGS
-// ============================================================
-async function loadLiveSettings() {
-  const { data, error } = await supabaseQuery('live_status', 'GET', null, 'limit=1');
-  
-  if (data && data.length) {
-    const s = data[0];
-    document.getElementById('el-live-status').checked = !!s.is_live;
-    document.getElementById('live-status-label').textContent = s.is_live ? '🔴 LIVE' : 'OFFLINE';
-    document.getElementById('el-stream-url').value = s.stream_url || '';
-    document.getElementById('el-offline-img').value = s.offline_image_url || '';
-  }
-}
-
-async function saveLiveSettings() {
-  const is_live = document.getElementById('el-live-status').checked;
-  const stream_url = document.getElementById('el-stream-url').value.trim();
-  const offline_image_url = document.getElementById('el-offline-img').value.trim();
-  
-  const { data: existing } = await supabaseQuery('live_status', 'GET', null, 'limit=1');
-  
-  if (existing && existing.length) {
-    await supabaseQuery('live_status', 'PATCH', {
-      is_live: is_live,
-      stream_url: stream_url,
-      offline_image_url: offline_image_url,
-      updated_at: new Date().toISOString()
-    }, `id=eq.${existing[0].id}`);
+/* ═══════════════════════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════════════════════ */
+async function loadStats() {
+  const r = await api('/api/stats');
+  if (!r) { toast('Could not load stats'); return; }
+  document.getElementById('s-total').textContent    = r.total    ?? '–';
+  document.getElementById('s-today').textContent    = r.today    ?? '–';
+  document.getElementById('s-active').textContent   = r.active   ?? '–';
+  document.getElementById('s-threads').textContent  = r.threads  ?? '–';
+  document.getElementById('s-comments').textContent = r.comments ?? '–';
+  document.getElementById('s-vlogs').textContent    = r.vlogs    ?? '–';
+  document.getElementById('s-posts').textContent    = r.posts    ?? '–';
+  document.getElementById('s-sigs').textContent     = r.signatures ?? '–';
+  const chartEl = document.getElementById('pages-chart');
+  if (r.pages && r.pages.length) {
+    const max = r.pages[0].count;
+    chartEl.innerHTML = r.pages.map(p => `
+      <div class="bar-row">
+        <span class="bar-label">${esc(p.label)}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${max>0?Math.round(p.count/max*100):0}%"></div></div>
+        <span class="bar-val">${p.count}</span>
+      </div>`).join('');
   } else {
-    await supabaseQuery('live_status', 'POST', {
-      is_live: is_live,
-      stream_url: stream_url,
-      offline_image_url: offline_image_url
-    });
+    chartEl.innerHTML = '<div class="empty-msg">no page data yet ♡</div>';
   }
-  
-  toast(is_live ? '🔴 You are LIVE!' : 'Stream ended');
-  loadLiveSettings();
 }
 
-// ============================================================
-// INITIALIZATION
-// ============================================================
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date for journal
+  document.getElementById('ej-date').value = new Date().toISOString().split('T')[0];
+  // Login with Enter key
+  document.getElementById('login-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  // Auto-login if token saved
   const saved = sessionStorage.getItem('lounge_token');
   if (saved) {
     authToken = saved;
     enterLounge();
   }
-  
-  document.getElementById('ej-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('login-password').addEventListener('keydown', e => {
-    if (e.key === 'Enter') doLogin();
-  });
 });
 </script>
 </body>
