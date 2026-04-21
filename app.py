@@ -1,10 +1,7 @@
 import os
-import io
 import uuid
-import mimetypes
 from datetime import datetime, timedelta, timezone
-from typing import Optional
-
+from typing import Optional, List
 from fastapi import FastAPI, Request, Response, HTTPException, Header, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
@@ -21,85 +18,165 @@ SUPABASE_ANON_KEY    = os.getenv("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", SUPABASE_ANON_KEY)
 KAI_EMAIL            = os.getenv("KAI_EMAIL")
 KAI_PASSWORD         = os.getenv("KAI_PASSWORD")
-FRONTEND_URL         = os.getenv("FRONTEND_URL", "*")
 PORT                 = int(os.getenv("PORT", "8000"))
 
-# Track Kai's online status (heartbeat)
 KAI_LAST_ACTIVE = None
 
-print(f"🔧 Environment check:")
-print(f"  SUPABASE_URL: {SUPABASE_URL[:30] if SUPABASE_URL else 'NOT SET'}...")
-print(f"  SUPABASE_ANON_KEY: {SUPABASE_ANON_KEY[:20] if SUPABASE_ANON_KEY else 'NOT SET'}...")
-print(f"  KAI_EMAIL: {KAI_EMAIL}")
-print(f"  PORT: {PORT}")
+print(f"🔧 SUPABASE_URL: {'SET' if SUPABASE_URL else 'NOT SET'}")
+print(f"🔧 KAI_EMAIL: {KAI_EMAIL}")
 
-# ─── Sprite storage directory ──────────────────────────────────────────────────
+# ─── Sprite storage ────────────────────────────────────────────────────────────
 SPRITES_DIR = os.path.join(os.path.dirname(__file__), "sprites")
 os.makedirs(SPRITES_DIR, exist_ok=True)
 
-# ─── Load frontend HTML files ─────────────────────────────────────────────────
-_HTML_PATH = os.path.join(os.path.dirname(__file__), "index.html")
-try:
-    with open(_HTML_PATH, "r", encoding="utf-8") as _f:
-        _HTML_TEMPLATE = _f.read()
-    print(f"✓ Loaded index.html ({len(_HTML_TEMPLATE)} chars)")
-except FileNotFoundError:
-    _HTML_TEMPLATE = """<!DOCTYPE html><html><head><title>KAICORE</title></head><body><h1>KAICORE</h1><p>index.html not found</p></body></html>"""
-    print("✗ index.html NOT FOUND")
+# ─── Load HTML files ───────────────────────────────────────────────────────────
+def load_html(name):
+    path = os.path.join(os.path.dirname(__file__), name)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return f"<html><body><h1>{name} not found</h1></body></html>"
 
-_LOUNGE_PATH = os.path.join(os.path.dirname(__file__), "kais_lounge.html")
-try:
-    with open(_LOUNGE_PATH, "r", encoding="utf-8") as _f:
-        _LOUNGE_TEMPLATE = _f.read()
-    print(f"✓ Loaded kais_lounge.html ({len(_LOUNGE_TEMPLATE)} chars)")
-except FileNotFoundError:
-    _LOUNGE_TEMPLATE = """<!DOCTYPE html><html><head><title>KAI'S LOUNGE</title></head><body><h1>KAI'S LOUNGE</h1><p>kais_lounge.html not found</p></body></html>"""
-    print("✗ kais_lounge.html NOT FOUND")
+_HTML_TEMPLATE   = load_html("index.html")
+_LOUNGE_TEMPLATE = load_html("kais_lounge.html")
 
 def inject_config(html: str, admin: bool = False) -> str:
-    """Inject real Supabase credentials into an HTML template."""
-    html = html.replace("'SUPABASE_URL'", f"'{SUPABASE_URL}'")
-    html = html.replace('"SUPABASE_URL"', f'"{SUPABASE_URL}"')
-    html = html.replace("'SUPABASE_ANON_KEY'", f"'{SUPABASE_ANON_KEY}'")
-    html = html.replace('"SUPABASE_ANON_KEY"', f'"{SUPABASE_ANON_KEY}"')
-    html = html.replace("'SUPABASE_SERVICE_KEY'", f"'{SUPABASE_SERVICE_KEY}'")
-    html = html.replace('"SUPABASE_SERVICE_KEY"', f'"{SUPABASE_SERVICE_KEY}"')
-    
+    html = html.replace("'SUPABASE_URL'",         f"'{SUPABASE_URL}'")
+    html = html.replace('"SUPABASE_URL"',          f'"{SUPABASE_URL}"')
+    html = html.replace("'SUPABASE_ANON_KEY'",     f"'{SUPABASE_ANON_KEY}'")
+    html = html.replace('"SUPABASE_ANON_KEY"',     f'"{SUPABASE_ANON_KEY}"')
+    html = html.replace("'SUPABASE_SERVICE_KEY'",  f"'{SUPABASE_SERVICE_KEY}'")
+    html = html.replace('"SUPABASE_SERVICE_KEY"',  f'"{SUPABASE_SERVICE_KEY}"')
     if admin:
         html = html.replace("</body>", "<script>window.__KAI_ADMIN__ = true;</script>\n</body>")
-    
     return html
 
 # ─── App ───────────────────────────────────────────────────────────────────────
-app = FastAPI(
-    title="KAICORE API",
-    description="Backend for KAICORE — Kai's personal digital space",
-    version="3.0.0",
-    docs_url="/api/docs",
-    redoc_url=None,
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Serve sprites as static files
+app = FastAPI(title="KAICORE API", version="4.0.0", docs_url="/api/docs", redoc_url=None)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 app.mount("/sprites", StaticFiles(directory=SPRITES_DIR), name="sprites")
 
+# ─── Supabase helper ───────────────────────────────────────────────────────────
+def sb_headers(service=True):
+    key = SUPABASE_SERVICE_KEY if service else SUPABASE_ANON_KEY
+    return {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation",
+    }
+
+async def sb_get(table: str, params: str = "select=*&order=created_at.desc"):
+    if not SUPABASE_URL:
+        return []
+    async with httpx.AsyncClient(timeout=15) as c:
+        r = await c.get(f"{SUPABASE_URL}/rest/v1/{table}?{params}", headers=sb_headers())
+    return r.json() if r.is_success else []
+
+async def sb_post(table: str, body: dict):
+    if not SUPABASE_URL:
+        return None
+    async with httpx.AsyncClient(timeout=15) as c:
+        r = await c.post(f"{SUPABASE_URL}/rest/v1/{table}", headers=sb_headers(), json=body)
+    return r.json() if r.is_success else None
+
+async def sb_patch(table: str, filter_str: str, body: dict):
+    if not SUPABASE_URL:
+        return None
+    async with httpx.AsyncClient(timeout=15) as c:
+        r = await c.patch(f"{SUPABASE_URL}/rest/v1/{table}?{filter_str}", headers=sb_headers(), json=body)
+    return r.json() if r.is_success else None
+
+async def sb_delete(table: str, filter_str: str):
+    if not SUPABASE_URL:
+        return True
+    async with httpx.AsyncClient(timeout=15) as c:
+        r = await c.delete(f"{SUPABASE_URL}/rest/v1/{table}?{filter_str}", headers=sb_headers())
+    return r.is_success
+
+# ─── Auth helper ───────────────────────────────────────────────────────────────
+async def require_kai(authorization: Optional[str] = Header(None)):
+    if not authorization or authorization != "Bearer kai_authenticated":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return True
+
+async def is_kai(authorization: Optional[str] = Header(None)) -> bool:
+    return authorization == "Bearer kai_authenticated"
+
 # ─── Models ────────────────────────────────────────────────────────────────────
+class LoginPayload(BaseModel):
+    email: str
+    password: str
+
 class TrackPayload(BaseModel):
     visitor_id: str
     page: str = "home"
     referrer: Optional[str] = None
     ua: Optional[str] = None
 
-class LoginPayload(BaseModel):
-    email: str
-    password: str
+class ThreadPayload(BaseModel):
+    content: str
+    image_url: Optional[str] = None
+    video_url: Optional[str] = None
+
+class PostPayload(BaseModel):
+    caption: Optional[str] = None
+    image_url: Optional[str] = None
+    video_url: Optional[str] = None
+    like_count: int = 0
+
+class CommentPayload(BaseModel):
+    thread_id: str
+    parent_id: Optional[str] = None
+    author_name: Optional[str] = "anonymous"
+    author_color: Optional[str] = "#FF69B4"
+    content: str
+
+class VlogPayload(BaseModel):
+    title: str
+    video_url: str
+    description: Optional[str] = None
+
+class ProfilePayload(BaseModel):
+    name: Optional[str] = None
+    mood_emoji: Optional[str] = None
+    location: Optional[str] = None
+    zodiac: Optional[str] = None
+    profile_pic_url: Optional[str] = None
+    bio: Optional[str] = None
+    kai_online_status: Optional[bool] = None
+    social_instagram: Optional[str] = None
+    social_tiktok: Optional[str] = None
+    social_spotify: Optional[str] = None
+
+class FactsPayload(BaseModel):
+    slot_number: int
+    fact_text: str
+
+class LivePayload(BaseModel):
+    is_live: bool = False
+    stream_url: Optional[str] = None
+    offline_image_url: Optional[str] = None
+
+class SignaturePayload(BaseModel):
+    name: str
+    message: str
+    visitor_id: Optional[str] = None
+
+class ChatPayload(BaseModel):
+    author_name: str = "Anonymous"
+    message: str
+    session_id: Optional[str] = None
+
+class JournalPayload(BaseModel):
+    date: Optional[str] = None
+    mood: Optional[str] = None
+    title: Optional[str] = None
+    content: str
+
+class VotePayload(BaseModel):
+    direction: str  # "up" or "down"
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE ROUTES
@@ -107,125 +184,389 @@ class LoginPayload(BaseModel):
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend():
-    """Serve the main KAICORE frontend."""
     return HTMLResponse(content=inject_config(_HTML_TEMPLATE, admin=False))
 
 @app.get("/kai", response_class=HTMLResponse, include_in_schema=False)
 async def serve_kai_admin():
-    """Kai's private admin entry point."""
     return HTMLResponse(content=inject_config(_HTML_TEMPLATE, admin=True))
 
 @app.get("/lounge", response_class=HTMLResponse, include_in_schema=False)
-async def serve_kais_lounge():
-    """Kai's Lounge — full standalone admin panel."""
+async def serve_lounge():
     return HTMLResponse(content=inject_config(_LOUNGE_TEMPLATE, admin=False))
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  AUTHENTICATION
+#  AUTH
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.post("/api/auth/login")
 async def auth_login(payload: LoginPayload):
-    """Login using Render env credentials."""
     if payload.email == KAI_EMAIL and payload.password == KAI_PASSWORD:
-        return {
-            "access_token": "kai_authenticated",
-            "token_type": "bearer",
-            "expires_in": 86400
-        }
+        return {"access_token": "kai_authenticated", "token_type": "bearer", "expires_in": 86400}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
-async def verify_kai_token(authorization: Optional[str] = Header(None)) -> bool:
-    """Verify if request is from authenticated Kai."""
-    return authorization is not None and authorization == "Bearer kai_authenticated"
-
 # ══════════════════════════════════════════════════════════════════════════════
-#  KAI ONLINE STATUS (Heartbeat)
+#  KAI ONLINE STATUS
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.post("/api/kai/heartbeat")
 async def kai_heartbeat(authorization: Optional[str] = Header(None)):
-    """Track when Kai is active in the lounge."""
     global KAI_LAST_ACTIVE
-    if not await verify_kai_token(authorization):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    
+    await require_kai(authorization)
     KAI_LAST_ACTIVE = datetime.now(timezone.utc)
     return JSONResponse({"status": "online"})
 
 @app.get("/api/kai/status")
 async def kai_status():
-    """Check if Kai is currently online (active in last 5 minutes)."""
     global KAI_LAST_ACTIVE
-    if KAI_LAST_ACTIVE and (datetime.now(timezone.utc) - KAI_LAST_ACTIVE).seconds < 300:
-        return JSONResponse({"online": True, "last_active": KAI_LAST_ACTIVE.isoformat()})
+    if KAI_LAST_ACTIVE:
+        diff = (datetime.now(timezone.utc) - KAI_LAST_ACTIVE).total_seconds()
+        if diff < 300:
+            return JSONResponse({"online": True, "last_active": KAI_LAST_ACTIVE.isoformat()})
     return JSONResponse({"online": False})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  SUPABASE PROXY (for lounge page)
+#  PROFILE  (kai_settings table)
 # ══════════════════════════════════════════════════════════════════════════════
 
-@app.post("/api/supabase/{table}")
-async def supabase_proxy(table: str, request: Request, authorization: Optional[str] = Header(None)):
-    """Proxy for Supabase queries (authenticated)."""
-    if not await verify_kai_token(authorization):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    
-    if not SUPABASE_URL:
-        return JSONResponse({"data": [], "error": "Supabase not configured"})
-    
-    try:
-        body = await request.json()
-    except:
-        body = {}
-    
-    method = body.get('method', 'GET')
-    query_body = body.get('body')
-    select = body.get('select', '*')
-    filter_param = body.get('filter', None)
-    
-    key = SUPABASE_SERVICE_KEY
-    headers = {
-        "apikey": key,
-        "Authorization": f"Bearer {key}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
-    
-    async with httpx.AsyncClient(timeout=30) as client:
-        if method == 'GET':
-            url = f"{SUPABASE_URL}/rest/v1/{table}?select={select}"
-            if filter_param:
-                url += f"&{filter_param}"
-            resp = await client.get(url, headers=headers)
-            
-        elif method == 'POST':
-            url = f"{SUPABASE_URL}/rest/v1/{table}"
-            resp = await client.post(url, headers=headers, json=query_body)
-            
-        elif method == 'PATCH':
-            if not filter_param:
-                return JSONResponse({"data": [], "error": "PATCH requires filter"})
-            url = f"{SUPABASE_URL}/rest/v1/{table}?{filter_param}"
-            resp = await client.patch(url, headers=headers, json=query_body)
-            
-        elif method == 'DELETE':
-            if not filter_param:
-                return JSONResponse({"data": [], "error": "DELETE requires filter"})
-            url = f"{SUPABASE_URL}/rest/v1/{table}?{filter_param}"
-            resp = await client.delete(url, headers=headers)
-            
+@app.get("/api/profile")
+async def get_profile():
+    rows = await sb_get("kai_settings", "select=*&limit=1")
+    if isinstance(rows, list) and rows:
+        return JSONResponse(rows[0])
+    return JSONResponse({})
+
+@app.patch("/api/profile")
+async def update_profile(payload: ProfilePayload, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    body = {k: v for k, v in payload.model_dump().items() if v is not None}
+    body["updated_at"] = datetime.now(timezone.utc).isoformat()
+    rows = await sb_get("kai_settings", "select=id&limit=1")
+    if isinstance(rows, list) and rows:
+        await sb_patch("kai_settings", f"id=eq.{rows[0]['id']}", body)
+    else:
+        body.setdefault("name", "KAI")
+        await sb_post("kai_settings", body)
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  THREADS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/threads")
+async def get_threads():
+    data = await sb_get("threads", "select=*&order=created_at.desc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/threads")
+async def create_thread(payload: ThreadPayload, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    row = await sb_post("threads", {
+        "content": payload.content,
+        "image_url": payload.image_url,
+        "video_url": payload.video_url,
+        "view_count": 0,
+        "comment_count": 0,
+    })
+    return JSONResponse({"ok": True, "data": row})
+
+@app.delete("/api/threads/{thread_id}")
+async def delete_thread(thread_id: str, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    await sb_delete("threads", f"id=eq.{thread_id}")
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  COMMENTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/comments")
+async def get_comments(thread_id: str):
+    data = await sb_get("comments", f"select=*&thread_id=eq.{thread_id}&order=created_at.asc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/comments")
+async def create_comment(payload: CommentPayload):
+    row = await sb_post("comments", {
+        "thread_id": payload.thread_id,
+        "parent_id": payload.parent_id,
+        "author_name": payload.author_name or "anonymous",
+        "author_color": payload.author_color or "#FF69B4",
+        "content": payload.content,
+        "upvotes": 0,
+        "downvotes": 0,
+    })
+    # Increment comment_count on thread
+    rows = await sb_get("threads", f"select=comment_count&id=eq.{payload.thread_id}")
+    if isinstance(rows, list) and rows:
+        cnt = (rows[0].get("comment_count") or 0) + 1
+        await sb_patch("threads", f"id=eq.{payload.thread_id}", {"comment_count": cnt})
+    return JSONResponse({"ok": True, "data": row})
+
+@app.post("/api/comments/{comment_id}/vote")
+async def vote_comment(comment_id: str, payload: VotePayload):
+    rows = await sb_get("comments", f"select=upvotes,downvotes&id=eq.{comment_id}")
+    if not isinstance(rows, list) or not rows:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    row = rows[0]
+    if payload.direction == "up":
+        await sb_patch("comments", f"id=eq.{comment_id}", {"upvotes": (row.get("upvotes") or 0) + 1})
+    else:
+        await sb_patch("comments", f"id=eq.{comment_id}", {"downvotes": (row.get("downvotes") or 0) + 1})
+    return JSONResponse({"ok": True})
+
+@app.delete("/api/comments/{comment_id}")
+async def delete_comment(comment_id: str, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    await sb_delete("comments", f"id=eq.{comment_id}")
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  POSTS (feed)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/posts")
+async def get_posts():
+    data = await sb_get("posts", "select=*&order=created_at.desc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/posts")
+async def create_post(payload: PostPayload, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    row = await sb_post("posts", {
+        "caption": payload.caption,
+        "image_url": payload.image_url,
+        "video_url": payload.video_url,
+        "like_count": 0,
+    })
+    return JSONResponse({"ok": True, "data": row})
+
+@app.post("/api/posts/{post_id}/like")
+async def like_post(post_id: str):
+    rows = await sb_get("posts", f"select=like_count&id=eq.{post_id}")
+    if not isinstance(rows, list) or not rows:
+        raise HTTPException(status_code=404, detail="Post not found")
+    new_count = (rows[0].get("like_count") or 0) + 1
+    await sb_patch("posts", f"id=eq.{post_id}", {"like_count": new_count})
+    return JSONResponse({"ok": True, "like_count": new_count})
+
+@app.delete("/api/posts/{post_id}")
+async def delete_post(post_id: str, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    await sb_delete("posts", f"id=eq.{post_id}")
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  VLOGS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/vlogs")
+async def get_vlogs():
+    data = await sb_get("vlogs", "select=*&order=created_at.desc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/vlogs")
+async def create_vlog(payload: VlogPayload, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    row = await sb_post("vlogs", {
+        "title": payload.title,
+        "video_url": payload.video_url,
+        "description": payload.description,
+    })
+    return JSONResponse({"ok": True, "data": row})
+
+@app.delete("/api/vlogs/{vlog_id}")
+async def delete_vlog(vlog_id: str, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    await sb_delete("vlogs", f"id=eq.{vlog_id}")
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  FUN FACTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/facts")
+async def get_facts():
+    data = await sb_get("fun_facts", "select=*&order=slot_number.asc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/facts")
+async def upsert_facts(payload: list, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    # payload is list of {slot_number, fact_text}
+    for item in payload:
+        slot = item.get("slot_number")
+        text = item.get("fact_text", "")
+        existing = await sb_get("fun_facts", f"select=id&slot_number=eq.{slot}&limit=1")
+        if isinstance(existing, list) and existing:
+            await sb_patch("fun_facts", f"slot_number=eq.{slot}", {"fact_text": text, "updated_at": datetime.now(timezone.utc).isoformat()})
         else:
-            return JSONResponse({"data": [], "error": f"Invalid method: {method}"})
-    
-    try:
-        data = resp.json()
-    except:
-        data = []
-    
+            await sb_post("fun_facts", {"slot_number": slot, "fact_text": text})
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  LIVE STATUS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/live")
+async def get_live():
+    rows = await sb_get("live_status", "select=*&limit=1")
+    if isinstance(rows, list) and rows:
+        return JSONResponse(rows[0])
+    return JSONResponse({"is_live": False, "stream_url": None, "offline_image_url": None})
+
+@app.patch("/api/live")
+async def update_live(payload: LivePayload, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    body = {
+        "is_live": payload.is_live,
+        "stream_url": payload.stream_url,
+        "offline_image_url": payload.offline_image_url,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    rows = await sb_get("live_status", "select=id&limit=1")
+    if isinstance(rows, list) and rows:
+        await sb_patch("live_status", f"id=eq.{rows[0]['id']}", body)
+    else:
+        await sb_post("live_status", body)
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  CHAT
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/chat")
+async def get_chat():
+    data = await sb_get("chat_messages", "select=*&order=created_at.asc&limit=50")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/chat")
+async def post_chat(payload: ChatPayload):
+    row = await sb_post("chat_messages", {
+        "author_name": payload.author_name[:50],
+        "message": payload.message[:500],
+        "session_id": payload.session_id,
+    })
+    return JSONResponse({"ok": True, "data": row})
+
+@app.delete("/api/chat")
+async def clear_chat(authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    # Delete all messages
+    if SUPABASE_URL:
+        async with httpx.AsyncClient(timeout=15) as c:
+            await c.delete(
+                f"{SUPABASE_URL}/rest/v1/chat_messages?id=neq.00000000-0000-0000-0000-000000000000",
+                headers=sb_headers()
+            )
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  SIGNATURES (I Was Here)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/signatures")
+async def get_signatures():
+    data = await sb_get("iwashere_signatures", "select=*&order=created_at.desc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/signatures")
+async def create_signature(payload: SignaturePayload):
+    row = await sb_post("iwashere_signatures", {
+        "name": payload.name[:100],
+        "message": payload.message[:500],
+        "visitor_id": payload.visitor_id,
+    })
+    return JSONResponse({"ok": True, "data": row})
+
+@app.delete("/api/signatures/{sig_id}")
+async def delete_signature(sig_id: str, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    await sb_delete("iwashere_signatures", f"id=eq.{sig_id}")
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  JOURNAL (Kai-only)
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/journal")
+async def get_journal(authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    data = await sb_get("journal_entries", "select=*&order=created_at.desc")
+    return JSONResponse({"data": data if isinstance(data, list) else []})
+
+@app.post("/api/journal")
+async def create_journal(payload: JournalPayload, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    row = await sb_post("journal_entries", {
+        "date": payload.date,
+        "mood": payload.mood,
+        "title": payload.title,
+        "content": payload.content,
+    })
+    return JSONResponse({"ok": True, "data": row})
+
+@app.delete("/api/journal/{entry_id}")
+async def delete_journal(entry_id: str, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    await sb_delete("journal_entries", f"id=eq.{entry_id}")
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  VISITOR TRACKING
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.post("/api/track")
+async def track_visit(payload: TrackPayload, request: Request):
+    if not SUPABASE_URL:
+        return JSONResponse({"ok": True})
+    ip = request.headers.get("x-forwarded-for", request.client.host if request.client else None)
+    await sb_post("visitors", {
+        "visitor_id": payload.visitor_id[:64],
+        "page": (payload.page or "home")[:64],
+        "referrer": (payload.referrer or "")[:200] or None,
+        "ua": (payload.ua or "")[:300] or None,
+        "ip": (ip or "")[:64] or None,
+    })
+    return JSONResponse({"ok": True})
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  STATS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/stats")
+async def get_stats(authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
+    if not SUPABASE_URL:
+        return JSONResponse({"total": 0, "today": 0, "active": 0, "threads": 0, "comments": 0, "vlogs": 0, "signatures": 0, "pages": []})
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    five_min_ago = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
+
+    visitors     = await sb_get("visitors",            "select=visitor_id,page,created_at")
+    threads_data = await sb_get("threads",             "select=id")
+    comments_data= await sb_get("comments",            "select=id")
+    vlogs_data   = await sb_get("vlogs",               "select=id")
+    sigs_data    = await sb_get("iwashere_signatures", "select=id")
+    posts_data   = await sb_get("posts",               "select=id")
+
+    if not isinstance(visitors, list): visitors = []
+    unique = len(set(v.get("visitor_id","") for v in visitors))
+    today_count = sum(1 for v in visitors if (v.get("created_at","")).startswith(today))
+    active = sum(1 for v in visitors if (v.get("created_at","")) >= five_min_ago)
+
+    page_counts = {}
+    for v in visitors:
+        pg = v.get("page") or "home"
+        page_counts[pg] = page_counts.get(pg, 0) + 1
+    pages = [{"label": k, "count": v} for k,v in sorted(page_counts.items(), key=lambda x:-x[1])][:10]
+
+    def cnt(d): return len(d) if isinstance(d, list) else 0
+
     return JSONResponse({
-        "data": data if isinstance(data, list) else ([data] if data else []),
-        "error": None if resp.is_success else str(data)
+        "total": unique, "today": today_count, "active": active,
+        "threads": cnt(threads_data), "comments": cnt(comments_data),
+        "vlogs": cnt(vlogs_data), "signatures": cnt(sigs_data),
+        "posts": cnt(posts_data), "pages": pages,
     })
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -241,36 +582,23 @@ async def upload_sprite(
     file: UploadFile = File(...),
     authorization: Optional[str] = Header(None),
 ):
-    """Upload a sprite sheet directly to the server."""
-    if not await verify_kai_token(authorization):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
+    await require_kai(authorization)
     if sprite_type not in ALLOWED_SPRITE_TYPES:
         raise HTTPException(status_code=400, detail=f"sprite_type must be one of {ALLOWED_SPRITE_TYPES}")
-
     content_type = file.content_type or "image/png"
     if content_type not in ALLOWED_MIME:
         raise HTTPException(status_code=400, detail="Only PNG, GIF, WebP, JPEG allowed")
-
     ext = content_type.split("/")[-1].replace("jpeg", "jpg")
     filename = f"{sprite_type}.{ext}"
-    dest = os.path.join(SPRITES_DIR, filename)
-
     data = await file.read()
     if len(data) > 10 * 1024 * 1024:
         raise HTTPException(status_code=413, detail="File too large (max 10MB)")
-
-    with open(dest, "wb") as f:
+    with open(os.path.join(SPRITES_DIR, filename), "wb") as f:
         f.write(data)
-
-    sprite_url = f"/sprites/{filename}"
-    print(f"✓ Sprite uploaded: {filename} ({len(data)} bytes)")
-
-    return JSONResponse({"ok": True, "url": sprite_url, "filename": filename})
+    return JSONResponse({"ok": True, "url": f"/sprites/{filename}", "filename": filename})
 
 @app.get("/api/sprites/list")
 async def list_sprites():
-    """List all uploaded sprites and their URLs."""
     sprites = {}
     if os.path.exists(SPRITES_DIR):
         for fname in os.listdir(SPRITES_DIR):
@@ -280,140 +608,61 @@ async def list_sprites():
     return JSONResponse({"sprites": sprites})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  VISITOR TRACKING
+#  SUPABASE GENERIC PROXY (for lounge)
 # ══════════════════════════════════════════════════════════════════════════════
 
-@app.post("/api/track")
-async def track_visit(payload: TrackPayload, request: Request):
-    """Log a page view."""
+@app.post("/api/supabase/{table}")
+async def supabase_proxy(table: str, request: Request, authorization: Optional[str] = Header(None)):
+    await require_kai(authorization)
     if not SUPABASE_URL:
-        return JSONResponse({"ok": True, "note": "Supabase not configured"})
-
-    ip = request.headers.get("x-forwarded-for", request.client.host if request.client else None)
-    
-    headers = {
-        "apikey": SUPABASE_SERVICE_KEY,
-        "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
-        "Content-Type": "application/json"
-    }
-    
-    async with httpx.AsyncClient(timeout=10) as client:
-        await client.post(
-            f"{SUPABASE_URL}/rest/v1/visitors",
-            headers=headers,
-            json={
-                "visitor_id": payload.visitor_id[:64],
-                "page": (payload.page or "home")[:64],
-                "referrer": (payload.referrer or "")[:200] or None,
-                "ua": (payload.ua or "")[:300] or None,
-                "ip": (ip or "")[:64] or None,
-            }
-        )
-    
-    return JSONResponse({"ok": True})
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  STATS (Kai only)
-# ══════════════════════════════════════════════════════════════════════════════
-
-@app.get("/api/stats")
-async def get_stats(authorization: Optional[str] = Header(None)):
-    """Return visitor + content stats. Requires Kai's auth token."""
-    if not await verify_kai_token(authorization):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    if not SUPABASE_URL:
-        return JSONResponse({
-            "total": 0, "today": 0, "active": 0,
-            "threads": 0, "comments": 0, "vlogs": 0, "signatures": 0,
-            "pages": []
-        })
-
-    headers = {
-        "apikey": SUPABASE_SERVICE_KEY,
-        "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}"
-    }
-    
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    five_min_ago = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
-    
-    async with httpx.AsyncClient(timeout=15) as client:
-        # Get visitors
-        v_resp = await client.get(
-            f"{SUPABASE_URL}/rest/v1/visitors?select=visitor_id,page,created_at",
-            headers=headers
-        )
-        visitors = v_resp.json() if v_resp.is_success else []
-        if not isinstance(visitors, list):
-            visitors = []
-        
-        # Get counts
-        threads_resp = await client.get(f"{SUPABASE_URL}/rest/v1/threads?select=id", headers=headers)
-        comments_resp = await client.get(f"{SUPABASE_URL}/rest/v1/comments?select=id", headers=headers)
-        vlogs_resp = await client.get(f"{SUPABASE_URL}/rest/v1/vlogs?select=id", headers=headers)
-        sigs_resp = await client.get(f"{SUPABASE_URL}/rest/v1/iwashere_signatures?select=id", headers=headers)
-    
-    unique_visitors = len(set(v.get("visitor_id", "") for v in visitors))
-    today_visits = sum(1 for v in visitors if (v.get("created_at") or "").startswith(today))
-    active_count = sum(1 for v in visitors if (v.get("created_at") or "") >= five_min_ago)
-    
-    page_counts = {}
-    for v in visitors:
-        pg = v.get("page") or "home"
-        page_counts[pg] = page_counts.get(pg, 0) + 1
-    pages_sorted = [{"label": pg, "count": ct} for pg, ct in sorted(page_counts.items(), key=lambda x: -x[1])][:10]
-    
-    def get_count(resp):
-        if resp.is_success:
-            data = resp.json()
-            return len(data) if isinstance(data, list) else 0
-        return 0
-    
+        return JSONResponse({"data": [], "error": "Supabase not configured"})
+    try:
+        body = await request.json()
+    except:
+        body = {}
+    method      = body.get("method", "GET")
+    query_body  = body.get("body")
+    select      = body.get("select", "*")
+    filter_p    = body.get("filter", None)
+    key = SUPABASE_SERVICE_KEY
+    headers = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json", "Prefer": "return=representation"}
+    async with httpx.AsyncClient(timeout=30) as c:
+        if method == "GET":
+            url = f"{SUPABASE_URL}/rest/v1/{table}?select={select}"
+            if filter_p: url += f"&{filter_p}"
+            resp = await c.get(url, headers=headers)
+        elif method == "POST":
+            resp = await c.post(f"{SUPABASE_URL}/rest/v1/{table}", headers=headers, json=query_body)
+        elif method == "PATCH":
+            if not filter_p: return JSONResponse({"data": [], "error": "PATCH requires filter"})
+            resp = await c.patch(f"{SUPABASE_URL}/rest/v1/{table}?{filter_p}", headers=headers, json=query_body)
+        elif method == "DELETE":
+            if not filter_p: return JSONResponse({"data": [], "error": "DELETE requires filter"})
+            resp = await c.delete(f"{SUPABASE_URL}/rest/v1/{table}?{filter_p}", headers=headers)
+        else:
+            return JSONResponse({"data": [], "error": "Invalid method"})
+    try: data = resp.json()
+    except: data = []
     return JSONResponse({
-        "total": unique_visitors,
-        "today": today_visits,
-        "active": active_count,
-        "threads": get_count(threads_resp),
-        "comments": get_count(comments_resp),
-        "vlogs": get_count(vlogs_resp),
-        "signatures": get_count(sigs_resp),
-        "pages": pages_sorted,
+        "data": data if isinstance(data, list) else ([data] if data else []),
+        "error": None if resp.is_success else str(data)
     })
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  HEALTH & CONFIG
+#  HEALTH
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/health")
 async def health():
-    sprite_files = os.listdir(SPRITES_DIR) if os.path.exists(SPRITES_DIR) else []
     return JSONResponse({
-        "status": "ok",
-        "service": "KAICORE",
-        "version": "3.0.0",
+        "status": "ok", "service": "KAICORE", "version": "4.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "supabase": bool(SUPABASE_URL),
-        "sprites": sprite_files,
     })
 
 @app.get("/api/config")
 async def get_config():
-    return JSONResponse({
-        "supabase_url": SUPABASE_URL,
-        "supabase_anon": SUPABASE_ANON_KEY,
-    })
-
-@app.get("/debug/env")
-async def debug_env():
-    """Debug endpoint to verify environment variables."""
-    return {
-        "supabase_url_set": bool(SUPABASE_URL),
-        "supabase_anon_key_set": bool(SUPABASE_ANON_KEY),
-        "kai_email": KAI_EMAIL,
-        "kai_password_length": len(KAI_PASSWORD) if KAI_PASSWORD else 0,
-        "sprites_dir_exists": os.path.exists(SPRITES_DIR),
-        "sprites_count": len(os.listdir(SPRITES_DIR)) if os.path.exists(SPRITES_DIR) else 0,
-    }
+    return JSONResponse({"supabase_url": SUPABASE_URL, "supabase_anon": SUPABASE_ANON_KEY})
 
 # ─── Dev server ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
