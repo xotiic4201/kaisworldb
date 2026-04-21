@@ -1316,9 +1316,13 @@ async function loadHome(){
   const rEl=document.getElementById('home-recent-threads');
   if(threads.length){rEl.innerHTML=threads.slice(0,3).map(t=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,105,180,.15);cursor:pointer" onclick="switchPage('threads')"><div style="font-family:'Dancing Script',cursive;font-size:12px;color:var(--lavender);margin-bottom:3px;">${fmtDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;line-height:1.5;">${esc((t.content||'').substr(0,100))}…</div></div>`).join('');}
   else{rEl.innerHTML=`<div style="text-align:center;padding:20px 0;font-family:'Dancing Script',cursive;font-size:15px;color:var(--lavender);">no threads yet ♡</div>`;}
+  
+  // Posts count
   const ps=await api('/api/posts');if(ps&&ps.data){const sp=document.getElementById('stat-posts');if(sp)sp.textContent=ps.data.length;}
+  
+  // Visitor count - FIXED: Now shows for EVERYONE, not just Kai
   const st2=await api('/api/stats');
-  if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total||0;}
+  if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total || 0;}
 }
 
 /* ══════════════════════════════════════════════════════════
