@@ -1723,6 +1723,155 @@ async function renderEStats(el){
 /* ══════════════════════════════════════════════════════════
    PET SYSTEM
 ══════════════════════════════════════════════════════════ */
+async function renderESprites(el){
+  const r=await api('/api/sprites/list');
+  const sprites=(r&&r.sprites)||{};
+  const types=['cat','bird','bat','dog','custom'];
+  const labels={cat:'🐱 Cat',bird:'🐦 Bird',bat:'🦇 Bat',dog:'🐶 Dog',custom:'✨ Custom'};
+  const GRID=16,PIX=20;
+  const palette=['#FF69B4','#FF1493','#FFD700','#8B00FF','#DDA0DD','#000000','#ffffff','#FF6347','#00CED1','#32CD32','#FF8C00','#9B30FF','#C8729A','#4a0000','transparent'];
+  let selColor='#FF69B4';
+  let pixels=Array(GRID).fill(null).map(()=>Array(GRID).fill('transparent'));
+  let erasing=false;
+
+  el.innerHTML=`
+    <div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">PET SPRITES ✦</div>
+
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--yellow);margin-bottom:12px;">current sprites ♡</div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px;" id="sprite-current">
+      ${types.map(t=>`<div style="text-align:center;">
+        <div style="width:80px;height:80px;border:2px solid rgba(255,215,0,.3);border-radius:14px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;margin-bottom:5px;overflow:hidden;">
+          ${sprites[t]?`<img src="${sprites[t]}?t=${Date.now()}" style="width:64px;height:64px;image-rendering:pixelated;object-fit:contain;">`:
+          `<span style="font-size:28px;opacity:.3">${labels[t].split(' ')[0]}</span>`}
+        </div>
+        <div style="font-size:10px;color:var(--lavender);letter-spacing:1px;">${t.toUpperCase()}</div>
+      </div>`).join('')}
+    </div>
+
+    <div style="background:rgba(255,105,180,.06);border:1px solid rgba(255,105,180,.2);border-radius:18px;padding:18px;margin-bottom:22px;">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--pink);margin-bottom:12px;">upload PNG sprite ♡</div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <select id="sp-type" style="padding:9px 14px;border-radius:18px;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,105,180,.3);color:#f0d0e0;font-family:'Raleway',sans-serif;font-size:12px;outline:none;">
+          ${types.map(t=>`<option value="${t}">${t}</option>`).join('')}
+        </select>
+        <input type="file" id="sp-file" accept=".png,.gif,.webp,.jpg" style="color:var(--lavender);font-size:12px;flex:1;min-width:0;">
+        <button class="bubble-btn bubble-btn-sm" onclick="eUploadSprite()">UPLOAD ♡</button>
+      </div>
+      <div style="font-size:10px;color:rgba(255,105,180,.5);margin-top:7px;">PNG/GIF/WebP · max 10MB · replaces existing sprite of that type</div>
+    </div>
+
+    <div style="background:rgba(139,0,255,.06);border:1px solid rgba(139,0,255,.25);border-radius:18px;padding:18px;">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--lavender);margin-bottom:14px;">pixel pet creator ✦ draw your own</div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;">
+        <canvas id="px-canvas" width="${GRID*PIX}" height="${GRID*PIX}"
+          style="border:2px solid rgba(255,215,0,.3);border-radius:8px;cursor:crosshair;image-rendering:pixelated;flex-shrink:0;background:#0a0015;"></canvas>
+        <div>
+          <div style="font-size:10px;color:var(--lavender);letter-spacing:2px;margin-bottom:8px;">PALETTE</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:200px;margin-bottom:14px;" id="px-palette"></div>
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+            <button class="bubble-btn bubble-btn-sm" id="px-erase-btn" onclick="window._pxToggleEraser()">ERASER</button>
+            <button class="bubble-btn bubble-btn-sm" onclick="window._pxClear()">CLEAR</button>
+            <button class="bubble-btn bubble-btn-sm" onclick="window._pxFill()">FILL BG</button>
+          </div>
+          <div style="font-size:10px;color:var(--lavender);letter-spacing:2px;margin-bottom:8px;">SAVE AS</div>
+          <select id="px-save-type" style="padding:8px 12px;border-radius:14px;background:rgba(0,0,0,.5);border:1.5px solid rgba(255,105,180,.3);color:#f0d0e0;font-size:11px;margin-bottom:8px;width:100%;">
+            ${types.map(t=>`<option value="${t}">${t}</option>`).join('')}
+          </select>
+          <button class="bubble-btn" onclick="window._pxSave()" style="width:100%">SAVE SPRITE ♡</button>
+        </div>
+      </div>
+    </div>`;
+
+  const palEl=el.querySelector('#px-palette');
+  palette.forEach(c=>{
+    const sw=document.createElement('div');
+    sw.style.cssText=`width:22px;height:22px;border-radius:5px;cursor:pointer;border:2px solid transparent;flex-shrink:0;${c==='transparent'?'background:repeating-conic-gradient(#555 0% 25%,#333 0% 50%) 0/10px 10px;':'background:'+c};`;
+    sw.title=c;
+    sw.addEventListener('click',()=>{
+      selColor=c;erasing=false;
+      palEl.querySelectorAll('div').forEach(x=>x.style.borderColor='transparent');
+      sw.style.borderColor='#FFD700';
+      document.getElementById('px-erase-btn').style.borderColor='rgba(255,105,180,.4)';
+    });
+    palEl.appendChild(sw);
+  });
+  palEl.children[0].style.borderColor='#FFD700';
+
+  const cvs=el.querySelector('#px-canvas');
+  const ctx2=cvs.getContext('2d');
+  function redraw(){
+    ctx2.clearRect(0,0,cvs.width,cvs.height);
+    ctx2.fillStyle='#0a0015';ctx2.fillRect(0,0,cvs.width,cvs.height);
+    ctx2.strokeStyle='rgba(255,255,255,.06)';ctx2.lineWidth=.5;
+    for(let i=0;i<=GRID;i++){
+      ctx2.beginPath();ctx2.moveTo(i*PIX,0);ctx2.lineTo(i*PIX,GRID*PIX);ctx2.stroke();
+      ctx2.beginPath();ctx2.moveTo(0,i*PIX);ctx2.lineTo(GRID*PIX,i*PIX);ctx2.stroke();
+    }
+    for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){
+      if(pixels[y][x]==='transparent')continue;
+      ctx2.fillStyle=pixels[y][x];ctx2.fillRect(x*PIX,y*PIX,PIX,PIX);
+    }
+  }
+  redraw();
+
+  let painting=false;
+  function paint(e){
+    const rect=cvs.getBoundingClientRect();
+    const cx=e.touches?e.touches[0].clientX:e.clientX;
+    const cy=e.touches?e.touches[0].clientY:e.clientY;
+    const px=Math.floor((cx-rect.left)/(rect.width/GRID));
+    const py=Math.floor((cy-rect.top)/(rect.height/GRID));
+    if(px<0||py<0||px>=GRID||py>=GRID)return;
+    pixels[py][px]=erasing?'transparent':selColor;
+    redraw();
+  }
+  cvs.addEventListener('mousedown',e=>{painting=true;paint(e);});
+  cvs.addEventListener('mousemove',e=>{if(painting)paint(e);});
+  cvs.addEventListener('mouseup',()=>painting=false);
+  cvs.addEventListener('mouseleave',()=>painting=false);
+  cvs.addEventListener('touchstart',e=>{e.preventDefault();painting=true;paint(e);},{passive:false});
+  cvs.addEventListener('touchmove',e=>{e.preventDefault();if(painting)paint(e);},{passive:false});
+  cvs.addEventListener('touchend',()=>painting=false);
+
+  window._pxToggleEraser=()=>{
+    erasing=!erasing;
+    document.getElementById('px-erase-btn').style.borderColor=erasing?'#FFD700':'rgba(255,105,180,.4)';
+  };
+  window._pxClear=()=>{pixels=Array(GRID).fill(null).map(()=>Array(GRID).fill('transparent'));redraw();};
+  window._pxFill=()=>{pixels=pixels.map(row=>row.map(c=>c==='transparent'?selColor:c));redraw();};
+  window._pxSave=async()=>{
+    const offC=document.createElement('canvas');offC.width=GRID;offC.height=GRID;
+    const offCtx=offC.getContext('2d');
+    for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){
+      if(pixels[y][x]==='transparent')continue;
+      offCtx.fillStyle=pixels[y][x];offCtx.fillRect(x,y,1,1);
+    }
+    offC.toBlob(async(blob)=>{
+      if(!blob)return;
+      const t=document.getElementById('px-save-type').value;
+      const fd=new FormData();fd.append('sprite_type',t);fd.append('file',blob,'sprite.png');
+      const tk=sessionStorage.getItem('kai_token');
+      try{
+        const res=await fetch('/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
+        if(res.ok){toast('sprite saved ♡');renderESprites(document.getElementById('edit-content'));}
+        else toast('upload failed ♡');
+      }catch(e){toast('error uploading ♡');}
+    },'image/png');
+  };
+}
+
+window.eUploadSprite=async()=>{
+  const t=document.getElementById('sp-type').value;
+  const f=document.getElementById('sp-file').files[0];
+  if(!f){toast('pick a file first ♡');return;}
+  const fd=new FormData();fd.append('sprite_type',t);fd.append('file',f);
+  const tk=sessionStorage.getItem('kai_token');
+  try{
+    const res=await fetch('/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
+    if(res.ok){toast('sprite uploaded ♡');renderESprites(document.getElementById('edit-content'));}
+    else toast('upload failed ♡');
+  }catch(e){toast('error uploading ♡');}
+};
 const petCanvas=document.getElementById('pet-canvas'),petCtx=petCanvas.getContext('2d');
 let pets=[],mouseX=0,mouseY=0;
 function resizePet(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
