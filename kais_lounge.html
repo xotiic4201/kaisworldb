@@ -150,6 +150,41 @@ textarea.form-input { resize:vertical; border-radius:16px; }
 .act-del { border-color:rgba(255,0,0,.4); color:#ff9090; }
 .act-del:hover { background:rgba(255,0,0,.15); }
 
+/* Sprite preview grid */
+.sprite-preview-grid {
+  display:flex; gap:14px; flex-wrap:wrap; margin-bottom:26px;
+}
+.sprite-preview-item {
+  text-align:center;
+}
+.sprite-preview-box {
+  width:80px; height:80px; border:2px solid rgba(255,215,0,.3); border-radius:14px;
+  background:rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center;
+  margin-bottom:5px; overflow:hidden;
+}
+.sprite-preview-box img {
+  width:64px; height:64px; image-rendering:pixelated; object-fit:contain;
+}
+.sprite-preview-label {
+  font-size:10px; color:var(--lavender); letter-spacing:1px;
+}
+
+/* Pixel editor canvas */
+.pixel-canvas {
+  border:2px solid rgba(255,215,0,.3); border-radius:8px;
+  cursor:crosshair; image-rendering:pixelated; flex-shrink:0; background:#0a0015;
+}
+.palette-grid {
+  display:flex; flex-wrap:wrap; gap:5px; max-width:200px; margin-bottom:14px;
+}
+.palette-swatch {
+  width:22px; height:22px; border-radius:5px; cursor:pointer;
+  border:2px solid transparent; flex-shrink:0;
+}
+.palette-swatch-transparent {
+  background:repeating-conic-gradient(#555 0% 25%,#333 0% 50%) 0/10px 10px;
+}
+
 /* Stats */
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
 .stat-box { background:rgba(255,215,0,.06); border:1.5px solid rgba(255,215,0,.3); border-radius:20px; padding:20px; text-align:center; }
@@ -238,6 +273,7 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
       <div class="sb-section">INTERACTIVE</div>
       <button class="sb-btn" data-panel="live">📡 LIVE STAGE</button>
       <button class="sb-btn" data-panel="guestbook">✍ GUESTBOOK</button>
+      <button class="sb-btn" data-panel="sprites">🎨 PET SPRITES ✦</button>
       <div class="sb-section">ANALYTICS</div>
       <button class="sb-btn" data-panel="stats">📊 STATS</button>
     </div>
@@ -393,6 +429,61 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
         </div>
       </div>
 
+      <!-- PET SPRITES -->
+      <div class="panel" id="panel-sprites">
+        <div class="panel-title">PET SPRITES</div>
+        <div class="panel-sub">🎨 manage kai's pixel pets — upload or draw your own ✦</div>
+        <div class="card">
+          <div class="card-title">CURRENT SPRITES</div>
+          <div id="sprite-current" class="sprite-preview-grid"><div class="loader"></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">UPLOAD SPRITE</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Sprite Type</label>
+              <select id="sp-type" class="form-input">
+                <option value="cat">🐱 Cat</option>
+                <option value="bird">🐦 Bird</option>
+                <option value="bat">🦇 Bat</option>
+                <option value="dog">🐶 Dog</option>
+                <option value="custom">✨ Custom</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">PNG/GIF/WebP File</label>
+              <input type="file" id="sp-file" accept=".png,.gif,.webp,.jpg" class="form-input">
+            </div>
+          </div>
+          <button class="bubble-btn" onclick="eUploadSprite()">UPLOAD SPRITE ♡</button>
+          <div class="empty-msg" style="font-size:10px; padding:8px 0 0; text-align:left;">PNG/GIF/WebP · max 10MB · replaces existing sprite of that type</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">PIXEL PET CREATOR ✦ DRAW YOUR OWN</div>
+          <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+            <canvas id="px-canvas" width="320" height="320" class="pixel-canvas"></canvas>
+            <div>
+              <div class="form-label">PALETTE</div>
+              <div id="px-palette" class="palette-grid"></div>
+              <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+                <button class="bubble-btn bubble-btn-sm" id="px-erase-btn" onclick="window._pxToggleEraser()">ERASER</button>
+                <button class="bubble-btn bubble-btn-sm" onclick="window._pxClear()">CLEAR</button>
+                <button class="bubble-btn bubble-btn-sm" onclick="window._pxFill()">FILL BG</button>
+              </div>
+              <div class="form-label">SAVE AS</div>
+              <select id="px-save-type" class="form-input" style="margin-bottom:12px;">
+                <option value="cat">🐱 Cat</option>
+                <option value="bird">🐦 Bird</option>
+                <option value="bat">🦇 Bat</option>
+                <option value="dog">🐶 Dog</option>
+                <option value="custom">✨ Custom</option>
+              </select>
+              <button class="bubble-btn" onclick="window._pxSave()" style="width:100%">SAVE SPRITE ♡</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- STATS -->
       <div class="panel" id="panel-stats">
         <div class="panel-title">ANALYTICS</div>
@@ -424,7 +515,7 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
 /* ═══════════════════════════════════════════════════════════
    CONFIG — injected by server at runtime
 ═══════════════════════════════════════════════════════════ */
-const API = 'https://kaisworldb.onrender.com'  // same origin as the FastAPI backend
+const API = '';  // empty = same origin
 let authToken = null;
 
 /* ═══════════════════════════════════════════════════════════
@@ -506,12 +597,12 @@ function enterLounge() {
   document.getElementById('app').classList.add('visible');
   showPanel('threads');
   startHeartbeat();
-  loadProfile();  // pre-load profile for links panel
-  loadFacts();    // pre-load facts
+  loadProfile();
+  loadFacts();
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HEARTBEAT — keeps Kai's online status alive
+   HEARTBEAT
 ═══════════════════════════════════════════════════════════ */
 let heartbeatTimer = null;
 
@@ -520,8 +611,8 @@ async function sendHeartbeat() {
 }
 
 function startHeartbeat() {
-  sendHeartbeat();  // immediate
-  heartbeatTimer = setInterval(sendHeartbeat, 60000);  // every 60s
+  sendHeartbeat();
+  heartbeatTimer = setInterval(sendHeartbeat, 60000);
   window.addEventListener('beforeunload', stopHeartbeat);
 }
 
@@ -538,7 +629,6 @@ function showPanel(id) {
   const panel = document.getElementById('panel-' + id);
   if (panel) panel.classList.add('active');
   document.querySelector(`.sb-btn[data-panel="${id}"]`)?.classList.add('active');
-  // Load data for panel
   switch(id) {
     case 'threads':   loadThreads(); break;
     case 'posts':     loadPosts(); break;
@@ -549,9 +639,9 @@ function showPanel(id) {
     case 'facts':     loadFacts(); break;
     case 'live':      loadLive(); break;
     case 'guestbook': loadGuestbook(); break;
+    case 'sprites':   renderSpritesPanel(); break;
     case 'stats':     loadStats(); break;
   }
-  // Close mobile sidebar
   document.getElementById('sidebar').classList.remove('open');
 }
 
@@ -729,27 +819,26 @@ async function deleteJournal(id) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PROFILE
+   PROFILE & LINKS
 ═══════════════════════════════════════════════════════════ */
 let profileLoaded = false;
 async function loadProfile() {
   const r = await api('/api/profile');
   if (!r) return;
   profileLoaded = true;
-  const s = r;
-  document.getElementById('ep-name').value     = s.name || 'KAI';
-  document.getElementById('ep-mood').value     = s.mood_emoji || '';
-  document.getElementById('ep-location').value = s.location || '';
-  document.getElementById('ep-zodiac').value   = s.zodiac || '';
-  document.getElementById('ep-pic').value      = s.profile_pic_url || '';
-  document.getElementById('ep-bio').value      = s.bio || '';
-  document.getElementById('ep-online').checked = !!s.kai_online_status;
+  document.getElementById('ep-name').value     = r.name || 'KAI';
+  document.getElementById('ep-mood').value     = r.mood_emoji || '';
+  document.getElementById('ep-location').value = r.location || '';
+  document.getElementById('ep-zodiac').value   = r.zodiac || '';
+  document.getElementById('ep-pic').value      = r.profile_pic_url || '';
+  document.getElementById('ep-bio').value      = r.bio || '';
+  document.getElementById('ep-online').checked = !!r.kai_online_status;
   if (document.getElementById('el-instagram'))
-    document.getElementById('el-instagram').value = s.social_instagram || '';
+    document.getElementById('el-instagram').value = r.social_instagram || '';
   if (document.getElementById('el-tiktok'))
-    document.getElementById('el-tiktok').value    = s.social_tiktok || '';
+    document.getElementById('el-tiktok').value    = r.social_tiktok || '';
   if (document.getElementById('el-spotify'))
-    document.getElementById('el-spotify').value   = s.social_spotify || '';
+    document.getElementById('el-spotify').value   = r.social_spotify || '';
 }
 
 async function saveProfile() {
@@ -868,6 +957,185 @@ async function deleteSig(id) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   PET SPRITES
+═══════════════════════════════════════════════════════════ */
+let spritesState = {};
+
+async function renderSpritesPanel() {
+  const r = await api('/api/sprites/list');
+  spritesState = (r && r.sprites) || {};
+  const types = ['cat', 'bird', 'bat', 'dog', 'custom'];
+  const labels = { cat: '🐱 Cat', bird: '🐦 Bird', bat: '🦇 Bat', dog: '🐶 Dog', custom: '✨ Custom' };
+  
+  const previewEl = document.getElementById('sprite-current');
+  previewEl.innerHTML = types.map(t => `
+    <div class="sprite-preview-item">
+      <div class="sprite-preview-box">
+        ${spritesState[t] ? `<img src="${spritesState[t]}?t=${Date.now()}" style="width:64px;height:64px;image-rendering:pixelated;object-fit:contain;">` :
+          `<span style="font-size:28px;opacity:.3">${labels[t].split(' ')[0]}</span>`}
+      </div>
+      <div class="sprite-preview-label">${t.toUpperCase()}</div>
+    </div>
+  `).join('');
+
+  // Initialize pixel editor if canvas exists
+  initPixelEditor();
+}
+
+const GRID = 16, PIX = 20;
+const PALETTE = ['#FF69B4','#FF1493','#FFD700','#8B00FF','#DDA0DD','#000000','#ffffff','#FF6347','#00CED1','#32CD32','#FF8C00','#9B30FF','#C8729A','#4a0000','transparent'];
+let selColor = '#FF69B4';
+let pixels = Array(GRID).fill(null).map(() => Array(GRID).fill('transparent'));
+let erasing = false;
+let pixelEditorInitialized = false;
+
+function initPixelEditor() {
+  const cvs = document.getElementById('px-canvas');
+  if (!cvs || pixelEditorInitialized) return;
+  pixelEditorInitialized = true;
+  
+  cvs.width = GRID * PIX;
+  cvs.height = GRID * PIX;
+  const ctx = cvs.getContext('2d');
+  
+  function redraw() {
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    ctx.fillStyle = '#0a0015';
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
+    ctx.strokeStyle = 'rgba(255,255,255,.06)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= GRID; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * PIX, 0);
+      ctx.lineTo(i * PIX, GRID * PIX);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * PIX);
+      ctx.lineTo(GRID * PIX, i * PIX);
+      ctx.stroke();
+    }
+    for (let y = 0; y < GRID; y++) {
+      for (let x = 0; x < GRID; x++) {
+        if (pixels[y][x] === 'transparent') continue;
+        ctx.fillStyle = pixels[y][x];
+        ctx.fillRect(x * PIX, y * PIX, PIX, PIX);
+      }
+    }
+  }
+  
+  // Build palette
+  const palEl = document.getElementById('px-palette');
+  if (palEl && palEl.children.length === 0) {
+    PALETTE.forEach(c => {
+      const sw = document.createElement('div');
+      sw.className = 'palette-swatch';
+      if (c === 'transparent') sw.classList.add('palette-swatch-transparent');
+      else sw.style.background = c;
+      sw.title = c;
+      sw.addEventListener('click', () => {
+        selColor = c;
+        erasing = false;
+        document.querySelectorAll('#px-palette .palette-swatch').forEach(x => x.style.borderColor = 'transparent');
+        sw.style.borderColor = '#FFD700';
+        const eraseBtn = document.getElementById('px-erase-btn');
+        if (eraseBtn) eraseBtn.style.borderColor = 'rgba(255,105,180,.4)';
+      });
+      palEl.appendChild(sw);
+    });
+    if (palEl.children[0]) palEl.children[0].style.borderColor = '#FFD700';
+  }
+  
+  // Drawing events
+  let painting = false;
+  function paint(e) {
+    const rect = cvs.getBoundingClientRect();
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    const px = Math.floor((cx - rect.left) / (rect.width / GRID));
+    const py = Math.floor((cy - rect.top) / (rect.height / GRID));
+    if (px < 0 || py < 0 || px >= GRID || py >= GRID) return;
+    pixels[py][px] = erasing ? 'transparent' : selColor;
+    redraw();
+  }
+  cvs.addEventListener('mousedown', e => { painting = true; paint(e); });
+  cvs.addEventListener('mousemove', e => { if (painting) paint(e); });
+  cvs.addEventListener('mouseup', () => painting = false);
+  cvs.addEventListener('mouseleave', () => painting = false);
+  cvs.addEventListener('touchstart', e => { e.preventDefault(); painting = true; paint(e); }, { passive: false });
+  cvs.addEventListener('touchmove', e => { e.preventDefault(); if (painting) paint(e); }, { passive: false });
+  cvs.addEventListener('touchend', () => painting = false);
+  
+  window._pxToggleEraser = () => {
+    erasing = !erasing;
+    const btn = document.getElementById('px-erase-btn');
+    if (btn) btn.style.borderColor = erasing ? '#FFD700' : 'rgba(255,105,180,.4)';
+  };
+  window._pxClear = () => {
+    pixels = Array(GRID).fill(null).map(() => Array(GRID).fill('transparent'));
+    redraw();
+  };
+  window._pxFill = () => {
+    pixels = pixels.map(row => row.map(c => c === 'transparent' ? selColor : c));
+    redraw();
+  };
+  window._pxSave = async () => {
+    const offC = document.createElement('canvas');
+    offC.width = GRID;
+    offC.height = GRID;
+    const offCtx = offC.getContext('2d');
+    for (let y = 0; y < GRID; y++) {
+      for (let x = 0; x < GRID; x++) {
+        if (pixels[y][x] === 'transparent') continue;
+        offCtx.fillStyle = pixels[y][x];
+        offCtx.fillRect(x, y, 1, 1);
+      }
+    }
+    offC.toBlob(async (blob) => {
+      if (!blob) return;
+      const t = document.getElementById('px-save-type').value;
+      const fd = new FormData();
+      fd.append('sprite_type', t);
+      fd.append('file', blob, 'sprite.png');
+      const tk = sessionStorage.getItem('lounge_token');
+      try {
+        const res = await fetch(API + '/api/sprites/upload', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${tk}` },
+          body: fd
+        });
+        if (res.ok) {
+          toast('sprite saved ♡');
+          renderSpritesPanel();
+        } else toast('upload failed ♡');
+      } catch (e) { toast('error uploading ♡'); }
+    }, 'image/png');
+  };
+  redraw();
+}
+
+window.eUploadSprite = async () => {
+  const t = document.getElementById('sp-type').value;
+  const f = document.getElementById('sp-file').files[0];
+  if (!f) { toast('pick a file first ♡'); return; }
+  const fd = new FormData();
+  fd.append('sprite_type', t);
+  fd.append('file', f);
+  const tk = sessionStorage.getItem('lounge_token');
+  try {
+    const res = await fetch(API + '/api/sprites/upload', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${tk}` },
+      body: fd
+    });
+    if (res.ok) {
+      toast('sprite uploaded ♡');
+      renderSpritesPanel();
+      document.getElementById('sp-file').value = '';
+    } else toast('upload failed ♡');
+  } catch (e) { toast('error uploading ♡'); }
+};
+
+/* ═══════════════════════════════════════════════════════════
    STATS
 ═══════════════════════════════════════════════════════════ */
 async function loadStats() {
@@ -899,13 +1167,10 @@ async function loadStats() {
    INIT
 ═══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Set today's date for journal
   document.getElementById('ej-date').value = new Date().toISOString().split('T')[0];
-  // Login with Enter key
   document.getElementById('login-password').addEventListener('keydown', e => {
     if (e.key === 'Enter') doLogin();
   });
-  // Auto-login if token saved
   const saved = sessionStorage.getItem('lounge_token');
   if (saved) {
     authToken = saved;
