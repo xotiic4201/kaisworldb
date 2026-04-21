@@ -392,7 +392,6 @@ async def get_facts():
 @app.post("/api/facts")
 async def upsert_facts(payload: list, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
-    # payload is list of {slot_number, fact_text}
     for item in payload:
         slot = item.get("slot_number")
         text = item.get("fact_text", "")
@@ -451,7 +450,6 @@ async def post_chat(payload: ChatPayload):
 @app.delete("/api/chat")
 async def clear_chat(authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
-    # Delete all messages
     if SUPABASE_URL:
         async with httpx.AsyncClient(timeout=15) as c:
             await c.delete(
@@ -530,7 +528,7 @@ async def track_visit(payload: TrackPayload, request: Request):
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  STATS
+#  STATS  ← FIXED: today/active now count unique visitor_ids, not page hits
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/stats")
@@ -550,9 +548,13 @@ async def get_stats(authorization: Optional[str] = Header(None)):
     posts_data   = await sb_get("posts",               "select=id")
 
     if not isinstance(visitors, list): visitors = []
-    unique = len(set(v.get("visitor_id","") for v in visitors))
-    today_count = sum(1 for v in visitors if (v.get("created_at","")).startswith(today))
-    active = sum(1 for v in visitors if (v.get("created_at","")) >= five_min_ago)
+
+    # Unique visitors total
+    unique = len(set(v.get("visitor_id", "") for v in visitors))
+    # Unique visitors today (not page-hit count)
+    today_count = len(set(v.get("visitor_id", "") for v in visitors if v.get("created_at", "").startswith(today)))
+    # Unique visitors active in last 5 min
+    active = len(set(v.get("visitor_id", "") for v in visitors if v.get("created_at", "") >= five_min_ago))
 
     page_counts = {}
     for v in visitors:
