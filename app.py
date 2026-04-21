@@ -102,7 +102,7 @@ async def require_kai(authorization: Optional[str] = Header(None)):
     return True
 
 async def is_kai(authorization: Optional[str] = Header(None)) -> bool:
-    return authorization == ""
+    return authorization == "Bearer kai_authenticated"
 
 # ─── Models ────────────────────────────────────────────────────────────────────
 class LoginPayload(BaseModel):
