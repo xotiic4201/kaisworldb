@@ -43,7 +43,19 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Raleway',sans-seri
   transform:rotateY(-22deg) rotateX(4deg);
   transition:transform 1.6s cubic-bezier(.645,.045,.355,1);
 }
-#book-3d.opening{transform:rotateY(-190deg) rotateX(4deg);}
+/* Book opens - front cover rotates open like a real book */
+#book-3d.opening{
+  transform:rotateY(-22deg) rotateX(4deg);
+}
+#book-3d.opening #book-front{
+  transform:rotateY(-160deg);
+  transform-origin:left center;
+  transition:transform 1.6s cubic-bezier(.645,.045,.355,1);
+}
+#book-front{
+  transition:transform 1.6s cubic-bezier(.645,.045,.355,1);
+  transform-origin:left center;
+}
 
 /* Front face */
 #book-front{
@@ -691,7 +703,7 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
         <div class="spine-text">KAI'S WORLD</div>
       </div>
       <!-- Page edges (right side) -->
-      <div id="book-pages-face" id="pages-face"></div>
+      <div id="book-pages-face"></div>
       <!-- Back face -->
       <div id="book-back-face"></div>
       <!-- Front cover -->
@@ -992,6 +1004,7 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
     <button class="nav-bubble" onclick="showETab('journal')">JOURNAL</button>
     <button class="nav-bubble" onclick="showETab('sigs')">GUESTBOOK</button>
     <button class="nav-bubble" onclick="showETab('stats')">STATS</button>
+    <button class="nav-bubble" onclick="showETab('sprites')">PET SPRITES ✦</button>
   </div>
   <div id="edit-content" style="padding:22px;"></div>
 </div>
@@ -1109,6 +1122,7 @@ document.addEventListener('mousemove',e=>{
   const gateEl=document.getElementById('gate');
   const siteEl=document.getElementById('site');
   const book3d=document.getElementById('book-3d');
+  const bookFront=document.getElementById('book-front');
 
   function pos(){
     const vw=window.innerWidth,vh=window.innerHeight;
@@ -1155,7 +1169,10 @@ document.addEventListener('mousemove',e=>{
       if(lockEl){const r=lockEl.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,140);lockEl.style.opacity='0';}
       kEl.style.display='none';if(hintEl)hintEl.style.display='none';
     },300);
-    setTimeout(()=>{playSound('book');if(book3d)book3d.classList.add('opening');},650);
+    setTimeout(()=>{
+      playSound('book');
+      book3d.classList.add('opening');
+    },650);
     setTimeout(()=>{gateEl.classList.add('hidden');siteEl.classList.add('visible');initSite();},2200);
   }
 })();
@@ -1220,6 +1237,20 @@ async function trackVisit(page='home'){
 }
 
 /* ══════════════════════════════════════════════════════════
+   KAI ONLINE STATUS CHECK
+══════════════════════════════════════════════════════════ */
+async function checkKaiOnlineStatus(){
+  const r=await api('/api/kai/status');
+  if(r && r.online){
+    document.getElementById('home-online-badge').style.display='inline-flex';
+    document.getElementById('kai-status').classList.add('visible');
+  } else {
+    document.getElementById('home-online-badge').style.display='none';
+    document.getElementById('kai-status').classList.remove('visible');
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════════════ */
 async function initSite(){
@@ -1229,7 +1260,12 @@ async function initSite(){
   initPetCanvas();
   startLivePoll();
   trackVisit('home');
-  setInterval(()=>{ const ap=document.querySelector('.page.active');if(ap)loadPage(ap.id.replace('page-','')); },14000);
+  checkKaiOnlineStatus();
+  setInterval(()=>{ 
+    const ap=document.querySelector('.page.active');
+    if(ap)loadPage(ap.id.replace('page-',''));
+    checkKaiOnlineStatus();
+  }, 30000);
   const tk=sessionStorage.getItem('kai_token');
   if(tk){isKai=true;document.getElementById('admin-nav-btn').style.display='block';}
   // Admin bypass
@@ -1289,13 +1325,13 @@ async function loadHome(){
   const rEl=document.getElementById('home-recent-threads');
   if(threads.length){rEl.innerHTML=threads.slice(0,3).map(t=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,105,180,.15);cursor:pointer" onclick="switchPage('threads')"><div style="font-family:'Dancing Script',cursive;font-size:12px;color:var(--lavender);margin-bottom:3px;">${fmtDate(t.created_at)}</div><div style="font-size:13px;color:#e0c0d0;line-height:1.5;">${esc((t.content||'').substr(0,100))}…</div></div>`).join('');}
   else{rEl.innerHTML=`<div style="text-align:center;padding:20px 0;font-family:'Dancing Script',cursive;font-size:15px;color:var(--lavender);">no threads yet ♡</div>`;}
-  // Stats
+  
+  // Posts count
   const ps=await api('/api/posts');if(ps&&ps.data){const sp=document.getElementById('stat-posts');if(sp)sp.textContent=ps.data.length;}
-  // Visitor count from stats if Kai
-  if(isKai){
-    const st2=await api('/api/stats');
-    if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total||0;}
-  }
+  
+  // Visitor count - NOW SHOWS FOR EVERYONE!
+  const st2=await api('/api/stats');
+  if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total||0;}
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1337,7 +1373,6 @@ async function openPost(id){
   document.getElementById('modal-caption').textContent=p.caption||p.content||'';
   document.getElementById('modal-likes').textContent=p.like_count||0;
   document.getElementById('modal-heart-btn').classList.remove('liked');
-  // Set avatar
   const av=document.getElementById('modal-av');
   if(kaiSettings.profile_pic_url)av.innerHTML=`<img src="${kaiSettings.profile_pic_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
   else av.textContent='K';
@@ -1540,6 +1575,7 @@ async function showETab(tab){
     case'live':renderELive(el);break;
     case'journal':renderEJournal(el);break;
     case'sigs':renderESigs(el);break;
+    case'sprites':renderESprites(el);break;
     case'stats':renderEStats(el);break;
   }
 }
@@ -1711,18 +1747,6 @@ async function renderESigs(el){
     ss.map(s=>eCard(`<div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--yellow);">${esc(s.name||'Anonymous')}</div><div style="font-size:12px;color:#d0c0d0;margin:4px 0;">${esc(s.message||'')}</div><div style="font-family:'Dancing Script',cursive;font-size:11px;color:var(--lavender);">${fmtDate(s.created_at)}</div><button class="vote-btn" style="color:#ff6060;margin-top:6px;" onclick="delSig('${s.id}');renderESigs(document.getElementById('edit-content'))">delete</button>`)).join('')||'<div class="empty-state">no signatures yet ♡</div>';
 }
 
-async function renderEStats(el){
-  el.innerHTML='<div class="loader"></div>';
-  const r=await api('/api/stats');
-  if(!r){el.innerHTML='<div class="empty-state">stats unavailable ♡</div>';return;}
-  const grid=['total','today','active','threads','comments','vlogs','posts','signatures'].map(k=>`<div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);border-radius:20px;padding:18px;text-align:center;"><div style="font-family:'Cinzel Decorative',serif;font-size:30px;color:var(--yellow);text-shadow:var(--glow-yellow);">${r[k]??'–'}</div><div style="font-size:9px;color:var(--lavender);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">${k}</div></div>`).join('');
-  const bars=r.pages&&r.pages.length?'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:14px;color:var(--pink);margin:18px 0 10px;">top pages ♡</div>'+r.pages.map(p=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="width:80px;font-size:11px;color:var(--lavender);text-align:right;">${esc(p.label)}</span><div style="flex:1;height:20px;background:rgba(0,0,0,.4);border-radius:10px;overflow:hidden;"><div style="height:100%;border-radius:10px;background:linear-gradient(90deg,var(--blood),var(--mauve),var(--yellow));width:${r.pages[0]?Math.round(p.count/r.pages[0].count*100):0}%;"></div></div><span style="font-size:11px;color:var(--yellow);">${p.count}</span></div>`).join(''):'';
-  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">ANALYTICS ♡</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:20px;">${grid}</div>${bars}`;
-}
-
-/* ══════════════════════════════════════════════════════════
-   PET SYSTEM
-══════════════════════════════════════════════════════════ */
 async function renderESprites(el){
   const r=await api('/api/sprites/list');
   const sprites=(r&&r.sprites)||{};
@@ -1872,6 +1896,19 @@ window.eUploadSprite=async()=>{
     else toast('upload failed ♡');
   }catch(e){toast('error uploading ♡');}
 };
+
+async function renderEStats(el){
+  el.innerHTML='<div class="loader"></div>';
+  const r=await api('/api/stats');
+  if(!r){el.innerHTML='<div class="empty-state">stats unavailable ♡</div>';return;}
+  const grid=['total','today','active','threads','comments','vlogs','posts','signatures'].map(k=>`<div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);border-radius:20px;padding:18px;text-align:center;"><div style="font-family:'Cinzel Decorative',serif;font-size:30px;color:var(--yellow);text-shadow:var(--glow-yellow);">${r[k]??'–'}</div><div style="font-size:9px;color:var(--lavender);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">${k}</div></div>`).join('');
+  const bars=r.pages&&r.pages.length?'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:14px;color:var(--pink);margin:18px 0 10px;">top pages ♡</div>'+r.pages.map(p=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="width:80px;font-size:11px;color:var(--lavender);text-align:right;">${esc(p.label)}</span><div style="flex:1;height:20px;background:rgba(0,0,0,.4);border-radius:10px;overflow:hidden;"><div style="height:100%;border-radius:10px;background:linear-gradient(90deg,var(--blood),var(--mauve),var(--yellow));width:${r.pages[0]?Math.round(p.count/r.pages[0].count*100):0}%;"></div></div><span style="font-size:11px;color:var(--yellow);">${p.count}</span></div>`).join(''):'';
+  el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:var(--pink);margin-bottom:18px;">ANALYTICS ♡</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:20px;">${grid}</div>${bars}`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PET SYSTEM
+══════════════════════════════════════════════════════════ */
 const petCanvas=document.getElementById('pet-canvas'),petCtx=petCanvas.getContext('2d');
 let pets=[],mouseX=0,mouseY=0;
 function resizePet(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
