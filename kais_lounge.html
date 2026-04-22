@@ -466,9 +466,9 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
               <div class="form-label">PALETTE</div>
               <div id="px-palette" class="palette-grid"></div>
               <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-                <button class="bubble-btn bubble-btn-sm" id="px-erase-btn" onclick="window._pxToggleEraser()">ERASER</button>
-                <button class="bubble-btn bubble-btn-sm" onclick="window._pxClear()">CLEAR</button>
-                <button class="bubble-btn bubble-btn-sm" onclick="window._pxFill()">FILL BG</button>
+                <button class="bubble-btn" id="px-erase-btn" onclick="window._pxToggleEraser()">ERASER</button>
+                <button class="bubble-btn" onclick="window._pxClear()">CLEAR</button>
+                <button class="bubble-btn" onclick="window._pxFill()">FILL BG</button>
               </div>
               <div class="form-label">SAVE AS</div>
               <select id="px-save-type" class="form-input" style="margin-bottom:12px;">
@@ -884,33 +884,74 @@ async function saveLinks() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FUN FACTS
+   FUN FACTS - FIXED VERSION
 ═══════════════════════════════════════════════════════════ */
 let existingFacts = [];
+
 async function loadFacts() {
   const el = document.getElementById('facts-editor');
   if (!el) return;
-  const r = await api('/api/facts');
-  existingFacts = r?.data || [];
-  el.innerHTML = '';
-  for (let i = 1; i <= 8; i++) {
-    const fact = existingFacts.find(f => f.slot_number === i);
-    const div = document.createElement('div');
-    div.className = 'form-group';
-    div.innerHTML = `<label class="form-label">Fact ${i}</label><input class="form-input" id="ef-${i}" placeholder="Fun fact about kai..." value="${esc(fact?.fact_text||'')}">`;
-    el.appendChild(div);
+  
+  try {
+    const r = await api('/api/facts');
+    if (r && r.data) {
+      existingFacts = r.data;
+    } else {
+      existingFacts = [];
+    }
+    
+    el.innerHTML = '';
+    
+    // Create input fields for all 8 slots
+    for (let i = 1; i <= 8; i++) {
+      const fact = existingFacts.find(f => f.slot_number === i);
+      const div = document.createElement('div');
+      div.className = 'form-group';
+      div.innerHTML = `
+        <label class="form-label">Fact ${i}</label>
+        <input class="form-input" id="ef-${i}" placeholder="Fun fact about kai..." value="${esc(fact?.fact_text || '')}">
+      `;
+      el.appendChild(div);
+    }
+  } catch (error) {
+    console.error('Error loading facts:', error);
+    el.innerHTML = '<div class="empty-msg">Error loading facts. Please try again.</div>';
   }
 }
 
 async function saveFacts() {
-  const facts = [];
-  for (let i = 1; i <= 8; i++) {
-    const el = document.getElementById(`ef-${i}`);
-    if (el && el.value.trim()) facts.push({ slot_number: i, fact_text: el.value.trim() });
+  try {
+    const facts = [];
+    
+    // Collect all non-empty facts
+    for (let i = 1; i <= 8; i++) {
+      const input = document.getElementById(`ef-${i}`);
+      if (input && input.value.trim()) {
+        facts.push({ 
+          slot_number: i, 
+          fact_text: input.value.trim() 
+        });
+      }
+    }
+    
+    if (facts.length === 0) {
+      toast('Please add at least one fun fact ♡');
+      return;
+    }
+    
+    // Send the array directly - backend expects an array of objects
+    const r = await api('/api/facts', 'POST', facts);
+    
+    if (r) {
+      toast(`Saved ${facts.length} fun facts ✦`);
+      await loadFacts(); // Reload to refresh the display
+    } else {
+      toast('Error saving facts - server error');
+    }
+  } catch (error) {
+    console.error('Error saving facts:', error);
+    toast('Error saving facts - check console');
   }
-  const r = await api('/api/facts', 'POST', facts);
-  if (r) toast('Fun facts saved ✦');
-  else    toast('Error saving facts');
 }
 
 /* ═══════════════════════════════════════════════════════════
