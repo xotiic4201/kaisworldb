@@ -117,16 +117,30 @@ async def sb_delete(table: str, filter_str: str):
         r = await c.delete(f"{SUPABASE_URL}/rest/v1/{table}?{filter_str}", headers=sb_headers())
     return r.is_success
 
-# ─── Auth helpers ──────────────────────────────────────────────────────────────
+# ─── Auth helpers - FIXED to accept both Kai and XOTIIC ────────────────────────
 async def require_kai(authorization: Optional[str] = Header(None)):
+    """Requires Kai authentication"""
     if not authorization or authorization != "Bearer kai_authenticated":
-        raise HTTPException(status_code=401, detail="Unauthorized")
+        raise HTTPException(status_code=401, detail="Unauthorized - Kai access only")
     return True
 
 async def require_xotiic(authorization: Optional[str] = Header(None)):
+    """Requires XOTIIC owner authentication"""
     if not authorization or authorization != "Bearer xotiic_authenticated":
         raise HTTPException(status_code=401, detail="Unauthorized - XOTIIC access only")
     return True
+
+async def require_kai_or_xotiic(authorization: Optional[str] = Header(None)):
+    """Allows both Kai and XOTIIC authentication"""
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if authorization == "Bearer kai_authenticated" or authorization == "Bearer xotiic_authenticated":
+        return True
+    raise HTTPException(status_code=401, detail="Unauthorized - valid credentials required")
+
+async def is_authenticated(authorization: Optional[str] = Header(None)) -> bool:
+    """Check if user is authenticated (either Kai or XOTIIC)"""
+    return authorization in ["Bearer kai_authenticated", "Bearer xotiic_authenticated"]
 
 # ─── Models ────────────────────────────────────────────────────────────────────
 class LoginPayload(BaseModel):
@@ -234,34 +248,7 @@ async def serve_xotiic_dashboard():
     if os.path.exists(xotiic_path):
         with open(xotiic_path, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
-    # Fallback built-in dashboard
-    return HTMLResponse(content="""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>✦ XOTIIC DASHBOARD ✦</title>
-        <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { background: #0a0018; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-            .container { background: linear-gradient(135deg, #1a0030, #0a0018); border: 2px solid #ff6eb4; border-radius: 20px; padding: 40px; text-align: center; max-width: 500px; }
-            h1 { color: #ffd700; font-size: 28px; margin-bottom: 10px; }
-            p { color: #ff6eb4; margin-bottom: 20px; }
-            code { background: #1a0030; padding: 10px; display: block; border-radius: 10px; color: #ffd700; margin: 20px 0; }
-            .btn { background: linear-gradient(135deg, #ff6eb4, #8b00ff); border: none; padding: 12px 24px; border-radius: 30px; color: #ffd700; cursor: pointer; font-weight: bold; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>✦ XOTIIC DASHBOARD ✦</h1>
-            <p>Owner Control Panel</p>
-            <code>Please save the HTML file as 'xotiic.html' in the same directory as app.py</code>
-            <button class="btn" onclick="fetch('/api/xotiic/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:prompt('Email:'),password:prompt('Password:')})}).then(r=>r.json()).then(d=>console.log(d))">Test Login</button>
-        </div>
-    </body>
-    </html>
-    """)
+    return HTMLResponse(content="<h1>XOTIIC Dashboard</h1><p>Please upload xotiic.html file</p>")
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  AUTH
@@ -351,7 +338,7 @@ async def kai_status():
     return JSONResponse({"online": False})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PROFILE
+#  PROFILE - FIXED: Allows both Kai and XOTIIC
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/profile")
@@ -363,7 +350,7 @@ async def get_profile():
 
 @app.patch("/api/profile")
 async def update_profile(payload: ProfilePayload, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     body = {k: v for k, v in payload.model_dump().items() if v is not None}
     body["updated_at"] = datetime.now(timezone.utc).isoformat()
     rows = await sb_get("kai_settings", "select=id&limit=1")
@@ -376,7 +363,7 @@ async def update_profile(payload: ProfilePayload, authorization: Optional[str] =
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  THREADS
+#  THREADS - FIXED: Allows both Kai and XOTIIC for reading
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/threads")
@@ -399,13 +386,13 @@ async def create_thread(payload: ThreadPayload, authorization: Optional[str] = H
 
 @app.delete("/api/threads/{thread_id}")
 async def delete_thread(thread_id: str, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     await sb_delete("threads", f"id=eq.{thread_id}")
     add_log("success", f"Thread deleted: {thread_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  COMMENTS
+#  COMMENTS - FIXED: Allows both Kai and XOTIIC for delete
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/comments")
@@ -445,13 +432,13 @@ async def vote_comment(comment_id: str, payload: VotePayload):
 
 @app.delete("/api/comments/{comment_id}")
 async def delete_comment(comment_id: str, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     await sb_delete("comments", f"id=eq.{comment_id}")
     add_log("success", f"Comment deleted: {comment_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  POSTS
+#  POSTS - FIXED: Allows both Kai and XOTIIC for delete
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/posts")
@@ -483,13 +470,13 @@ async def like_post(post_id: str):
 
 @app.delete("/api/posts/{post_id}")
 async def delete_post(post_id: str, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     await sb_delete("posts", f"id=eq.{post_id}")
     add_log("success", f"Post deleted: {post_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  VLOGS
+#  VLOGS - FIXED: Allows both Kai and XOTIIC for delete
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/vlogs")
@@ -510,13 +497,13 @@ async def create_vlog(payload: VlogPayload, authorization: Optional[str] = Heade
 
 @app.delete("/api/vlogs/{vlog_id}")
 async def delete_vlog(vlog_id: str, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     await sb_delete("vlogs", f"id=eq.{vlog_id}")
     add_log("success", f"Vlog deleted: {vlog_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  FUN FACTS
+#  FUN FACTS - FIXED: Allows both Kai and XOTIIC
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/facts")
@@ -526,7 +513,7 @@ async def get_facts():
 
 @app.post("/api/facts")
 async def upsert_facts(payload: List[FactsPayload], authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     for item in payload:
         slot = item.slot_number
         text = item.fact_text
@@ -539,7 +526,7 @@ async def upsert_facts(payload: List[FactsPayload], authorization: Optional[str]
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  LIVE STATUS
+#  LIVE STATUS - FIXED: Allows both Kai and XOTIIC
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/live")
@@ -551,7 +538,7 @@ async def get_live():
 
 @app.patch("/api/live")
 async def update_live(payload: LivePayload, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     body = {
         "is_live": payload.is_live,
         "stream_url": payload.stream_url,
@@ -567,7 +554,7 @@ async def update_live(payload: LivePayload, authorization: Optional[str] = Heade
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  CHAT
+#  CHAT - FIXED: Allows both Kai and XOTIIC for clear
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/chat")
@@ -587,7 +574,7 @@ async def post_chat(payload: ChatPayload):
 
 @app.delete("/api/chat")
 async def clear_chat(authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     if SUPABASE_URL:
         async with httpx.AsyncClient(timeout=15) as c:
             await c.delete(
@@ -598,7 +585,7 @@ async def clear_chat(authorization: Optional[str] = Header(None)):
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  SIGNATURES
+#  SIGNATURES - FIXED: Allows both Kai and XOTIIC for delete
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/signatures")
@@ -618,18 +605,19 @@ async def create_signature(payload: SignaturePayload):
 
 @app.delete("/api/signatures/{sig_id}")
 async def delete_signature(sig_id: str, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     await sb_delete("iwashere_signatures", f"id=eq.{sig_id}")
     add_log("success", f"Signature deleted: {sig_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  JOURNAL
+#  JOURNAL - FIXED: Allows XOTIIC to access (owner can see everything)
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/journal")
 async def get_journal(authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    """Allow both Kai and XOTIIC to access journal"""
+    await require_kai_or_xotiic(authorization)
     data = await sb_get("journal_entries", "select=*&order=created_at.desc")
     add_log("info", "Journal accessed")
     return JSONResponse({"data": data if isinstance(data, list) else []})
@@ -648,7 +636,7 @@ async def create_journal(payload: JournalPayload, authorization: Optional[str] =
 
 @app.delete("/api/journal/{entry_id}")
 async def delete_journal(entry_id: str, authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     await sb_delete("journal_entries", f"id=eq.{entry_id}")
     add_log("success", f"Journal entry deleted: {entry_id}")
     return JSONResponse({"ok": True})
@@ -725,7 +713,7 @@ async def upload_sprite(
     file: UploadFile = File(...),
     authorization: Optional[str] = Header(None),
 ):
-    await require_kai(authorization)
+    await require_kai_or_xotiic(authorization)
     if sprite_type not in ALLOWED_SPRITE_TYPES:
         raise HTTPException(status_code=400, detail=f"sprite_type must be one of {ALLOWED_SPRITE_TYPES}")
     content_type = file.content_type or "image/png"
