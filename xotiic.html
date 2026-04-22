@@ -3,13 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>✦ XOTIIC DASHBOARD ✦</title>
+<title>✦ XOTIICS DASHBOARD ✦</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ==========================================================================
+   RESET & BASE VARIABLES
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+:root {
+    --pk: #ff6eb4;
+    --rose: #ff1493;
+    --blush: #ffc0d8;
+    --mauve: #c8729a;
+    --lav: #d4a0e8;
+    --lilac: #eedcf8;
+    --plum: #6b2fa0;
+    --purple: #8b00ff;
+    --deep: #3a0060;
+    --gold: #ffd700;
+    --cream: #fff5d6;
+    --amber: #ffb347;
+    --blood: #7a0020;
+    --crimson: #3d0010;
+    --midnight: #0a0018;
+    --glass: rgba(255,105,180,.12);
+    --glow-pk: 0 0 22px rgba(255,110,180,.8), 0 0 50px rgba(255,110,180,.3);
+    --glow-gold: 0 0 22px rgba(255,215,0,.9), 0 0 50px rgba(255,215,0,.4);
+    --glow-purple: 0 0 22px rgba(139,0,255,.8), 0 0 50px rgba(139,0,255,.3);
 }
 
 body {
@@ -24,7 +49,9 @@ body {
 ::-webkit-scrollbar-thumb { background: #ff6eb4; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #ff1493; }
 
-/* ===== LOGIN SCREEN ===== */
+/* ==========================================================================
+   LOGIN SCREEN
+   ========================================================================== */
 .login-overlay {
     position: fixed;
     inset: 0;
@@ -130,7 +157,9 @@ body {
     display: none;
 }
 
-/* ===== DASHBOARD ===== */
+/* ==========================================================================
+   DASHBOARD LAYOUT
+   ========================================================================== */
 .dashboard {
     display: flex;
     height: 100vh;
@@ -232,7 +261,7 @@ body {
     text-align: center;
 }
 
-/* Main Content */
+/* Main Content Area */
 .main-content {
     flex: 1;
     overflow-y: auto;
@@ -240,7 +269,9 @@ body {
     background: radial-gradient(ellipse at 30% 20%, rgba(139,0,255,0.05), transparent);
 }
 
-/* Stats Cards */
+/* ==========================================================================
+   STATS CARDS
+   ========================================================================== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -276,7 +307,9 @@ body {
     margin-top: 6px;
 }
 
-/* Panel Container */
+/* ==========================================================================
+   PANELS
+   ========================================================================== */
 .panel {
     display: none;
     animation: panelFade 0.3s ease;
@@ -306,7 +339,9 @@ body {
     margin-bottom: 24px;
 }
 
-/* Cards */
+/* ==========================================================================
+   CARDS & FORMS
+   ========================================================================== */
 .card {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,105,180,0.15);
@@ -324,7 +359,72 @@ body {
     margin-bottom: 18px;
 }
 
-/* Tables & Lists */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,215,0,0.6);
+    margin-bottom: 6px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    background: rgba(0,0,0,0.4);
+    border: 1.5px solid rgba(255,105,180,0.2);
+    color: #f0d0e8;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.input-field:focus {
+    border-color: #ff6eb4;
+    box-shadow: 0 0 10px rgba(255,105,180,0.2);
+}
+
+textarea.input-field {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.btn-primary {
+    padding: 12px 24px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #ff6eb4, #8b00ff);
+    border: none;
+    color: #ffd700;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255,105,180,0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #8b0000, #4a0000);
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 9px;
+}
+
+/* ==========================================================================
+   TABLES
+   ========================================================================== */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -367,53 +467,14 @@ body {
     transform: scale(1.02);
 }
 
-/* Inputs */
-.input-field {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 16px;
-    background: rgba(0,0,0,0.4);
-    border: 1.5px solid rgba(255,105,180,0.2);
-    color: #f0d0e8;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    margin-bottom: 12px;
-}
-
-.input-field:focus {
-    border-color: #ff6eb4;
-}
-
-textarea.input-field {
-    resize: vertical;
-    min-height: 80px;
-}
-
-.btn-primary {
-    padding: 12px 24px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, #ff6eb4, #8b00ff);
-    border: none;
-    color: #ffd700;
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 10px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(255,105,180,0.4);
-}
-
-/* Log Viewer */
+/* ==========================================================================
+   LOGS & ACTIVITY
+   ========================================================================== */
 .log-container {
     background: rgba(0,0,0,0.5);
     border-radius: 20px;
     padding: 16px;
-    font-family: 'Monaco', monospace;
+    font-family: 'Monaco', 'Courier New', monospace;
     font-size: 11px;
     max-height: 500px;
     overflow-y: auto;
@@ -437,6 +498,7 @@ textarea.input-field {
     border-radius: 12px;
     font-size: 9px;
     margin-right: 12px;
+    font-weight: bold;
 }
 
 .log-type.info { background: rgba(0,200,255,0.2); color: #00ccff; }
@@ -464,6 +526,9 @@ textarea.input-field {
     background: rgba(255,105,180,0.2);
 }
 
+/* ==========================================================================
+   MISCELLANEOUS
+   ========================================================================== */
 .empty-state {
     text-align: center;
     padding: 48px;
@@ -570,6 +635,7 @@ textarea.input-field {
     background-color: #ffd700;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
     .sidebar { width: 80px; }
     .sidebar-header h1 { font-size: 12px; letter-spacing: 1px; }
@@ -579,104 +645,202 @@ textarea.input-field {
     .main-content { padding: 16px; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
+<!-- ==========================================================================
+     LOGIN OVERLAY
+     ========================================================================== -->
 <div id="loginOverlay" class="login-overlay">
     <div class="login-box">
         <div class="login-icon">👑</div>
         <div class="login-title">XOTIIC</div>
-        <div class="login-sub">✦ owner's sanctuary ✦</div>
+        <div class="login-sub">✦ OWNER'S SANCTUARY ✦</div>
         <input type="email" id="loginEmail" class="login-input" placeholder="XOTIIC Email" autocomplete="email">
         <input type="password" id="loginPassword" class="login-input" placeholder="XOTIIC Password">
         <button class="login-btn" id="loginBtn">ENTER /XOTIIC ♡</button>
-        <div id="loginError" class="login-error">❌ invalid credentials</div>
+        <div id="loginError" class="login-error">❌ INVALID XOTIIC CREDENTIALS</div>
     </div>
 </div>
 
-<!-- MAIN DASHBOARD -->
+<!-- ==========================================================================
+     MAIN DASHBOARD
+     ========================================================================== -->
 <div id="dashboard" class="dashboard">
+    
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="sidebar-header">
             <h1>✦ XOTIIC ✦</h1>
-            <div class="owner-tag">👑 BF / OWNER</div>
+            <div class="owner-tag">👑 BF / FULL OWNER</div>
         </div>
+        
         <div class="sidebar-nav">
+            <!-- OVERVIEW SECTION -->
             <div class="nav-section">
                 <div class="nav-section-title">OVERVIEW</div>
-                <div class="nav-item active" data-panel="dashboard"><span class="nav-icon">📊</span><span>Dashboard</span></div>
-                <div class="nav-item" data-panel="logs"><span class="nav-icon">📜</span><span>Activity Logs</span></div>
-                <div class="nav-item" data-panel="data"><span class="nav-icon">🗄️</span><span>All Data</span></div>
+                <div class="nav-item active" data-panel="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-panel="logs">
+                    <span class="nav-icon">📜</span>
+                    <span>Activity Logs</span>
+                </div>
+                <div class="nav-item" data-panel="data">
+                    <span class="nav-icon">🗄️</span>
+                    <span>All Data</span>
+                </div>
+                <div class="nav-item" data-panel="stats">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </div>
             </div>
+            
+            <!-- CONTENT SECTION -->
             <div class="nav-section">
                 <div class="nav-section-title">CONTENT</div>
-                <div class="nav-item" data-panel="threads"><span class="nav-icon">💬</span><span>Threads</span></div>
-                <div class="nav-item" data-panel="posts"><span class="nav-icon">📸</span><span>Feed Posts</span></div>
-                <div class="nav-item" data-panel="vlogs"><span class="nav-icon">🎥</span><span>Vlogs</span></div>
-                <div class="nav-item" data-panel="journal"><span class="nav-icon">📖</span><span>Journal</span></div>
+                <div class="nav-item" data-panel="threads">
+                    <span class="nav-icon">💬</span>
+                    <span>Threads</span>
+                </div>
+                <div class="nav-item" data-panel="posts">
+                    <span class="nav-icon">📸</span>
+                    <span>Feed Posts</span>
+                </div>
+                <div class="nav-item" data-panel="vlogs">
+                    <span class="nav-icon">🎥</span>
+                    <span>Vlogs</span>
+                </div>
+                <div class="nav-item" data-panel="journal">
+                    <span class="nav-icon">📖</span>
+                    <span>Kai's Journal</span>
+                </div>
             </div>
+            
+            <!-- COMMUNITY SECTION -->
             <div class="nav-section">
                 <div class="nav-section-title">COMMUNITY</div>
-                <div class="nav-item" data-panel="comments"><span class="nav-icon">💭</span><span>Comments</span></div>
-                <div class="nav-item" data-panel="signatures"><span class="nav-icon">✍️</span><span>Guestbook</span></div>
-                <div class="nav-item" data-panel="chat"><span class="nav-icon">💬</span><span>Live Chat</span></div>
+                <div class="nav-item" data-panel="comments">
+                    <span class="nav-icon">💭</span>
+                    <span>Comments</span>
+                </div>
+                <div class="nav-item" data-panel="signatures">
+                    <span class="nav-icon">✍️</span>
+                    <span>Guestbook</span>
+                </div>
+                <div class="nav-item" data-panel="chat">
+                    <span class="nav-icon">💬</span>
+                    <span>Live Chat</span>
+                </div>
             </div>
+            
+            <!-- SETTINGS SECTION -->
             <div class="nav-section">
                 <div class="nav-section-title">SETTINGS</div>
-                <div class="nav-item" data-panel="profile"><span class="nav-icon">👤</span><span>Profile</span></div>
-                <div class="nav-item" data-panel="facts"><span class="nav-icon">⭐</span><span>Fun Facts</span></div>
-                <div class="nav-item" data-panel="live"><span class="nav-icon">📡</span><span>Live Control</span></div>
+                <div class="nav-item" data-panel="profile">
+                    <span class="nav-icon">👤</span>
+                    <span>Profile</span>
+                </div>
+                <div class="nav-item" data-panel="facts">
+                    <span class="nav-icon">⭐</span>
+                    <span>Fun Facts</span>
+                </div>
+                <div class="nav-item" data-panel="live">
+                    <span class="nav-icon">📡</span>
+                    <span>Live Control</span>
+                </div>
+                <div class="nav-item" data-panel="sprites">
+                    <span class="nav-icon">🎨</span>
+                    <span>Pet Sprites</span>
+                </div>
             </div>
         </div>
-        <div class="logout-btn" id="logoutBtn">🚪 LOGOUT</div>
+        
+        <div class="logout-btn" id="logoutBtn">
+            🚪 LOGOUT
+        </div>
     </div>
+    
+    <!-- MAIN CONTENT AREA -->
     <div class="main-content" id="mainContent"></div>
 </div>
+
 <div id="toast"></div>
 
 <script>
-// ============================================================
-// XOTIIC DASHBOARD - Owner Control Panel
-// ============================================================
+// ==========================================================================
+//                         XOTIIC DASHBOARD - COMPLETE
+//                         OWNER CONTROL PANEL
+//                         VERSION 1.0.0
+// ==========================================================================
 
+// --------------------------------------------------------------------------
+// CONFIGURATION
+// --------------------------------------------------------------------------
 const API_URL = window.location.origin;
 let authToken = null;
 let activityLogs = [];
+let refreshInterval = null;
+let currentPanel = 'dashboard';
 
-// ============================================================
-// Utility Functions
-// ============================================================
+// --------------------------------------------------------------------------
+// UTILITY FUNCTIONS
+// --------------------------------------------------------------------------
 
-function showToast(msg) {
+/**
+ * Display a toast notification
+ */
+function showToast(msg, type = 'info') {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-function addLog(type, message) {
-    const entry = { 
-        id: Date.now(), 
-        timestamp: new Date().toISOString(), 
-        type: type, 
-        message: message 
+/**
+ * Add an entry to the activity log
+ */
+function addLog(type, message, details = null) {
+    const entry = {
+        id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        timestamp: new Date().toISOString(),
+        type: type,
+        message: message,
+        details: details
     };
     activityLogs.unshift(entry);
-    if (activityLogs.length > 500) activityLogs.pop();
-    console.log(`[${type.toUpperCase()}] ${message}`);
+    if (activityLogs.length > 1000) activityLogs.pop();
+    console.log(`[${type.toUpperCase()}] ${message}`, details || '');
 }
 
+/**
+ * Format ISO date to readable string
+ */
 function formatDate(iso) {
     if (!iso) return 'N/A';
-    try { 
-        return new Date(iso).toLocaleString(); 
-    } catch(e) { 
-        return iso; 
+    try {
+        return new Date(iso).toLocaleString();
+    } catch(e) {
+        return iso;
     }
 }
 
+/**
+ * Escape HTML special characters
+ */
 function escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -687,37 +851,55 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
-// ============================================================
-// API Functions
-// ============================================================
+/**
+ * Extract YouTube embed URL
+ */
+function ytEmbed(url) {
+    if (!url) return '';
+    const match = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+    const id = match ? match[1] : (url.length === 11 ? url : url);
+    return `https://www.youtube.com/embed/${id}`;
+}
 
+// --------------------------------------------------------------------------
+// API FUNCTIONS
+// --------------------------------------------------------------------------
+
+/**
+ * Make API call with authentication
+ */
 async function apiCall(path, method = 'GET', body = null) {
     const headers = { 'Content-Type': 'application/json' };
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
     
     try {
-        const response = await fetch(`${API_URL}${path}`, { 
-            method, 
-            headers, 
-            body: body ? JSON.stringify(body) : undefined 
+        const response = await fetch(`${API_URL}${path}`, {
+            method,
+            headers,
+            body: body ? JSON.stringify(body) : undefined
         });
         
-        if (response.status === 401) { 
-            logout(); 
+        if (response.status === 401) {
+            addLog('error', 'Session expired - please login again');
+            logout();
             return null;
         }
+        
         if (!response.ok) return null;
         return await response.json();
     } catch (err) {
-        addLog('error', `API error: ${path}`);
+        addLog('error', `API error: ${path} - ${err.message}`);
         return null;
     }
 }
 
-// ============================================================
-// Login Functions
-// ============================================================
+// --------------------------------------------------------------------------
+// AUTHENTICATION FUNCTIONS
+// --------------------------------------------------------------------------
 
+/**
+ * Attempt login with XOTIIC credentials
+ */
 async function attemptLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -725,7 +907,7 @@ async function attemptLogin() {
     const loginBtn = document.getElementById('loginBtn');
     
     if (!email || !password) {
-        errorEl.textContent = '❌ fill in both fields';
+        errorEl.textContent = '❌ Fill in both fields';
         errorEl.style.display = 'block';
         return;
     }
@@ -745,138 +927,199 @@ async function attemptLogin() {
             const data = await response.json();
             authToken = data.access_token;
             sessionStorage.setItem('xotiic_token', authToken);
-            addLog('success', `XOTIIC login successful`);
+            addLog('success', `XOTIIC login successful - ${email}`);
             enterDashboard();
         } else {
-            errorEl.textContent = '❌ invalid XOTIIC credentials';
+            errorEl.textContent = '❌ Invalid XOTIIC credentials';
             errorEl.style.display = 'block';
-            addLog('error', `Failed XOTIIC login attempt`);
+            addLog('error', `Failed XOTIIC login attempt for ${email}`);
         }
     } catch (err) {
-        errorEl.textContent = '❌ connection error - is backend running?';
+        errorEl.textContent = '❌ Connection error - is backend running?';
         errorEl.style.display = 'block';
+        console.error('Login error:', err);
     } finally {
         loginBtn.disabled = false;
         loginBtn.textContent = 'ENTER /XOTIIC ♡';
     }
 }
 
+/**
+ * Logout and clear session
+ */
 function logout() {
     authToken = null;
     sessionStorage.removeItem('xotiic_token');
+    if (refreshInterval) clearInterval(refreshInterval);
     document.getElementById('dashboard').classList.remove('visible');
     document.getElementById('loginOverlay').classList.remove('hidden');
+    addLog('info', 'Logged out');
     showToast('Logged out');
 }
 
+/**
+ * Enter the dashboard after successful login
+ */
 function enterDashboard() {
     document.getElementById('loginOverlay').classList.add('hidden');
     document.getElementById('dashboard').classList.add('visible');
     loadPanel('dashboard');
+    startAutoRefresh();
 }
 
-// ============================================================
-// Data Loading
-// ============================================================
+/**
+ * Start auto-refresh interval for dashboard
+ */
+function startAutoRefresh() {
+    if (refreshInterval) clearInterval(refreshInterval);
+    refreshInterval = setInterval(() => {
+        if (currentPanel === 'dashboard' || currentPanel === 'logs' || currentPanel === 'data') {
+            loadPanel(currentPanel);
+        }
+    }, 30000);
+}
 
+// --------------------------------------------------------------------------
+// DATA LOADING FUNCTIONS
+// --------------------------------------------------------------------------
+
+/**
+ * Load dashboard statistics
+ */
 async function loadDashboardStats() {
-    const stats = await apiCall('/api/stats');
-    const threads = await apiCall('/api/threads');
-    const posts = await apiCall('/api/posts');
-    const vlogs = await apiCall('/api/vlogs');
-    const signatures = await apiCall('/api/signatures');
-    const journal = await apiCall('/api/journal');
+    try {
+        const stats = await apiCall('/api/stats');
+        const threads = await apiCall('/api/threads');
+        const posts = await apiCall('/api/posts');
+        const vlogs = await apiCall('/api/vlogs');
+        const signatures = await apiCall('/api/signatures');
+        const journal = await apiCall('/api/journal');
+        const comments = await apiCall('/api/comments?thread_id=dummy');
+        
+        return {
+            total_visitors: stats?.total || 0,
+            today_visitors: stats?.today || 0,
+            active_now: stats?.active || 0,
+            threads: threads?.data?.length || 0,
+            posts: posts?.data?.length || 0,
+            vlogs: vlogs?.data?.length || 0,
+            signatures: signatures?.data?.length || 0,
+            comments: comments?.data?.length || 0,
+            journal_entries: journal?.data?.length || 0,
+            top_pages: stats?.pages || []
+        };
+    } catch (err) {
+        addLog('error', 'Failed to load dashboard stats');
+        return null;
+    }
+}
+
+/**
+ * Load all data for the data panel
+ */
+async function loadAllData() {
+    const [threads, posts, vlogs, journal, signatures, comments, profile, facts, live] = await Promise.all([
+        apiCall('/api/threads'),
+        apiCall('/api/posts'),
+        apiCall('/api/vlogs'),
+        apiCall('/api/journal'),
+        apiCall('/api/signatures'),
+        apiCall('/api/comments?thread_id=dummy'),
+        apiCall('/api/profile'),
+        apiCall('/api/facts'),
+        apiCall('/api/live')
+    ]);
     
     return {
-        total_visitors: stats?.total || 0,
-        today_visitors: stats?.today || 0,
-        active_now: stats?.active || 0,
-        threads: threads?.data?.length || 0,
-        posts: posts?.data?.length || 0,
-        vlogs: vlogs?.data?.length || 0,
-        signatures: signatures?.data?.length || 0,
-        journal_entries: journal?.data?.length || 0,
-        top_pages: stats?.pages || []
+        threads: threads?.data || [],
+        posts: posts?.data || [],
+        vlogs: vlogs?.data || [],
+        journal: journal?.data || [],
+        signatures: signatures?.data || [],
+        comments: comments?.data || [],
+        profile: profile || {},
+        facts: facts?.data || [],
+        live: live || {}
     };
 }
 
-// ============================================================
-// Delete Operations
-// ============================================================
+// --------------------------------------------------------------------------
+// DELETE OPERATIONS
+// --------------------------------------------------------------------------
 
-async function deleteThread(id) {
-    if (!confirm(`Delete this thread?`)) return;
+async function deleteThread(id, content) {
+    if (!confirm(`Delete thread "${content?.substring(0, 50)}"?`)) return;
     const result = await apiCall(`/api/threads/${id}`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Thread deleted'); 
-        loadPanel('threads'); 
-        showToast('Thread deleted'); 
+    if (result) {
+        addLog('success', `Deleted thread: ${content?.substring(0, 50)}`);
+        loadPanel('threads');
+        showToast('Thread deleted');
     }
 }
 
-async function deletePost(id) {
-    if (!confirm(`Delete this post?`)) return;
+async function deletePost(id, caption) {
+    if (!confirm(`Delete post "${caption?.substring(0, 50)}"?`)) return;
     const result = await apiCall(`/api/posts/${id}`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Post deleted'); 
-        loadPanel('posts'); 
-        showToast('Post deleted'); 
+    if (result) {
+        addLog('success', `Deleted post: ${caption?.substring(0, 50)}`);
+        loadPanel('posts');
+        showToast('Post deleted');
     }
 }
 
-async function deleteVlog(id) {
-    if (!confirm(`Delete this vlog?`)) return;
+async function deleteVlog(id, title) {
+    if (!confirm(`Delete vlog "${title}"?`)) return;
     const result = await apiCall(`/api/vlogs/${id}`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Vlog deleted'); 
-        loadPanel('vlogs'); 
-        showToast('Vlog deleted'); 
+    if (result) {
+        addLog('success', `Deleted vlog: ${title}`);
+        loadPanel('vlogs');
+        showToast('Vlog deleted');
     }
 }
 
-async function deleteJournal(id) {
-    if (!confirm(`Delete this journal entry?`)) return;
+async function deleteJournal(id, title) {
+    if (!confirm(`Delete journal entry "${title}"?`)) return;
     const result = await apiCall(`/api/journal/${id}`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Journal entry deleted'); 
-        loadPanel('journal'); 
-        showToast('Entry deleted'); 
+    if (result) {
+        addLog('success', `Deleted journal entry: ${title}`);
+        loadPanel('journal');
+        showToast('Journal entry deleted');
     }
 }
 
-async function deleteSignature(id) {
-    if (!confirm(`Delete this signature?`)) return;
+async function deleteSignature(id, name) {
+    if (!confirm(`Delete signature from "${name}"?`)) return;
     const result = await apiCall(`/api/signatures/${id}`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Signature deleted'); 
-        loadPanel('signatures'); 
-        showToast('Signature deleted'); 
+    if (result) {
+        addLog('success', `Deleted signature from: ${name}`);
+        loadPanel('signatures');
+        showToast('Signature deleted');
     }
 }
 
 async function deleteComment(id) {
-    if (!confirm(`Delete this comment?`)) return;
+    if (!confirm('Delete this comment?')) return;
     const result = await apiCall(`/api/comments/${id}`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Comment deleted'); 
-        loadPanel('comments'); 
-        showToast('Comment deleted'); 
+    if (result) {
+        addLog('success', 'Deleted comment');
+        loadPanel('comments');
+        showToast('Comment deleted');
     }
 }
 
-async function clearChat() {
-    if (!confirm(`⚠️ PERMANENTLY DELETE ALL CHAT MESSAGES?`)) return;
-    const result = await apiCall(`/api/chat`, 'DELETE');
-    if (result) { 
-        addLog('success', 'Chat cleared'); 
-        loadPanel('chat'); 
-        showToast('Chat cleared'); 
+async function clearChatHistory() {
+    if (!confirm('⚠️ PERMANENTLY DELETE ALL CHAT MESSAGES? This cannot be undone.')) return;
+    const result = await apiCall('/api/chat', 'DELETE');
+    if (result) {
+        addLog('success', 'Cleared all chat history');
+        loadPanel('chat');
+        showToast('Chat history cleared');
     }
 }
 
-// ============================================================
-// Save Operations
-// ============================================================
+// --------------------------------------------------------------------------
+// SAVE OPERATIONS
+// --------------------------------------------------------------------------
 
 async function saveProfile() {
     const body = {
@@ -887,16 +1130,17 @@ async function saveProfile() {
         profile_pic_url: document.getElementById('profilePic')?.value || null,
         bio: document.getElementById('profileBio')?.value || null
     };
+    
     const result = await apiCall('/api/profile', 'PATCH', body);
-    if (result) { 
-        addLog('success', 'Profile updated'); 
-        showToast('Profile saved!'); 
+    if (result) {
+        addLog('success', 'Profile updated');
+        showToast('Profile saved!');
     } else {
         showToast('Error saving profile');
     }
 }
 
-async function saveFacts() {
+async function saveAllFacts() {
     const facts = [];
     for (let i = 1; i <= 8; i++) {
         const input = document.getElementById(`fact_${i}`);
@@ -904,40 +1148,90 @@ async function saveFacts() {
             facts.push({ slot_number: i, fact_text: input.value.trim() });
         }
     }
+    
     const result = await apiCall('/api/facts', 'POST', facts);
-    if (result) { 
-        addLog('success', `Updated ${facts.length} fun facts`); 
-        showToast('Facts saved!'); 
+    if (result) {
+        addLog('success', `Updated ${facts.length} fun facts`);
+        showToast('Facts saved!');
     } else {
         showToast('Error saving facts');
     }
 }
 
-async function saveLive() {
+async function saveLiveSettings() {
     const body = {
         is_live: document.getElementById('liveToggle')?.checked || false,
         stream_url: document.getElementById('streamUrl')?.value.trim() || null,
         offline_image_url: document.getElementById('offlineImg')?.value.trim() || null
     };
+    
     const result = await apiCall('/api/live', 'PATCH', body);
-    if (result) { 
-        addLog('success', body.is_live ? 'Went LIVE' : 'Ended live stream'); 
-        showToast(body.is_live ? '🔴 You are now LIVE!' : 'Stream ended'); 
+    if (result) {
+        addLog('success', body.is_live ? 'Went LIVE' : 'Ended live stream');
+        showToast(body.is_live ? '🔴 You are now LIVE!' : 'Stream ended');
     } else {
         showToast('Error updating live status');
     }
 }
 
-// ============================================================
-// Panel Rendering
-// ============================================================
+// --------------------------------------------------------------------------
+// SPRITE FUNCTIONS
+// --------------------------------------------------------------------------
 
-let currentPanel = 'dashboard';
+let spriteData = {};
 
+async function loadSprites() {
+    const result = await apiCall('/api/sprites/list');
+    if (result && result.sprites) {
+        spriteData = result.sprites;
+    }
+    return spriteData;
+}
+
+async function uploadSprite() {
+    const type = document.getElementById('spriteType')?.value;
+    const file = document.getElementById('spriteFile')?.files[0];
+    
+    if (!type || !file) {
+        showToast('Select a sprite type and file');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('sprite_type', type);
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch(`${API_URL}/api/sprites/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${authToken}` },
+            body: formData
+        });
+        
+        if (response.ok) {
+            addLog('success', `Uploaded sprite: ${type}`);
+            showToast('Sprite uploaded!');
+            loadPanel('sprites');
+        } else {
+            showToast('Upload failed');
+        }
+    } catch (err) {
+        showToast('Error uploading sprite');
+    }
+}
+
+// --------------------------------------------------------------------------
+// PANEL RENDERING FUNCTIONS
+// --------------------------------------------------------------------------
+
+/**
+ * Load and render the selected panel
+ */
 async function loadPanel(panelName) {
     currentPanel = panelName;
     const container = document.getElementById('mainContent');
     
+    // Update active nav state
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
         if (item.dataset.panel === panelName) item.classList.add('active');
@@ -946,30 +1240,74 @@ async function loadPanel(panelName) {
     addLog('info', `Loading panel: ${panelName}`);
     
     switch(panelName) {
-        case 'dashboard': await renderDashboard(container); break;
-        case 'logs': renderLogs(container); break;
-        case 'data': await renderAllData(container); break;
-        case 'threads': await renderThreads(container); break;
-        case 'posts': await renderPosts(container); break;
-        case 'vlogs': await renderVlogs(container); break;
-        case 'journal': await renderJournal(container); break;
-        case 'comments': await renderComments(container); break;
-        case 'signatures': await renderSignatures(container); break;
-        case 'chat': await renderChat(container); break;
-        case 'profile': await renderProfile(container); break;
-        case 'facts': await renderFacts(container); break;
-        case 'live': await renderLive(container); break;
+        case 'dashboard':
+            await renderDashboard(container);
+            break;
+        case 'logs':
+            renderLogs(container);
+            break;
+        case 'data':
+            await renderAllData(container);
+            break;
+        case 'stats':
+            await renderStats(container);
+            break;
+        case 'threads':
+            await renderThreads(container);
+            break;
+        case 'posts':
+            await renderPosts(container);
+            break;
+        case 'vlogs':
+            await renderVlogs(container);
+            break;
+        case 'journal':
+            await renderJournal(container);
+            break;
+        case 'comments':
+            await renderComments(container);
+            break;
+        case 'signatures':
+            await renderSignatures(container);
+            break;
+        case 'chat':
+            await renderChat(container);
+            break;
+        case 'profile':
+            await renderProfile(container);
+            break;
+        case 'facts':
+            await renderFacts(container);
+            break;
+        case 'live':
+            await renderLive(container);
+            break;
+        case 'sprites':
+            await renderSprites(container);
+            break;
+        default:
+            container.innerHTML = '<div class="empty-state">Panel not found</div>';
     }
 }
+
+// --------------------------------------------------------------------------
+// DASHBOARD RENDER
+// --------------------------------------------------------------------------
 
 async function renderDashboard(container) {
     container.innerHTML = '<div class="loader"></div>';
     const stats = await loadDashboardStats();
     
+    if (!stats) {
+        container.innerHTML = '<div class="empty-state">❌ Failed to load dashboard</div>';
+        return;
+    }
+    
     container.innerHTML = `
         <div class="panel active">
             <div class="panel-title">✦ DASHBOARD ✦</div>
-            <div class="panel-sub">welcome, owner</div>
+            <div class="panel-sub">Welcome back, owner. Here's what's happening.</div>
+            
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-value">${stats.total_visitors}</div><div class="stat-label">Total Visitors</div></div>
                 <div class="stat-card"><div class="stat-value">${stats.today_visitors}</div><div class="stat-label">Today</div></div>
@@ -977,9 +1315,11 @@ async function renderDashboard(container) {
                 <div class="stat-card"><div class="stat-value">${stats.threads}</div><div class="stat-label">Threads</div></div>
                 <div class="stat-card"><div class="stat-value">${stats.posts}</div><div class="stat-label">Posts</div></div>
                 <div class="stat-card"><div class="stat-value">${stats.vlogs}</div><div class="stat-label">Vlogs</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.comments}</div><div class="stat-label">Comments</div></div>
                 <div class="stat-card"><div class="stat-value">${stats.signatures}</div><div class="stat-label">Signatures</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.journal_entries}</div><div class="stat-label">Journal</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.journal_entries}</div><div class="stat-label">Journal Entries</div></div>
             </div>
+            
             <div class="card">
                 <div class="card-title">📈 TOP PAGES</div>
                 <div style="margin-top: 10px;">
@@ -988,30 +1328,35 @@ async function renderDashboard(container) {
                             <span>/${p.label}</span>
                             <span style="color: #ffd700;">${p.count} views</span>
                         </div>
-                    `).join('') || '<div class="empty-state">no page data yet</div>'}
+                    `).join('') || '<div class="empty-state">No page data yet</div>'}
                 </div>
             </div>
+            
             <div class="card">
                 <div class="card-title">🕐 RECENT ACTIVITY</div>
-                <div class="log-container">
+                <div style="max-height: 300px; overflow-y: auto;">
                     ${activityLogs.slice(0, 20).map(log => `
                         <div class="log-entry">
                             <span class="log-time">${new Date(log.timestamp).toLocaleTimeString()}</span>
                             <span class="log-type ${log.type}">${log.type.toUpperCase()}</span>
-                            <span>${escapeHtml(log.message)}</span>
+                            <span class="log-message">${escapeHtml(log.message)}</span>
                         </div>
-                    `).join('') || '<div class="empty-state">no activity yet</div>'}
+                    `).join('') || '<div class="empty-state">No recent activity</div>'}
                 </div>
             </div>
         </div>
     `;
 }
 
+// --------------------------------------------------------------------------
+// LOGS RENDER
+// --------------------------------------------------------------------------
+
 function renderLogs(container) {
     container.innerHTML = `
         <div class="panel active">
             <div class="panel-title">📜 ACTIVITY LOGS</div>
-            <div class="panel-sub">complete system history</div>
+            <div class="panel-sub">Complete system activity history</div>
             <div class="card">
                 <button class="refresh-btn" onclick="loadPanel('logs')">⟳ REFRESH</button>
                 <div class="log-container">
@@ -1019,117 +1364,535 @@ function renderLogs(container) {
                         <div class="log-entry">
                             <span class="log-time">${new Date(log.timestamp).toLocaleString()}</span>
                             <span class="log-type ${log.type}">${log.type.toUpperCase()}</span>
-                            <span>${escapeHtml(log.message)}</span>
+                            <span class="log-message">${escapeHtml(log.message)}</span>
+                            ${log.details ? `<div style="margin-left: 100px; font-size: 10px; color: #888;">${escapeHtml(JSON.stringify(log.details))}</div>` : ''}
                         </div>
-                    `).join('') || '<div class="empty-state">no logs yet</div>'}
+                    `).join('') || '<div class="empty-state">No logs yet</div>'}
                 </div>
             </div>
         </div>
     `;
 }
 
+// --------------------------------------------------------------------------
+// ALL DATA RENDER
+// --------------------------------------------------------------------------
+
 async function renderAllData(container) {
     container.innerHTML = '<div class="loader"></div>';
-    const [threads, posts, vlogs, journal, signatures, comments] = await Promise.all([
-        apiCall('/api/threads'), apiCall('/api/posts'), apiCall('/api/vlogs'),
-        apiCall('/api/journal'), apiCall('/api/signatures'), apiCall('/api/comments?thread_id=dummy')
-    ]);
+    const data = await loadAllData();
     
     container.innerHTML = `
         <div class="panel active">
             <div class="panel-title">🗄️ ALL DATA</div>
-            <div class="panel-sub">complete database overview</div>
+            <div class="panel-sub">Complete database overview - everything stored</div>
+            
             <div class="card">
-                <div class="card-title">📝 THREADS (${threads?.data?.length || 0})</div>
-                <table class="data-table"><thead><tr><th>Date</th><th>Content</th><th></th></tr></thead><tbody>
-                    ${(threads?.data || []).slice(0, 20).map(t => `<tr><td style="font-size:10px">${formatDate(t.created_at)}</td><td>${escapeHtml((t.content || '').substring(0, 60))}</td><td><button class="delete-btn" onclick="deleteThread('${t.id}')">DELETE</button></td></tr>`).join('')}
-                </tbody></table>
+                <div class="card-title">📝 THREADS (${data.threads.length})</div>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Content</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${data.threads.slice(0, 20).map(t => `
+                            <tr>
+                                <td style="font-size: 10px;">${formatDate(t.created_at)}</td>
+                                <td>${escapeHtml((t.content || '').substring(0, 80))}${t.content?.length > 80 ? '...' : ''}</td>
+                                <td><button class="delete-btn" onclick="deleteThread('${t.id}', '${escapeHtml(t.content || '').replace(/'/g, "\\'")}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                ${data.threads.length === 0 ? '<div class="empty-state">No threads</div>' : ''}
             </div>
+            
             <div class="card">
-                <div class="card-title">📸 POSTS (${posts?.data?.length || 0})</div>
-                <table class="data-table"><thead><tr><th>Date</th><th>Caption</th><th>Likes</th><th></th></tr></thead><tbody>
-                    ${(posts?.data || []).slice(0, 20).map(p => `<tr><td style="font-size:10px">${formatDate(p.created_at)}</td><td>${escapeHtml((p.caption || '').substring(0, 40))}</td><td>♥ ${p.like_count || 0}</td><td><button class="delete-btn" onclick="deletePost('${p.id}')">DELETE</button></td></tr>`).join('')}
-                </tbody></table>
+                <div class="card-title">📸 FEED POSTS (${data.posts.length})</div>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Caption</th><th>Likes</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${data.posts.slice(0, 20).map(p => `
+                            <tr>
+                                <td style="font-size: 10px;">${formatDate(p.created_at)}</td>
+                                <td>${escapeHtml((p.caption || '').substring(0, 60))}</td>
+                                <td>♥ ${p.like_count || 0}</td>
+                                <td><button class="delete-btn" onclick="deletePost('${p.id}', '${escapeHtml(p.caption || '').replace(/'/g, "\\'")}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             </div>
+            
             <div class="card">
-                <div class="card-title">💬 COMMENTS (${comments?.data?.length || 0})</div>
-                <table class="data-table"><thead><tr><th>Date</th><th>Author</th><th>Content</th><th></th></tr></thead><tbody>
-                    ${(comments?.data || []).slice(0, 20).map(c => `<tr><td style="font-size:10px">${formatDate(c.created_at)}</td><td>${escapeHtml(c.author_name || 'anon')}</td><td>${escapeHtml((c.content || '').substring(0, 40))}</td><td><button class="delete-btn" onclick="deleteComment('${c.id}')">DELETE</button></td></tr>`).join('')}
-                </tbody></table>
+                <div class="card-title">💬 COMMENTS (${data.comments.length})</div>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Author</th><th>Content</th><th>Votes</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${data.comments.slice(0, 20).map(c => `
+                            <tr>
+                                <td style="font-size: 10px;">${formatDate(c.created_at)}</td>
+                                <td style="color: ${c.author_color || '#ff69b4'}">${escapeHtml(c.author_name || 'anonymous')}</td>
+                                <td>${escapeHtml((c.content || '').substring(0, 60))}</td>
+                                <td>▲ ${c.upvotes || 0} / ▼ ${c.downvotes || 0}</td>
+                                <td><button class="delete-btn" onclick="deleteComment('${c.id}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🎥 VLOGS (${data.vlogs.length})</div>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Title</th><th>Description</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${data.vlogs.slice(0, 20).map(v => `
+                            <tr>
+                                <td style="font-size: 10px;">${formatDate(v.created_at)}</td>
+                                <td>${escapeHtml(v.title || 'Untitled')}</td>
+                                <td>${escapeHtml((v.description || '').substring(0, 50))}</td>
+                                <td><button class="delete-btn" onclick="deleteVlog('${v.id}', '${escapeHtml(v.title || '').replace(/'/g, "\\'")}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📖 KAI'S JOURNAL (${data.journal.length})</div>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Title</th><th>Mood</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${data.journal.slice(0, 20).map(j => `
+                            <tr>
+                                <td style="font-size: 10px;">${j.date || formatDate(j.created_at)}</td>
+                                <td>${escapeHtml(j.title || 'Untitled')}</td>
+                                <td>${escapeHtml(j.mood || '✨')}</td>
+                                <td><button class="delete-btn" onclick="deleteJournal('${j.id}', '${escapeHtml(j.title || '').replace(/'/g, "\\'")}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">✍️ GUESTBOOK SIGNATURES (${data.signatures.length})</div>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Name</th><th>Message</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${data.signatures.slice(0, 20).map(s => `
+                            <tr>
+                                <td style="font-size: 10px;">${formatDate(s.created_at)}</td>
+                                <td>${escapeHtml(s.name)}</td>
+                                <td>${escapeHtml((s.message || '').substring(0, 50))}</td>
+                                <td><button class="delete-btn" onclick="deleteSignature('${s.id}', '${escapeHtml(s.name || '').replace(/'/g, "\\'")}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             </div>
         </div>
     `;
 }
 
+// --------------------------------------------------------------------------
+// STATS RENDER
+// --------------------------------------------------------------------------
+
+async function renderStats(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const stats = await apiCall('/api/stats');
+    
+    if (!stats) {
+        container.innerHTML = '<div class="empty-state">❌ Failed to load stats</div>';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">📊 ANALYTICS</div>
+            <div class="panel-sub">Visitor statistics and content metrics</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">${stats.total || 0}</div><div class="stat-label">Total Visitors</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.today || 0}</div><div class="stat-label">Today</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.active || 0}</div><div class="stat-label">Active Now</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.threads || 0}</div><div class="stat-label">Threads</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.comments || 0}</div><div class="stat-label">Comments</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.vlogs || 0}</div><div class="stat-label">Vlogs</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.signatures || 0}</div><div class="stat-label">Signatures</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.posts || 0}</div><div class="stat-label">Posts</div></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📈 TOP PAGES</div>
+                <div class="bar-chart" style="margin-top: 10px;">
+                    ${(stats.pages || []).map(p => `
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <span style="width: 100px; font-size: 11px;">/${p.label}</span>
+                            <div style="flex: 1; height: 20px; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden;">
+                                <div style="width: ${Math.min(100, (p.count / (stats.pages[0]?.count || 1)) * 100)}%; height: 100%; background: linear-gradient(90deg, #ff6eb4, #ffd700); border-radius: 10px;"></div>
+                            </div>
+                            <span style="width: 50px; font-size: 11px; color: #ffd700;">${p.count}</span>
+                        </div>
+                    `).join('') || '<div class="empty-state">No page data yet</div>'}
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="loadPanel('stats')" style="margin-top: 10px;">⟳ REFRESH STATS</button>
+        </div>
+    `;
+}
+
+// --------------------------------------------------------------------------
+// THREADS RENDER
+// --------------------------------------------------------------------------
+
 async function renderThreads(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/threads');
     const threads = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">💬 THREADS</div><div class="panel-sub">manage threads</div><div class="card"><button class="refresh-btn" onclick="loadPanel('threads')">⟳ REFRESH</button>${threads.map(t => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-size:11px; color:#ff6eb4;">${formatDate(t.created_at)} • 👁 ${t.view_count || 0} views</div><div>${escapeHtml(t.content || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deleteThread('${t.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no threads</div>'}</div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">💬 THREADS</div>
+            <div class="panel-sub">Manage all forum threads</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('threads')">⟳ REFRESH</button>
+                ${threads.map(t => `
+                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(t.created_at)} • 👁 ${t.view_count || 0} views • 💬 ${t.comment_count || 0} comments</div>
+                                <div style="margin-top: 8px;">${escapeHtml(t.content || '')}</div>
+                                ${t.image_url ? `<img src="${escapeHtml(t.image_url)}" style="max-height: 120px; margin-top: 8px; border-radius: 12px;">` : ''}
+                                ${t.video_url ? `<div style="margin-top: 8px;"><iframe src="${ytEmbed(t.video_url)}" style="width: 100%; max-height: 200px; border-radius: 12px;"></iframe></div>` : ''}
+                            </div>
+                            <button class="delete-btn" onclick="deleteThread('${t.id}', '${escapeHtml(t.content || '').replace(/'/g, "\\'")}')">DELETE</button>
+                        </div>
+                    </div>
+                `).join('')}
+                ${threads.length === 0 ? '<div class="empty-state">No threads yet</div>' : ''}
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// POSTS RENDER
+// --------------------------------------------------------------------------
 
 async function renderPosts(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/posts');
     const posts = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">📸 FEED POSTS</div><div class="panel-sub">manage posts</div><div class="card"><button class="refresh-btn" onclick="loadPanel('posts')">⟳ REFRESH</button>${posts.map(p => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-size:11px; color:#ff6eb4;">${formatDate(p.created_at)} • ♥ ${p.like_count || 0}</div><div>${escapeHtml(p.caption || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deletePost('${p.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no posts</div>'}</div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">📸 FEED POSTS</div>
+            <div class="panel-sub">Manage Instagram-style posts</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('posts')">⟳ REFRESH</button>
+                ${posts.map(p => `
+                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
+                        <div style="display: flex; gap: 12px;">
+                            ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px;">` : ''}
+                            ${p.video_url ? `<div style="width: 80px; height: 80px; background: rgba(0,0,0,0.5); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">▶</div>` : ''}
+                            <div style="flex: 1;">
+                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(p.created_at)} • ♥ ${p.like_count || 0} likes</div>
+                                <div>${escapeHtml(p.caption || '')}</div>
+                            </div>
+                            <button class="delete-btn" onclick="deletePost('${p.id}', '${escapeHtml(p.caption || '').replace(/'/g, "\\'")}')">DELETE</button>
+                        </div>
+                    </div>
+                `).join('')}
+                ${posts.length === 0 ? '<div class="empty-state">No posts yet</div>' : ''}
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// VLOGS RENDER
+// --------------------------------------------------------------------------
 
 async function renderVlogs(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/vlogs');
     const vlogs = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">🎥 VLOGS</div><div class="panel-sub">manage vlogs</div><div class="card"><button class="refresh-btn" onclick="loadPanel('vlogs')">⟳ REFRESH</button>${vlogs.map(v => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-weight:bold; color:#ffd700;">${escapeHtml(v.title || 'Untitled')}</div><div style="font-size:11px; color:#ff6eb4;">${formatDate(v.created_at)}</div><div>${escapeHtml(v.description || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deleteVlog('${v.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no vlogs</div>'}</div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">🎥 VLOGS</div>
+            <div class="panel-sub">Video diary entries</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('vlogs')">⟳ REFRESH</button>
+                ${vlogs.map(v => `
+                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: bold; color: #ffd700;">${escapeHtml(v.title || 'Untitled')}</div>
+                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(v.created_at)}</div>
+                                <div style="font-size: 12px; margin-top: 6px;">${escapeHtml(v.description || '')}</div>
+                                <div style="margin-top: 8px;"><iframe src="${ytEmbed(v.video_url)}" style="width: 100%; max-width: 400px; height: 225px; border-radius: 12px;"></iframe></div>
+                            </div>
+                            <button class="delete-btn" onclick="deleteVlog('${v.id}', '${escapeHtml(v.title || '').replace(/'/g, "\\'")}')">DELETE</button>
+                        </div>
+                    </div>
+                `).join('')}
+                ${vlogs.length === 0 ? '<div class="empty-state">No vlogs yet</div>' : ''}
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// JOURNAL RENDER
+// --------------------------------------------------------------------------
 
 async function renderJournal(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/journal');
     const entries = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">📖 JOURNAL</div><div class="panel-sub">private entries</div><div class="card"><button class="refresh-btn" onclick="loadPanel('journal')">⟳ REFRESH</button>${entries.map(e => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-weight:bold; color:#ffd700;">${escapeHtml(e.title || 'Untitled')} ${e.mood ? `✨ ${escapeHtml(e.mood)}` : ''}</div><div style="font-size:11px; color:#ff6eb4;">${e.date || formatDate(e.created_at)}</div><div>${escapeHtml((e.content || '').substring(0, 100))}...</div><button class="delete-btn" style="margin-top:8px" onclick="deleteJournal('${e.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no entries</div>'}</div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">📖 KAI'S JOURNAL</div>
+            <div class="panel-sub">Private entries - only visible to owner</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('journal')">⟳ REFRESH</button>
+                ${entries.map(e => `
+                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; color: #ffd700;">${escapeHtml(e.title || 'Untitled')} ${e.mood ? `✨ ${escapeHtml(e.mood)}` : ''}</div>
+                                <div style="font-size: 11px; color: #ff6eb4;">${e.date || formatDate(e.created_at)}</div>
+                                <div style="font-size: 12px; margin-top: 6px; white-space: pre-wrap;">${escapeHtml((e.content || '').substring(0, 300))}${e.content?.length > 300 ? '...' : ''}</div>
+                            </div>
+                            <button class="delete-btn" onclick="deleteJournal('${e.id}', '${escapeHtml(e.title || '').replace(/'/g, "\\'")}')">DELETE</button>
+                        </div>
+                    </div>
+                `).join('')}
+                ${entries.length === 0 ? '<div class="empty-state">No journal entries yet</div>' : ''}
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// COMMENTS RENDER
+// --------------------------------------------------------------------------
 
 async function renderComments(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/comments?thread_id=dummy');
     const comments = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">💭 COMMENTS</div><div class="panel-sub">all comments</div><div class="card"><button class="refresh-btn" onclick="loadPanel('comments')">⟳ REFRESH</button>${comments.map(c => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-size:11px; color:#ff6eb4;">${formatDate(c.created_at)} • ${escapeHtml(c.author_name || 'anon')}</div><div>${escapeHtml(c.content || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deleteComment('${c.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no comments</div>'}</div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">💭 COMMENTS</div>
+            <div class="panel-sub">All user comments across threads</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('comments')">⟳ REFRESH</button>
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Author</th><th>Content</th><th>Votes</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${comments.map(c => `
+                            <tr>
+                                <td style="font-size: 10px;">${formatDate(c.created_at)}</td>
+                                <td style="color: ${c.author_color || '#ff69b4'}">${escapeHtml(c.author_name || 'anonymous')}</td>
+                                <td>${escapeHtml((c.content || '').substring(0, 80))}</td>
+                                <td>▲ ${c.upvotes || 0} / ▼ ${c.downvotes || 0}</td>
+                                <td><button class="delete-btn" onclick="deleteComment('${c.id}')">DELETE</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                ${comments.length === 0 ? '<div class="empty-state">No comments yet</div>' : ''}
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// SIGNATURES RENDER
+// --------------------------------------------------------------------------
 
 async function renderSignatures(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/signatures');
     const sigs = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">✍️ GUESTBOOK</div><div class="panel-sub">signatures</div><div class="card"><button class="refresh-btn" onclick="loadPanel('signatures')">⟳ REFRESH</button>${sigs.map(s => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-weight:bold; color:#ffd700;">${escapeHtml(s.name || 'Anonymous')}</div><div style="font-size:11px; color:#ff6eb4;">${formatDate(s.created_at)}</div><div>"${escapeHtml(s.message || '')}"</div><button class="delete-btn" style="margin-top:8px" onclick="deleteSignature('${s.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no signatures</div>'}</div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">✍️ GUESTBOOK</div>
+            <div class="panel-sub">Signatures from visitors</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('signatures')">⟳ REFRESH</button>
+                ${sigs.map(s => `
+                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: bold; color: #ffd700;">${escapeHtml(s.name || 'Anonymous')}</div>
+                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(s.created_at)}</div>
+                                <div style="font-size: 12px; margin-top: 6px;">"${escapeHtml(s.message || '')}"</div>
+                            </div>
+                            <button class="delete-btn" onclick="deleteSignature('${s.id}', '${escapeHtml(s.name || '').replace(/'/g, "\\'")}')">DELETE</button>
+                        </div>
+                    </div>
+                `).join('')}
+                ${sigs.length === 0 ? '<div class="empty-state">No signatures yet</div>' : ''}
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// CHAT RENDER
+// --------------------------------------------------------------------------
 
 async function renderChat(container) {
     container.innerHTML = '<div class="loader"></div>';
     const data = await apiCall('/api/chat');
     const messages = data?.data || [];
-    container.innerHTML = `<div class="panel active"><div class="panel-title">💬 LIVE CHAT</div><div class="panel-sub">chat history</div><div class="card"><button class="refresh-btn" onclick="loadPanel('chat')">⟳ REFRESH</button><button class="refresh-btn" style="margin-right:8px; background:rgba(255,0,0,0.2);" onclick="clearChat()">🗑️ CLEAR ALL</button><div class="log-container">${messages.map(m => `<div class="log-entry"><span class="log-time">${new Date(m.created_at).toLocaleString()}</span><span style="color:#ff6eb4;">${escapeHtml(m.author_name || 'anon')}:</span><span> ${escapeHtml(m.message || '')}</span></div>`).join('') || '<div class="empty-state">no messages</div>'}</div></div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">💬 LIVE CHAT HISTORY</div>
+            <div class="panel-sub">All live chat messages</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('chat')">⟳ REFRESH</button>
+                <button class="refresh-btn" style="margin-right: 8px; background: rgba(255,0,0,0.2);" onclick="clearChatHistory()">🗑️ CLEAR ALL</button>
+                <div class="log-container">
+                    ${messages.map(m => `
+                        <div class="log-entry">
+                            <span class="log-time">${new Date(m.created_at).toLocaleString()}</span>
+                            <span style="color: #ff6eb4;">${escapeHtml(m.author_name || 'anon')}:</span>
+                            <span> ${escapeHtml(m.message || '')}</span>
+                        </div>
+                    `).join('')}
+                    ${messages.length === 0 ? '<div class="empty-state">No chat messages yet</div>' : ''}
+                </div>
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// PROFILE RENDER
+// --------------------------------------------------------------------------
 
 async function renderProfile(container) {
     const profile = await apiCall('/api/profile');
-    container.innerHTML = `<div class="panel active"><div class="panel-title">👤 PROFILE SETTINGS</div><div class="panel-sub">manage kai's public profile</div><div class="card"><div class="form-group"><label class="card-title">Display Name</label><input type="text" id="profileName" class="input-field" value="${escapeHtml(profile?.name || 'KAI')}"></div><div class="form-group"><label class="card-title">Mood Emoji</label><input type="text" id="profileMood" class="input-field" value="${escapeHtml(profile?.mood_emoji || '✨')}"></div><div class="form-group"><label class="card-title">Location</label><input type="text" id="profileLocation" class="input-field" value="${escapeHtml(profile?.location || '')}"></div><div class="form-group"><label class="card-title">Zodiac</label><input type="text" id="profileZodiac" class="input-field" value="${escapeHtml(profile?.zodiac || '')}"></div><div class="form-group"><label class="card-title">Profile Picture URL</label><input type="text" id="profilePic" class="input-field" value="${escapeHtml(profile?.profile_pic_url || '')}"></div><div class="form-group"><label class="card-title">Bio</label><textarea id="profileBio" class="input-field" rows="4">${escapeHtml(profile?.bio || '')}</textarea></div><button class="btn-primary" onclick="saveProfile()">SAVE PROFILE ✦</button></div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">👤 PROFILE SETTINGS</div>
+            <div class="panel-sub">Manage Kai's public profile</div>
+            <div class="card">
+                <div class="form-group">
+                    <label class="card-title">Display Name</label>
+                    <input type="text" id="profileName" class="input-field" value="${escapeHtml(profile?.name || 'KAI')}">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Mood Emoji</label>
+                    <input type="text" id="profileMood" class="input-field" value="${escapeHtml(profile?.mood_emoji || '✨')}">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Location</label>
+                    <input type="text" id="profileLocation" class="input-field" value="${escapeHtml(profile?.location || '')}">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Zodiac</label>
+                    <input type="text" id="profileZodiac" class="input-field" value="${escapeHtml(profile?.zodiac || '')}">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Profile Picture URL</label>
+                    <input type="text" id="profilePic" class="input-field" value="${escapeHtml(profile?.profile_pic_url || '')}" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Bio</label>
+                    <textarea id="profileBio" class="input-field" rows="4">${escapeHtml(profile?.bio || '')}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Instagram URL</label>
+                    <input type="text" id="profileInsta" class="input-field" value="${escapeHtml(profile?.social_instagram || '')}" placeholder="https://instagram.com/...">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">TikTok URL</label>
+                    <input type="text" id="profileTikTok" class="input-field" value="${escapeHtml(profile?.social_tiktok || '')}" placeholder="https://tiktok.com/@...">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Spotify URL</label>
+                    <input type="text" id="profileSpotify" class="input-field" value="${escapeHtml(profile?.social_spotify || '')}" placeholder="https://open.spotify.com/...">
+                </div>
+                <button class="btn-primary" onclick="saveProfile()">SAVE PROFILE ✦</button>
+            </div>
+        </div>
+    `;
 }
+
+// --------------------------------------------------------------------------
+// FACTS RENDER
+// --------------------------------------------------------------------------
 
 async function renderFacts(container) {
     const data = await apiCall('/api/facts');
     const facts = data?.data || [];
-    let html = `<div class="panel active"><div class="panel-title">⭐ FUN FACTS</div><div class="panel-sub">8 facts shown on the about page</div><div class="card">`;
+    
+    let html = `
+        <div class="panel active">
+            <div class="panel-title">⭐ FUN FACTS</div>
+            <div class="panel-sub">8 facts shown on the about page</div>
+            <div class="card">
+    `;
+    
     for (let i = 1; i <= 8; i++) {
         const fact = facts.find(f => f.slot_number === i);
-        html += `<div class="form-group"><label class="card-title">Fact ${i}</label><input type="text" id="fact_${i}" class="input-field" value="${escapeHtml(fact?.fact_text || '')}" placeholder="Enter fun fact..."></div>`;
+        html += `
+            <div class="form-group">
+                <label class="card-title">Fact ${i}</label>
+                <input type="text" id="fact_${i}" class="input-field" value="${escapeHtml(fact?.fact_text || '')}" placeholder="Enter fun fact...">
+            </div>
+        `;
     }
-    html += `<button class="btn-primary" onclick="saveFacts()">SAVE ALL FACTS ✦</button></div></div>`;
+    
+    html += `<button class="btn-primary" onclick="saveAllFacts()">SAVE ALL FACTS ✦</button></div></div>`;
     container.innerHTML = html;
 }
 
+// --------------------------------------------------------------------------
+// LIVE RENDER
+// --------------------------------------------------------------------------
+
 async function renderLive(container) {
     const live = await apiCall('/api/live');
-    container.innerHTML = `<div class="panel active"><div class="panel-title">📡 LIVE STAGE CONTROL</div><div class="panel-sub">manage live streaming status</div><div class="card"><div class="form-group"><label class="card-title">Live Status</label><div style="display:flex; gap:12px; align-items:center;"><label class="toggle-switch"><input type="checkbox" id="liveToggle" ${live?.is_live ? 'checked' : ''}><span class="toggle-slider"></span></label><span id="liveStatusText" style="color: ${live?.is_live ? '#00ff64' : '#ff6eb4'}">${live?.is_live ? '🔴 LIVE NOW' : '⚫ OFFLINE'}</span></div></div><div class="form-group"><label class="card-title">Stream URL (YouTube)</label><input type="text" id="streamUrl" class="input-field" value="${escapeHtml(live?.stream_url || '')}" placeholder="https://youtube.com/watch?v=..."></div><div class="form-group"><label class="card-title">Offline Image URL</label><input type="text" id="offlineImg" class="input-field" value="${escapeHtml(live?.offline_image_url || '')}" placeholder="https://..."></div><button class="btn-primary" onclick="saveLive()">UPDATE LIVE STATUS ✦</button></div></div>`;
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">📡 LIVE STAGE CONTROL</div>
+            <div class="panel-sub">Manage live streaming status</div>
+            <div class="card">
+                <div class="form-group">
+                    <label class="card-title">Live Status</label>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="liveToggle" ${live?.is_live ? 'checked' : ''}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span id="liveStatusText" style="color: ${live?.is_live ? '#00ff64' : '#ff6eb4'}">${live?.is_live ? '🔴 LIVE NOW' : '⚫ OFFLINE'}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Stream URL (YouTube)</label>
+                    <input type="text" id="streamUrl" class="input-field" value="${escapeHtml(live?.stream_url || '')}" placeholder="https://youtube.com/watch?v=...">
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Offline Image URL</label>
+                    <input type="text" id="offlineImg" class="input-field" value="${escapeHtml(live?.offline_image_url || '')}" placeholder="https://...">
+                </div>
+                <button class="btn-primary" onclick="saveLiveSettings()">UPDATE LIVE STATUS ✦</button>
+            </div>
+        </div>
+    `;
     
     const toggle = document.getElementById('liveToggle');
     if (toggle) {
@@ -1143,41 +1906,103 @@ async function renderLive(container) {
     }
 }
 
-// ============================================================
-// Event Listeners & Initialization
-// ============================================================
+// --------------------------------------------------------------------------
+// SPRITES RENDER
+// --------------------------------------------------------------------------
 
+async function renderSprites(container) {
+    await loadSprites();
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">🎨 PET SPRITES</div>
+            <div class="panel-sub">Manage Kai's pixel pets</div>
+            
+            <div class="card">
+                <div class="card-title">CURRENT SPRITES</div>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    ${Object.entries(spriteData).map(([type, url]) => `
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; background: rgba(0,0,0,0.3); border-radius: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <img src="${url}?t=${Date.now()}" style="max-width: 70px; max-height: 70px; image-rendering: pixelated;">
+                            </div>
+                            <div style="font-size: 10px; margin-top: 5px; color: #ff6eb4;">${type.toUpperCase()}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${Object.keys(spriteData).length === 0 ? '<div class="empty-state">No sprites uploaded yet</div>' : ''}
+            </div>
+            
+            <div class="card">
+                <div class="card-title">UPLOAD NEW SPRITE</div>
+                <div class="form-group">
+                    <label class="card-title">Sprite Type</label>
+                    <select id="spriteType" class="input-field">
+                        <option value="cat">🐱 Cat</option>
+                        <option value="bird">🐦 Bird</option>
+                        <option value="bat">🦇 Bat</option>
+                        <option value="dog">🐶 Dog</option>
+                        <option value="custom">✨ Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="card-title">Image File (PNG/GIF/WebP)</label>
+                    <input type="file" id="spriteFile" class="input-field" accept="image/png,image/gif,image/webp,image/jpeg">
+                </div>
+                <button class="btn-primary" onclick="uploadSprite()">UPLOAD SPRITE ✦</button>
+                <div class="empty-state" style="font-size: 10px; padding: 8px 0 0; text-align: left;">PNG/GIF/WebP · Max 10MB · Replaces existing sprite of that type</div>
+            </div>
+        </div>
+    `;
+}
+
+// --------------------------------------------------------------------------
+// EVENT LISTENERS & INITIALIZATION
+// --------------------------------------------------------------------------
+
+// Setup navigation click handlers
 document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => loadPanel(item.dataset.panel));
+    item.addEventListener('click', () => {
+        loadPanel(item.dataset.panel);
+    });
 });
 
+// Setup logout button
 document.getElementById('logoutBtn')?.addEventListener('click', logout);
+
+// Setup login button and enter key
 document.getElementById('loginBtn')?.addEventListener('click', attemptLogin);
-document.getElementById('loginPassword')?.addEventListener('keypress', (e) => { 
-    if (e.key === 'Enter') attemptLogin(); 
+document.getElementById('loginPassword')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') attemptLogin();
 });
 
-// Check for saved token
+// Check for saved token on page load
 const savedToken = sessionStorage.getItem('xotiic_token');
 if (savedToken) {
     authToken = savedToken;
     enterDashboard();
 }
 
-// Expose functions globally
+// Expose global functions for onclick handlers
 window.deleteThread = deleteThread;
 window.deletePost = deletePost;
 window.deleteVlog = deleteVlog;
 window.deleteJournal = deleteJournal;
 window.deleteSignature = deleteSignature;
 window.deleteComment = deleteComment;
-window.clearChat = clearChat;
+window.clearChatHistory = clearChatHistory;
 window.saveProfile = saveProfile;
-window.saveFacts = saveFacts;
-window.saveLive = saveLive;
+window.saveAllFacts = saveAllFacts;
+window.saveLiveSettings = saveLiveSettings;
+window.uploadSprite = uploadSprite;
 window.loadPanel = loadPanel;
 window.logout = logout;
 window.attemptLogin = attemptLogin;
+window.showToast = showToast;
+window.addLog = addLog;
+window.apiCall = apiCall;
+window.formatDate = formatDate;
+window.escapeHtml = escapeHtml;
 </script>
 </body>
 </html>
