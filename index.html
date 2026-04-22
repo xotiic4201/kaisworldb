@@ -1167,7 +1167,7 @@ let loadedSprites = {};
 let spriteImages = {};
 let animationFrames = 0;
 
-// Fetch sprites from backend
+// Fetch sprites from backend and detect sprite sheet dimensions
 async function loadSpritesFromServer() {
     try {
         const res = await fetch(API_URL + '/api/sprites/list');
@@ -1176,10 +1176,24 @@ async function loadSpritesFromServer() {
             loadedSprites = data.sprites;
             console.log('✅ Sprites loaded:', loadedSprites);
             
-            // Preload images
+            // Preload images and detect frame count
             for (const [type, url] of Object.entries(loadedSprites)) {
                 const img = new Image();
                 img.src = url + '?t=' + Date.now();
+                
+                // Wait for image to load to detect dimensions
+                await new Promise((resolve) => {
+                    img.onload = () => {
+                        const frameSize = img.height;
+                        const frameCount = Math.floor(img.width / frameSize);
+                        console.log(`🎬 ${type}: ${img.width}x${img.height}, frames: ${frameCount}, frame size: ${frameSize}px`);
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        console.warn(`Failed to load sprite: ${type}`);
+                        resolve();
+                    };
+                });
                 spriteImages[type] = img;
             }
         }
@@ -1188,16 +1202,22 @@ async function loadSpritesFromServer() {
     }
 }
 
-// Draw sprite from uploaded image (with animation frame support)
+
 function drawSpriteImage(ctx, type, x, y, size = 32, frame = 0) {
     const img = spriteImages[type];
     if (img && img.complete && img.naturalWidth > 0) {
-        // Check if it's a sprite sheet (multiple frames)
-        const frameCount = Math.floor(img.width / size);
+        // Frame size is the HEIGHT of the image (each frame is a square)
+        const frameSize = img.height;
+        const frameCount = Math.floor(img.width / frameSize);
+        
         if (frameCount > 1) {
+            // SPRITESHEET: slice horizontally, each frame is frameSize x frameSize
             const frameIndex = frame % frameCount;
-            ctx.drawImage(img, frameIndex * size, 0, size, img.height, x, y, size, size);
+            const sx = frameIndex * frameSize;
+            const sy = 0;
+            ctx.drawImage(img, sx, sy, frameSize, frameSize, x, y, size, size);
         } else {
+            // Single image: draw full image
             ctx.drawImage(img, x, y, size, size);
         }
         return true;
@@ -1759,7 +1779,13 @@ class PSPet{
     const W=canvas?canvas.width:800,H=canvas?canvas.height:460;
     if(this.x<-50)this.x=W+50;if(this.x>W+50)this.x=-50;
     if(this.y<80){this.y=80;this.vy=Math.abs(this.vy);}if(this.y>H-50){this.y=H-50;this.vy=-Math.abs(this.vy)*.5;}
-    this.animFrame = (this.animFrame + 0.1) % 4;
+        // Get actual frame count from the sprite image
+    let maxFrames = 4;
+    if (spriteImages[this.type] && spriteImages[this.type].complete && spriteImages[this.type].naturalWidth > 0) {
+      const frameSize = spriteImages[this.type].height;
+      maxFrames = Math.floor(spriteImages[this.type].width / frameSize) || 4;
+    }
+    this.animFrame = (this.animFrame + 0.08) % maxFrames;
   }
   draw(ctx){
     ctx.save();
@@ -1824,7 +1850,13 @@ class FloatPet{
     const W=window.innerWidth,H=window.innerHeight;
     if(this.x<-50)this.x=W+50;if(this.x>W+50)this.x=-50;
     if(this.y<80){this.y=80;this.vy=Math.abs(this.vy);}if(this.y>H-50){this.y=H-50;this.vy=-Math.abs(this.vy)*.5;}
-    this.animFrame = (this.animFrame + 0.08) % 4;
+        // Get actual frame count from the sprite image
+    let maxFrames = 4;
+    if (spriteImages[this.type] && spriteImages[this.type].complete && spriteImages[this.type].naturalWidth > 0) {
+      const frameSize = spriteImages[this.type].height;
+      maxFrames = Math.floor(spriteImages[this.type].width / frameSize) || 4;
+    }
+    this.animFrame = (this.animFrame + 0.06) % maxFrames;
   }
   draw(ctx){
     ctx.save(); ctx.translate(this.x,this.y);
