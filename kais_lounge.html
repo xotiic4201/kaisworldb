@@ -513,9 +513,9 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   CONFIG — injected by server at runtime
+   CONFIG
 ═══════════════════════════════════════════════════════════ */
-const API = '';  // empty = same origin
+const API = 'https://kaisworldb.onrender.com';  // empty = same origin
 let authToken = null;
 
 /* ═══════════════════════════════════════════════════════════
@@ -539,6 +539,16 @@ async function api(path, method = 'GET', body = null) {
   }
 }
 
+async function apiForm(path, method = 'POST', formData = null) {
+  const headers = {};
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  try {
+    const r = await fetch(API + path, { method, headers, body: formData });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+
 /* ═══════════════════════════════════════════════════════════
    UTILS
 ═══════════════════════════════════════════════════════════ */
@@ -556,6 +566,12 @@ function fmtDate(iso) {
   if (!iso) return '';
   try { return new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
   catch(e) { return iso; }
+}
+function ytEmbed(url) {
+  if (!url) return '';
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+  const id = m ? m[1] : (url.length === 11 ? url : url);
+  return `https://www.youtube.com/embed/${id}`;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -602,7 +618,7 @@ function enterLounge() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HEARTBEAT
+   HEARTBEAT (sends every 60 seconds to keep Kai marked online)
 ═══════════════════════════════════════════════════════════ */
 let heartbeatTimer = null;
 
@@ -611,7 +627,7 @@ async function sendHeartbeat() {
 }
 
 function startHeartbeat() {
-  sendHeartbeat();
+  sendHeartbeat(); // send immediately
   heartbeatTimer = setInterval(sendHeartbeat, 60000);
   window.addEventListener('beforeunload', stopHeartbeat);
 }
@@ -1096,11 +1112,10 @@ function initPixelEditor() {
       const fd = new FormData();
       fd.append('sprite_type', t);
       fd.append('file', blob, 'sprite.png');
-      const tk = sessionStorage.getItem('lounge_token');
       try {
         const res = await fetch(API + '/api/sprites/upload', {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${tk}` },
+          headers: { 'Authorization': `Bearer ${authToken}` },
           body: fd
         });
         if (res.ok) {
@@ -1120,11 +1135,10 @@ window.eUploadSprite = async () => {
   const fd = new FormData();
   fd.append('sprite_type', t);
   fd.append('file', f);
-  const tk = sessionStorage.getItem('lounge_token');
   try {
     const res = await fetch(API + '/api/sprites/upload', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${tk}` },
+      headers: { 'Authorization': `Bearer ${authToken}` },
       body: fd
     });
     if (res.ok) {
