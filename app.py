@@ -805,6 +805,16 @@ async def health():
 async def get_config():
     return JSONResponse({"supabase_url": SUPABASE_URL, "supabase_anon": SUPABASE_ANON_KEY})
 
+@app.get("/xotiic", response_class=HTMLResponse, include_in_schema=False)
+async def serve_xotiic():
+    """XOTIIC Owner Dashboard"""
+    # Read the HTML file directly
+    xotiic_path = os.path.join(os.path.dirname(__file__), "xotiic.html")
+    if os.path.exists(xotiic_path):
+        with open(xotiic_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    return HTMLResponse(content="<h1>XOTIIC Dashboard</h1><p>Please upload xotiic.html file</p>")
+
 # ─── Dev server ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
