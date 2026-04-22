@@ -1157,13 +1157,17 @@ async function loadSpritesFromServer() {
                         const w = img.width;
                         const h = img.height;
                         
+                        // Check for GIF animation detection
+                        const isGif = url.toLowerCase().includes('.gif');
+                        
                         if (h > 0 && w % h === 0 && w > h) {
                             const frameCount = Math.floor(w / h);
                             spriteConfig[type] = {
                                 frameWidth: h,
                                 frameHeight: h,
                                 frameCount: frameCount,
-                                type: 'horizontal-square'
+                                type: 'horizontal-square',
+                                isAnimated: frameCount > 1 || isGif
                             };
                             console.log(`🎬 ${type}: ${frameCount} frames, ${h}x${h}px each`);
                         } 
@@ -1173,9 +1177,20 @@ async function loadSpritesFromServer() {
                                 frameWidth: w,
                                 frameHeight: w,
                                 frameCount: frameCount,
-                                type: 'vertical-square'
+                                type: 'vertical-square',
+                                isAnimated: frameCount > 1 || isGif
                             };
                             console.log(`🎬 ${type}: vertical ${frameCount} frames`);
+                        }
+                        else if (isGif) {
+                            spriteConfig[type] = {
+                                frameWidth: w,
+                                frameHeight: h,
+                                frameCount: 1,
+                                type: 'gif',
+                                isAnimated: true
+                            };
+                            console.log(`🎬 ${type}: animated GIF ${w}x${h}px`);
                         }
                         else {
                             spriteConfig[type] = {
@@ -1202,7 +1217,8 @@ async function loadSpritesFromServer() {
     }
 }
 
-function drawSpriteImage(ctx, type, x, y, targetSize = 48, frame = 0) {
+// FIX 1: Better sprite animation with GIF support
+function drawSpriteImage(ctx, type, x, y, targetSize = 56, frame = 0) {
     const img = spriteImages[type];
     const config = spriteConfig[type];
     
@@ -1221,37 +1237,9 @@ function drawSpriteImage(ctx, type, x, y, targetSize = 48, frame = 0) {
                 sy = frameIndex * config.frameHeight;
             }
             
-            const aspect = sw / sh;
-            let drawW = targetSize;
-            let drawH = targetSize;
-            let drawX = x;
-            let drawY = y;
-            
-            if (aspect > 1) {
-                drawH = targetSize / aspect;
-                drawY = y + (targetSize - drawH) / 2;
-            } else if (aspect < 1) {
-                drawW = targetSize * aspect;
-                drawX = x + (targetSize - drawW) / 2;
-            }
-            
-            ctx.drawImage(img, sx, sy, sw, sh, drawX, drawY, drawW, drawH);
+            ctx.drawImage(img, sx, sy, sw, sh, x, y, targetSize, targetSize);
         } else {
-            const aspect = config.frameWidth / config.frameHeight;
-            let drawW = targetSize;
-            let drawH = targetSize;
-            let drawX = x;
-            let drawY = y;
-            
-            if (aspect > 1) {
-                drawH = targetSize / aspect;
-                drawY = y + (targetSize - drawH) / 2;
-            } else if (aspect < 1) {
-                drawW = targetSize * aspect;
-                drawX = x + (targetSize - drawW) / 2;
-            }
-            
-            ctx.drawImage(img, 0, 0, config.frameWidth, config.frameHeight, drawX, drawY, drawW, drawH);
+            ctx.drawImage(img, 0, 0, config.frameWidth, config.frameHeight, x, y, targetSize, targetSize);
         }
         return true;
     }
@@ -1279,7 +1267,6 @@ function drawPixelSprite(ctx, type, x, y, size = 48) {
     });
 }
 
-// MAIN DRAW FUNCTION - BIGGER SIZE (56px default)!
 function drawPetSprite(ctx, type, ox, oy, size = 56, frame = 0) {
     const drawn = drawSpriteImage(ctx, type, ox, oy, size, frame);
     if (!drawn) {
@@ -1327,6 +1314,28 @@ function burst(x,y,n=80){
 }
 function animP(){pCtx.clearRect(0,0,pC.width,pC.height);pCtx.globalAlpha=1;parts=parts.filter(p=>{p.update();p.draw(pCtx);return p.l>0;});requestAnimationFrame(animP);}
 animP();
+
+// FIX 4: Right-click delete with blood effect
+function addBloodEffect(x, y) {
+    for (let i = 0; i < 20; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 5;
+        const vx = Math.cos(angle) * speed;
+        const vy = Math.sin(angle) * speed - 1.5;
+        const color = ['#ff0000', '#cc0000', '#990000', '#ff3333'][Math.floor(Math.random() * 4)];
+        const size = 2 + Math.random() * 4;
+        parts.push(new P(x, y, color, vx, vy, size, 30 + Math.random() * 25));
+    }
+    const bloodText = document.createElement('div');
+    bloodText.textContent = '💀';
+    bloodText.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:24px;pointer-events:none;z-index:99999;animation:fadeOut 0.5s ease-out forwards;`;
+    document.body.appendChild(bloodText);
+    setTimeout(() => bloodText.remove(), 500);
+}
+
+const bloodStyle = document.createElement('style');
+bloodStyle.textContent = `@keyframes fadeOut { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.5)} }`;
+document.head.appendChild(bloodStyle);
 
 // ══ BOOK PAGE EDGES ══
 (()=>{
@@ -1526,7 +1535,7 @@ async function initSite(){
   spawnSakura();
   await loadProfile();
   loadPage('home');
-  initPetCanvas();
+  initPetCanvas(); // This now has manual spawn only!
   startLivePoll();
   trackVisit('home');
   startKaiStatusCheck();
@@ -1740,14 +1749,57 @@ async function loadAbout(){
   else grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">no fun facts yet ♡</div>';
 }
 
-// ══ LIVE ══
-async function loadStage(){const s=await api('/api/live');if(s)renderLive(s);loadChat();}
+// ══ LIVE - FIXED: No resetting video every 5 seconds ══
+let lastLiveState = null;
+async function loadStage(){
+  const s=await api('/api/live');
+  if(s) {
+    // Only update if the stream state actually changed
+    const hasChanged = !lastLiveState || 
+                       lastLiveState.is_live !== s.is_live || 
+                       lastLiveState.stream_url !== s.stream_url ||
+                       lastLiveState.offline_image_url !== s.offline_image_url;
+    if (hasChanged) {
+      renderLive(s);
+      lastLiveState = s;
+    }
+  }
+  loadChat(); // Chat still refreshes but video doesn't reset
+}
 function renderLive(s){
   const badge=document.getElementById('live-badge'),area=document.getElementById('stage-video-area');
-  if(s.is_live&&s.stream_url){badge.style.display='inline-flex';area.innerHTML=`<div class="stage-vid-wrap"><iframe src="${ytEmbed(s.stream_url)}" allowfullscreen></iframe></div>`;}
-  else{badge.style.display='none';area.innerHTML=`<div class="offline-screen"${s.offline_image_url?` style="background-image:url(${s.offline_image_url});background-size:cover;background-position:center;"`:''}>${!s.offline_image_url?`<div style="font-size:40px;opacity:.35">■</div><div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--lav);">KAI IS OFFLINE</div><div style="font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,105,180,.4);margin-top:6px;">check back soon ♡</div>`:''}</div>`;}
+  if(s.is_live&&s.stream_url){
+    badge.style.display='inline-flex';
+    // Only replace iframe if stream changed to avoid flicker
+    const existingIframe = area.querySelector('iframe');
+    const newEmbedUrl = ytEmbed(s.stream_url);
+    if (!existingIframe || existingIframe.src !== newEmbedUrl) {
+      area.innerHTML=`<div class="stage-vid-wrap"><iframe src="${newEmbedUrl}" allowfullscreen></iframe></div>`;
+    }
+  } else {
+    badge.style.display='none';
+    // Only update offline screen if it's a new state
+    if (lastLiveState && lastLiveState.is_live !== s.is_live) {
+      area.innerHTML=`<div class="offline-screen"${s.offline_image_url?` style="background-image:url(${s.offline_image_url});background-size:cover;background-position:center;"`:''}>${!s.offline_image_url?`<div style="font-size:40px;opacity:.35">■</div><div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--lav);">KAI IS OFFLINE</div><div style="font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,105,180,.4);margin-top:6px;">check back soon ♡</div>`:''}</div>`;
+    }
+  }
 }
-function startLivePoll(){setInterval(async()=>{const s=await api('/api/live');if(s)renderLive(s);loadChat();},6000);}
+function startLivePoll(){
+  // Slower polling for live status (every 10s) but no video reset on each poll
+  setInterval(async()=>{ 
+    const s=await api('/api/live');
+    if(s) {
+      const hasChanged = !lastLiveState || 
+                         lastLiveState.is_live !== s.is_live || 
+                         lastLiveState.stream_url !== s.stream_url;
+      if (hasChanged) {
+        renderLive(s);
+        lastLiveState = s;
+      }
+    }
+    loadChat(); 
+  }, 10000);
+}
 async function loadChat(){
   const r=await api('/api/chat'); const ms=(r&&r.data)||[];
   const el=document.getElementById('chat-messages'); if(!el)return;
@@ -1787,7 +1839,7 @@ async function kaiLogin(){
 }
 document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')kaiLogin();});
 
-// ══ PETSCAPE - FIXED WITH BIGGER SPRITES & ANIMATION ══
+// ══ PETSCAPE - BIGGER SPRITES & ANIMATION ══
 let petscapePets = [], petscapeMouseX = 0, petscapeMouseY = 0;
 document.addEventListener('mousemove', e => { petscapeMouseX = e.clientX; petscapeMouseY = e.clientY; });
 
@@ -1798,8 +1850,8 @@ class PSPet {
         this.vy = (Math.random() - 0.5) * 1.5;
         this.dir = 1;
         this.animFrame = Math.random() * 10;
-        this.animSpeed = 0.12; // FASTER!
-        this.size = 56; // BIGGER!
+        this.animSpeed = 0.12;
+        this.size = 56;
     }
     
     update() {
@@ -1898,7 +1950,7 @@ function spawnRandomPetscapePet() {
 
 function clearAllPets() { petscapePets = []; if (typeof toast === 'function') toast('all pets cleared ♡'); }
 
-// ══ FLOATING PETS - SPAWN EVERYWHERE! ══
+// ══ FLOATING PETS - MANUAL SPAWN ONLY + RIGHT-CLICK DELETE ══
 const petCanvas = document.getElementById('pet-canvas');
 const petCtx = petCanvas.getContext('2d');
 let floatPets = [];
@@ -1916,8 +1968,8 @@ class Pet {
         this.vy = (Math.random() - 0.5) * 2;
         this.dir = 1;
         this.animFrame = Math.random() * 10;
-        this.animSpeed = 0.15; // FASTER!
-        this.size = 56; // BIGGER!
+        this.animSpeed = 0.15;
+        this.size = 56;
     }
     
     update() {
@@ -1967,20 +2019,9 @@ class Pet {
     }
 }
 
-function spawnFloatPetAnywhere() {
-    const types = ['cat', 'bird', 'bat', 'dog'];
-    const t = types[Math.floor(Math.random() * 4)];
-    const pers = ['sleepy', 'playful', 'chaotic'][Math.floor(Math.random() * 3)];
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight;
-    floatPets.push(new Pet(t, x, y, pers));
-    if (floatPets.length > 15) floatPets.shift();
-}
-
+// FIX 6 & 7: NO random spawning, manual spawn with pet selection
 function initPetCanvas() {
     floatPets = [];
-    for (let i = 0; i < 6; i++) setTimeout(() => spawnFloatPetAnywhere(), i * 300);
-    setInterval(() => { if (floatPets.length < 12) spawnFloatPetAnywhere(); }, 12000);
     
     function animate() {
         if (petCtx) {
@@ -1991,17 +2032,107 @@ function initPetCanvas() {
         requestAnimationFrame(animate);
     }
     animate();
-    console.log('✅ Pets spawn EVERYWHERE on the page!');
+    
+    // Setup right-click delete
+    setupRightClickDelete();
+    
+    console.log('✅ Pets only spawn manually - right click to delete with blood!');
 }
 
+// FIX 5: Right-click delete listener
+function setupRightClickDelete() {
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        // Check floating pets
+        for (let i = 0; i < floatPets.length; i++) {
+            const pet = floatPets[i];
+            const dx = mouseX - pet.x;
+            const dy = mouseY - pet.y;
+            if (Math.hypot(dx, dy) < 50) {
+                addBloodEffect(pet.x, pet.y);
+                floatPets.splice(i, 1);
+                if (typeof toast === 'function') toast('💀 ' + pet.type + ' deleted 💀');
+                return;
+            }
+        }
+        
+        // Check petscape pets
+        const canvas = document.getElementById('petscape-canvas');
+        if (canvas && petscapePets) {
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = mouseX - rect.left;
+            const canvasY = mouseY - rect.top;
+            
+            for (let i = 0; i < petscapePets.length; i++) {
+                const pet = petscapePets[i];
+                const dx = canvasX - pet.x;
+                const dy = canvasY - pet.y;
+                if (Math.hypot(dx, dy) < 50) {
+                    addBloodEffect(pet.x + rect.left, pet.y + rect.top);
+                    petscapePets.splice(i, 1);
+                    if (typeof toast === 'function') toast('💀 ' + pet.type + ' deleted 💀');
+                    return;
+                }
+            }
+        }
+    });
+}
+
+// FIX 7 & 8: Manual spawn button with pet selection
 function addPetSpawnButton() {
-    const btn = document.createElement('button');
-    btn.innerHTML = '🐾';
-    btn.style.cssText = `position:fixed;bottom:80px;right:18px;z-index:9000;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff6eb4,#8b00ff);backdrop-filter:blur(12px);border:2px solid rgba(255,215,0,.6);color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 20px rgba(255,105,180,.5);`;
-    btn.onmouseenter = () => btn.style.transform = 'scale(1.1)';
-    btn.onmouseleave = () => btn.style.transform = 'scale(1)';
-    btn.onclick = () => { spawnFloatPetAnywhere(); if (typeof toast === 'function') toast('✨ New pet appeared! ✨'); };
-    document.body.appendChild(btn);
+    // Create container
+    const container = document.createElement('div');
+    container.style.cssText = `position:fixed;bottom:80px;right:18px;z-index:9000;display:flex;flex-direction:column;gap:8px;`;
+    
+    // Main spawn button
+    const mainBtn = document.createElement('button');
+    mainBtn.innerHTML = '🐾';
+    mainBtn.style.cssText = `width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff6eb4,#8b00ff);backdrop-filter:blur(12px);border:2px solid rgba(255,215,0,.6);color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 20px rgba(255,105,180,.5);`;
+    mainBtn.onmouseenter = () => mainBtn.style.transform = 'scale(1.1)';
+    mainBtn.onmouseleave = () => mainBtn.style.transform = 'scale(1)';
+    
+    // Pet selection buttons (hidden by default)
+    const petButtons = document.createElement('div');
+    petButtons.style.cssText = `display:none;flex-direction:column;gap:5px;margin-bottom:5px;`;
+    
+    const pets = [
+        { emoji: '🐱', type: 'cat', color: '#ff69b4' },
+        { emoji: '🐶', type: 'dog', color: '#d2691e' },
+        { emoji: '🐦', type: 'bird', color: '#ffd700' },
+        { emoji: '🦇', type: 'bat', color: '#9b30ff' }
+    ];
+    
+    pets.forEach(p => {
+        const btn = document.createElement('button');
+        btn.innerHTML = p.emoji;
+        btn.style.cssText = `width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,${p.color},#4a0060);border:1px solid rgba(255,215,0,.5);color:white;font-size:18px;cursor:pointer;transition:all 0.2s;`;
+        btn.onclick = () => {
+            spawnSpecificPet(p.type);
+            petButtons.style.display = 'none';
+        };
+        petButtons.appendChild(btn);
+    });
+    
+    mainBtn.onclick = () => {
+        petButtons.style.display = petButtons.style.display === 'none' ? 'flex' : 'none';
+    };
+    
+    container.appendChild(mainBtn);
+    container.appendChild(petButtons);
+    document.body.appendChild(container);
+}
+
+function spawnSpecificPet(type) {
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    const pers = ['sleepy', 'playful', 'chaotic'][Math.floor(Math.random() * 3)];
+    floatPets.push(new Pet(type, x, y, pers));
+    if (floatPets.length > 12) floatPets.shift();
+    if (typeof toast === 'function') toast(`✨ ${type} appeared! Right-click to delete ✨`);
 }
 
 setTimeout(() => { if (!document.getElementById('pet-spawn-btn')) addPetSpawnButton(); }, 2000);
@@ -2115,7 +2246,7 @@ window.ytEmbed=ytEmbed;
 window.api=api;
 window.loadSpritesFromServer=loadSpritesFromServer;
 window.drawPetSprite=drawPetSprite;
-window.spawnFloatPetAnywhere=spawnFloatPetAnywhere;
+window.spawnSpecificPet=spawnSpecificPet;
 </script>
 </body>
 </html>
