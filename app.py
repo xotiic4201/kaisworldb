@@ -18,12 +18,35 @@ SUPABASE_ANON_KEY    = os.getenv("SUPABASE_ANON_KEY", "")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", SUPABASE_ANON_KEY)
 KAI_EMAIL            = os.getenv("KAI_EMAIL")
 KAI_PASSWORD         = os.getenv("KAI_PASSWORD")
+# XOTIIC Owner credentials
+XOTIIC_EMAIL         = os.getenv("XOTIIC_EMAIL", "")
+XOTIIC_PASSWORD      = os.getenv("XOTIIC_PASSWORD", "")
 PORT                 = int(os.getenv("PORT", "8000"))
 
 KAI_LAST_ACTIVE = None
 
 print(f"🔧 SUPABASE_URL: {'SET' if SUPABASE_URL else 'NOT SET'}")
 print(f"🔧 KAI_EMAIL: {KAI_EMAIL}")
+print(f"🔧 XOTIIC_EMAIL: {'SET' if XOTIIC_EMAIL else 'NOT SET'}")
+
+# ─── Activity Logging System ───────────────────────────────────────────────────
+LOG_ENTRIES = []
+
+def add_log(level: str, message: str, details: dict = None):
+    """Add entry to activity log - tracks everything"""
+    entry = {
+        "id": str(uuid.uuid4()),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "level": level,  # info, warning, error, success
+        "message": message,
+        "details": details
+    }
+    LOG_ENTRIES.insert(0, entry)
+    # Keep only last 2000 logs
+    while len(LOG_ENTRIES) > 2000:
+        LOG_ENTRIES.pop()
+    print(f"[{level.upper()}] {message}")
+    return entry
 
 # ─── Sprite storage ────────────────────────────────────────────────────────────
 SPRITES_DIR = os.path.join(os.path.dirname(__file__), "sprites")
@@ -40,6 +63,7 @@ def load_html(name):
 
 _HTML_TEMPLATE   = load_html("index.html")
 _LOUNGE_TEMPLATE = load_html("kais_lounge.html")
+_XOTIIC_TEMPLATE = load_html("xotiic_dashboard.html")  # Your XOTIIC dashboard HTML file
 
 def inject_config(html: str, admin: bool = False) -> str:
     html = html.replace("'SUPABASE_URL'",         f"'{SUPABASE_URL}'")
@@ -95,14 +119,23 @@ async def sb_delete(table: str, filter_str: str):
         r = await c.delete(f"{SUPABASE_URL}/rest/v1/{table}?{filter_str}", headers=sb_headers())
     return r.is_success
 
-# ─── Auth helper ───────────────────────────────────────────────────────────────
+# ─── Auth helpers ──────────────────────────────────────────────────────────────
 async def require_kai(authorization: Optional[str] = Header(None)):
     if not authorization or authorization != "Bearer kai_authenticated":
         raise HTTPException(status_code=401, detail="Unauthorized")
     return True
 
+async def require_xotiic(authorization: Optional[str] = Header(None)):
+    """Special auth for XOTIIC owner panel"""
+    if not authorization or authorization != "Bearer xotiic_authenticated":
+        raise HTTPException(status_code=401, detail="Unauthorized - XOTIIC access only")
+    return True
+
 async def is_kai(authorization: Optional[str] = Header(None)) -> bool:
     return authorization == "Bearer kai_authenticated"
+
+async def is_xotiic(authorization: Optional[str] = Header(None)) -> bool:
+    return authorization == "Bearer xotiic_authenticated"
 
 # ─── Models ────────────────────────────────────────────────────────────────────
 class LoginPayload(BaseModel):
@@ -178,21 +211,48 @@ class JournalPayload(BaseModel):
 class VotePayload(BaseModel):
     direction: str  # "up" or "down"
 
+class LogPayload(BaseModel):
+    level: str
+    message: str
+    details: Optional[dict] = None
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  PAGE ROUTES
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_frontend():
+    add_log("info", "Main page served")
     return HTMLResponse(content=inject_config(_HTML_TEMPLATE, admin=False))
 
 @app.get("/kai", response_class=HTMLResponse, include_in_schema=False)
 async def serve_kai_admin():
+    add_log("info", "Kai admin page served")
     return HTMLResponse(content=inject_config(_HTML_TEMPLATE, admin=True))
 
 @app.get("/lounge", response_class=HTMLResponse, include_in_schema=False)
 async def serve_lounge():
+    add_log("info", "Lounge page served")
     return HTMLResponse(content=inject_config(_LOUNGE_TEMPLATE, admin=False))
+
+@app.get("/xotiic", response_class=HTMLResponse, include_in_schema=False)
+async def serve_xotiic_dashboard():
+    """Special XOTIIC owner dashboard endpoint"""
+    add_log("info", "XOTIIC dashboard page served")
+    if os.path.exists(os.path.join(os.path.dirname(__file__), "xotiic_dashboard.html")):
+        with open(os.path.join(os.path.dirname(__file__), "xotiic_dashboard.html"), "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    # Fallback if file doesn't exist
+    return HTMLResponse(content="""
+    <!DOCTYPE html>
+    <html>
+    <head><title>XOTIIC Dashboard</title></head>
+    <body>
+        <h1>XOTIIC Dashboard</h1>
+        <p>Please save the XOTIIC dashboard HTML file as 'xotiic_dashboard.html' in the same directory.</p>
+    </body>
+    </html>
+    """)
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  AUTH
@@ -201,8 +261,65 @@ async def serve_lounge():
 @app.post("/api/auth/login")
 async def auth_login(payload: LoginPayload):
     if payload.email == KAI_EMAIL and payload.password == KAI_PASSWORD:
+        add_log("success", f"Kai login successful: {payload.email}")
         return {"access_token": "kai_authenticated", "token_type": "bearer", "expires_in": 86400}
+    add_log("warning", f"Failed Kai login attempt: {payload.email}")
     raise HTTPException(status_code=401, detail="Invalid credentials")
+
+@app.post("/api/xotiic/login")
+async def xotiic_login(payload: LoginPayload):
+    """Special login endpoint for /xotiic dashboard - uses XOTIIC credentials"""
+    if payload.email == XOTIIC_EMAIL and payload.password == XOTIIC_PASSWORD:
+        add_log("success", f"XOTIIC login successful: {payload.email}", {"role": "owner"})
+        return {"access_token": "xotiic_authenticated", "token_type": "bearer", "expires_in": 86400, "role": "owner"}
+    add_log("warning", f"Failed XOTIIC login attempt: {payload.email}", {"ip": None})
+    raise HTTPException(status_code=401, detail="Invalid XOTIIC credentials")
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  XOTIIC LOGGING ENDPOINTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+@app.get("/api/xotiic/logs")
+async def get_xotiic_logs(authorization: Optional[str] = Header(None)):
+    """Get all activity logs - XOTIIC only"""
+    await require_xotiic(authorization)
+    return JSONResponse({"logs": LOG_ENTRIES})
+
+@app.post("/api/xotiic/log")
+async def add_xotiic_log(payload: LogPayload, authorization: Optional[str] = Header(None)):
+    """Add a log entry from frontend"""
+    await require_xotiic(authorization)
+    add_log(payload.level, payload.message, payload.details)
+    return JSONResponse({"ok": True})
+
+@app.get("/api/xotiic/stats")
+async def get_xotiic_stats(authorization: Optional[str] = Header(None)):
+    """Get detailed stats for XOTIIC dashboard"""
+    await require_xotiic(authorization)
+    
+    # Get all data counts
+    threads = await sb_get("threads", "select=id")
+    posts = await sb_get("posts", "select=id")
+    vlogs = await sb_get("vlogs", "select=id")
+    comments = await sb_get("comments", "select=id")
+    signatures = await sb_get("iwashere_signatures", "select=id")
+    journal = await sb_get("journal_entries", "select=id")
+    visitors = await sb_get("visitors", "select=visitor_id,created_at")
+    
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    today_visitors = len(set(v.get("visitor_id", "") for v in visitors if v.get("created_at", "").startswith(today))) if isinstance(visitors, list) else 0
+    
+    return JSONResponse({
+        "total_threads": len(threads) if isinstance(threads, list) else 0,
+        "total_posts": len(posts) if isinstance(posts, list) else 0,
+        "total_vlogs": len(vlogs) if isinstance(vlogs, list) else 0,
+        "total_comments": len(comments) if isinstance(comments, list) else 0,
+        "total_signatures": len(signatures) if isinstance(signatures, list) else 0,
+        "total_journal": len(journal) if isinstance(journal, list) else 0,
+        "total_visitors": len(set(v.get("visitor_id", "") for v in visitors)) if isinstance(visitors, list) else 0,
+        "today_visitors": today_visitors,
+        "log_count": len(LOG_ENTRIES)
+    })
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  KAI ONLINE STATUS (heartbeat-based)
@@ -214,6 +331,7 @@ async def kai_heartbeat(authorization: Optional[str] = Header(None)):
     global KAI_LAST_ACTIVE
     await require_kai(authorization)
     KAI_LAST_ACTIVE = datetime.now(timezone.utc)
+    add_log("info", "Kai heartbeat received")
     return JSONResponse({"status": "online"})
 
 @app.get("/api/kai/status")
@@ -247,6 +365,7 @@ async def update_profile(payload: ProfilePayload, authorization: Optional[str] =
     else:
         body.setdefault("name", "KAI")
         await sb_post("kai_settings", body)
+    add_log("info", "Profile updated")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -268,12 +387,14 @@ async def create_thread(payload: ThreadPayload, authorization: Optional[str] = H
         "view_count": 0,
         "comment_count": 0,
     })
+    add_log("info", f"Thread created: {payload.content[:50]}...")
     return JSONResponse({"ok": True, "data": row})
 
 @app.delete("/api/threads/{thread_id}")
 async def delete_thread(thread_id: str, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     await sb_delete("threads", f"id=eq.{thread_id}")
+    add_log("success", f"Thread deleted: {thread_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -301,6 +422,7 @@ async def create_comment(payload: CommentPayload):
     if isinstance(rows, list) and rows:
         cnt = (rows[0].get("comment_count") or 0) + 1
         await sb_patch("threads", f"id=eq.{payload.thread_id}", {"comment_count": cnt})
+    add_log("info", f"Comment added to thread {payload.thread_id}")
     return JSONResponse({"ok": True, "data": row})
 
 @app.post("/api/comments/{comment_id}/vote")
@@ -319,6 +441,7 @@ async def vote_comment(comment_id: str, payload: VotePayload):
 async def delete_comment(comment_id: str, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     await sb_delete("comments", f"id=eq.{comment_id}")
+    add_log("success", f"Comment deleted: {comment_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -339,6 +462,7 @@ async def create_post(payload: PostPayload, authorization: Optional[str] = Heade
         "video_url": payload.video_url,
         "like_count": 0,
     })
+    add_log("info", f"Post created: {payload.caption[:50] if payload.caption else 'No caption'}...")
     return JSONResponse({"ok": True, "data": row})
 
 @app.post("/api/posts/{post_id}/like")
@@ -348,12 +472,14 @@ async def like_post(post_id: str):
         raise HTTPException(status_code=404, detail="Post not found")
     new_count = (rows[0].get("like_count") or 0) + 1
     await sb_patch("posts", f"id=eq.{post_id}", {"like_count": new_count})
+    add_log("info", f"Post liked: {post_id} (now {new_count} likes)")
     return JSONResponse({"ok": True, "like_count": new_count})
 
 @app.delete("/api/posts/{post_id}")
 async def delete_post(post_id: str, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     await sb_delete("posts", f"id=eq.{post_id}")
+    add_log("success", f"Post deleted: {post_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -373,12 +499,14 @@ async def create_vlog(payload: VlogPayload, authorization: Optional[str] = Heade
         "video_url": payload.video_url,
         "description": payload.description,
     })
+    add_log("info", f"Vlog created: {payload.title}")
     return JSONResponse({"ok": True, "data": row})
 
 @app.delete("/api/vlogs/{vlog_id}")
 async def delete_vlog(vlog_id: str, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     await sb_delete("vlogs", f"id=eq.{vlog_id}")
+    add_log("success", f"Vlog deleted: {vlog_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -396,14 +524,12 @@ async def upsert_facts(payload: List[FactsPayload], authorization: Optional[str]
     for item in payload:
         slot = item.slot_number
         text = item.fact_text
-        # Check if fact exists
         existing = await sb_get("fun_facts", f"select=id&slot_number=eq.{slot}&limit=1")
         if isinstance(existing, list) and existing:
-            # Update existing fact
             await sb_patch("fun_facts", f"slot_number=eq.{slot}", {"fact_text": text, "updated_at": datetime.now(timezone.utc).isoformat()})
         else:
-            # Create new fact
             await sb_post("fun_facts", {"slot_number": slot, "fact_text": text})
+    add_log("info", f"Updated {len(payload)} fun facts")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -431,6 +557,7 @@ async def update_live(payload: LivePayload, authorization: Optional[str] = Heade
         await sb_patch("live_status", f"id=eq.{rows[0]['id']}", body)
     else:
         await sb_post("live_status", body)
+    add_log("success", f"Live status updated: {'LIVE' if payload.is_live else 'OFFLINE'}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -449,6 +576,7 @@ async def post_chat(payload: ChatPayload):
         "message": payload.message[:500],
         "session_id": payload.session_id,
     })
+    add_log("info", f"Chat message from {payload.author_name}")
     return JSONResponse({"ok": True, "data": row})
 
 @app.delete("/api/chat")
@@ -460,6 +588,7 @@ async def clear_chat(authorization: Optional[str] = Header(None)):
                 f"{SUPABASE_URL}/rest/v1/chat_messages?id=neq.00000000-0000-0000-0000-000000000000",
                 headers=sb_headers()
             )
+    add_log("warning", "Chat history cleared")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -478,12 +607,14 @@ async def create_signature(payload: SignaturePayload):
         "message": payload.message[:500],
         "visitor_id": payload.visitor_id,
     })
+    add_log("info", f"New signature from {payload.name}")
     return JSONResponse({"ok": True, "data": row})
 
 @app.delete("/api/signatures/{sig_id}")
 async def delete_signature(sig_id: str, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     await sb_delete("iwashere_signatures", f"id=eq.{sig_id}")
+    add_log("success", f"Signature deleted: {sig_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -494,6 +625,7 @@ async def delete_signature(sig_id: str, authorization: Optional[str] = Header(No
 async def get_journal(authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     data = await sb_get("journal_entries", "select=*&order=created_at.desc")
+    add_log("info", "Journal accessed")
     return JSONResponse({"data": data if isinstance(data, list) else []})
 
 @app.post("/api/journal")
@@ -505,12 +637,14 @@ async def create_journal(payload: JournalPayload, authorization: Optional[str] =
         "title": payload.title,
         "content": payload.content,
     })
+    add_log("info", f"Journal entry created: {payload.title}")
     return JSONResponse({"ok": True, "data": row})
 
 @app.delete("/api/journal/{entry_id}")
 async def delete_journal(entry_id: str, authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     await sb_delete("journal_entries", f"id=eq.{entry_id}")
+    add_log("success", f"Journal entry deleted: {entry_id}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -529,10 +663,11 @@ async def track_visit(payload: TrackPayload, request: Request):
         "ua": (payload.ua or "")[:300] or None,
         "ip": (ip or "")[:64] or None,
     })
+    add_log("info", f"Visitor tracked: {payload.page} - {payload.visitor_id[:20]}...")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  STATS - FIXED: Uses unique visitor counts
+#  STATS
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/stats")
@@ -552,11 +687,8 @@ async def get_stats():
 
     if not isinstance(visitors, list): visitors = []
 
-    # Unique visitors total
     unique = len(set(v.get("visitor_id", "") for v in visitors))
-    # Unique visitors today (not page-hit count)
     today_count = len(set(v.get("visitor_id", "") for v in visitors if v.get("created_at", "").startswith(today)))
-    # Unique visitors active in last 5 min
     active = len(set(v.get("visitor_id", "") for v in visitors if v.get("created_at", "") >= five_min_ago))
 
     page_counts = {}
@@ -600,6 +732,7 @@ async def upload_sprite(
         raise HTTPException(status_code=413, detail="File too large (max 10MB)")
     with open(os.path.join(SPRITES_DIR, filename), "wb") as f:
         f.write(data)
+    add_log("info", f"Sprite uploaded: {sprite_type}")
     return JSONResponse({"ok": True, "url": f"/sprites/{filename}", "filename": filename})
 
 @app.get("/api/sprites/list")
@@ -663,6 +796,7 @@ async def health():
         "status": "ok", "service": "KAICORE", "version": "4.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "supabase": bool(SUPABASE_URL),
+        "xotiic_enabled": bool(XOTIIC_EMAIL and XOTIIC_PASSWORD)
     })
 
 @app.get("/api/config")
@@ -672,4 +806,4 @@ async def get_config():
 # ─── Dev server ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=PORT, reload=True)
