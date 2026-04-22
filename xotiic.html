@@ -408,10 +408,6 @@ textarea.input-field {
     box-shadow: 0 0 20px rgba(255,105,180,0.4);
 }
 
-.btn-danger {
-    background: linear-gradient(135deg, #8b0000, #4a0000);
-}
-
 /* Log Viewer */
 .log-container {
     background: rgba(0,0,0,0.5);
@@ -452,7 +448,6 @@ textarea.input-field {
     color: #c0a0d0;
 }
 
-/* Refresh button */
 .refresh-btn {
     float: right;
     background: rgba(255,105,180,0.1);
@@ -469,7 +464,6 @@ textarea.input-field {
     background: rgba(255,105,180,0.2);
 }
 
-/* Empty state */
 .empty-state {
     text-align: center;
     padding: 48px;
@@ -492,7 +486,6 @@ textarea.input-field {
     to { transform: rotate(360deg); }
 }
 
-/* Toast */
 #toast {
     position: fixed;
     bottom: 30px;
@@ -516,7 +509,6 @@ textarea.input-field {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Logout button */
 .logout-btn {
     margin: 16px;
     padding: 10px;
@@ -534,7 +526,50 @@ textarea.input-field {
     background: rgba(255,0,0,0.2);
 }
 
-/* Responsive */
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255,105,180,0.2);
+    border: 1px solid rgba(255,105,180,0.4);
+    border-radius: 34px;
+    transition: 0.3s;
+}
+
+.toggle-switch .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ff6eb4;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+    background-color: #ffd700;
+}
+
 @media (max-width: 768px) {
     .sidebar { width: 80px; }
     .sidebar-header h1 { font-size: 12px; letter-spacing: 1px; }
@@ -544,32 +579,6 @@ textarea.input-field {
     .main-content { padding: 16px; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
-
-/* Online indicator */
-.online-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    background: rgba(0,255,100,0.1);
-    border-radius: 30px;
-    font-size: 9px;
-    color: #00ff64;
-    margin-left: 12px;
-}
-
-.online-dot {
-    width: 6px;
-    height: 6px;
-    background: #00ff64;
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
 </style>
 </head>
 <body>
@@ -577,986 +586,94 @@ textarea.input-field {
 <!-- LOGIN OVERLAY -->
 <div id="loginOverlay" class="login-overlay">
     <div class="login-box">
-        <div class="login-icon">🔒</div>
+        <div class="login-icon">👑</div>
         <div class="login-title">XOTIIC</div>
         <div class="login-sub">✦ owner's sanctuary ✦</div>
-        <input type="email" id="loginEmail" class="login-input" placeholder="kai@kaicore.com" autocomplete="email">
-        <input type="password" id="loginPassword" class="login-input" placeholder="password...">
-        <button class="login-btn" onclick="attemptLogin()">ENTER ♡</button>
+        <input type="email" id="loginEmail" class="login-input" placeholder="XOTIIC Email" autocomplete="email">
+        <input type="password" id="loginPassword" class="login-input" placeholder="XOTIIC Password">
+        <button class="login-btn" id="loginBtn">ENTER /XOTIIC ♡</button>
         <div id="loginError" class="login-error">❌ invalid credentials</div>
     </div>
 </div>
 
 <!-- MAIN DASHBOARD -->
 <div id="dashboard" class="dashboard">
-    <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="sidebar-header">
             <h1>✦ XOTIIC ✦</h1>
-            <p>control center</p>
             <div class="owner-tag">👑 BF / OWNER</div>
         </div>
         <div class="sidebar-nav">
             <div class="nav-section">
                 <div class="nav-section-title">OVERVIEW</div>
-                <div class="nav-item active" data-panel="dashboard">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" data-panel="logs">
-                    <span class="nav-icon">📜</span>
-                    <span>Activity Logs</span>
-                </div>
-                <div class="nav-item" data-panel="data">
-                    <span class="nav-icon">🗄️</span>
-                    <span>All Data</span>
-                </div>
+                <div class="nav-item active" data-panel="dashboard"><span class="nav-icon">📊</span><span>Dashboard</span></div>
+                <div class="nav-item" data-panel="logs"><span class="nav-icon">📜</span><span>Activity Logs</span></div>
+                <div class="nav-item" data-panel="data"><span class="nav-icon">🗄️</span><span>All Data</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">CONTENT</div>
-                <div class="nav-item" data-panel="threads">
-                    <span class="nav-icon">💬</span>
-                    <span>Threads</span>
-                </div>
-                <div class="nav-item" data-panel="posts">
-                    <span class="nav-icon">📸</span>
-                    <span>Feed Posts</span>
-                </div>
-                <div class="nav-item" data-panel="vlogs">
-                    <span class="nav-icon">🎥</span>
-                    <span>Vlogs</span>
-                </div>
-                <div class="nav-item" data-panel="journal">
-                    <span class="nav-icon">📖</span>
-                    <span>Kai's Journal</span>
-                </div>
+                <div class="nav-item" data-panel="threads"><span class="nav-icon">💬</span><span>Threads</span></div>
+                <div class="nav-item" data-panel="posts"><span class="nav-icon">📸</span><span>Feed Posts</span></div>
+                <div class="nav-item" data-panel="vlogs"><span class="nav-icon">🎥</span><span>Vlogs</span></div>
+                <div class="nav-item" data-panel="journal"><span class="nav-icon">📖</span><span>Journal</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">COMMUNITY</div>
-                <div class="nav-item" data-panel="comments">
-                    <span class="nav-icon">💭</span>
-                    <span>Comments</span>
-                </div>
-                <div class="nav-item" data-panel="signatures">
-                    <span class="nav-icon">✍️</span>
-                    <span>Guestbook</span>
-                </div>
-                <div class="nav-item" data-panel="chat">
-                    <span class="nav-icon">💬</span>
-                    <span>Live Chat</span>
-                </div>
+                <div class="nav-item" data-panel="comments"><span class="nav-icon">💭</span><span>Comments</span></div>
+                <div class="nav-item" data-panel="signatures"><span class="nav-icon">✍️</span><span>Guestbook</span></div>
+                <div class="nav-item" data-panel="chat"><span class="nav-icon">💬</span><span>Live Chat</span></div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">SETTINGS</div>
-                <div class="nav-item" data-panel="profile">
-                    <span class="nav-icon">👤</span>
-                    <span>Profile</span>
-                </div>
-                <div class="nav-item" data-panel="facts">
-                    <span class="nav-icon">⭐</span>
-                    <span>Fun Facts</span>
-                </div>
-                <div class="nav-item" data-panel="live">
-                    <span class="nav-icon">📡</span>
-                    <span>Live Control</span>
-                </div>
+                <div class="nav-item" data-panel="profile"><span class="nav-icon">👤</span><span>Profile</span></div>
+                <div class="nav-item" data-panel="facts"><span class="nav-icon">⭐</span><span>Fun Facts</span></div>
+                <div class="nav-item" data-panel="live"><span class="nav-icon">📡</span><span>Live Control</span></div>
             </div>
         </div>
-        <div class="logout-btn" onclick="logout()">
-            🚪 LOGOUT
-        </div>
+        <div class="logout-btn" id="logoutBtn">🚪 LOGOUT</div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-content" id="mainContent">
-        <!-- Will be populated dynamically -->
-    </div>
+    <div class="main-content" id="mainContent"></div>
 </div>
-
 <div id="toast"></div>
 
 <script>
 // ============================================================
-// CONFIGURATION
+// XOTIIC DASHBOARD - Owner Control Panel
 // ============================================================
-const API_URL = 'https://kaisworldb.onrender.com';
+
+const API_URL = window.location.origin;
 let authToken = null;
 let activityLogs = [];
 
-
-
-
-# ─── Add this new endpoint for /xotiic login ──────────────────────────────────
-@app.post("/api/xotiic/login")
-async def xotiic_login(payload: LoginPayload):
-    """Special login endpoint for /xotiic dashboard - uses XOTIIC credentials"""
-    if payload.email == XOTIIC_EMAIL and payload.password == XOTIIC_PASSWORD:
-        add_log("info", f"XOTIIC login successful: {payload.email}")
-        return {"access_token": "xotiic_authenticated", "token_type": "bearer", "expires_in": 86400, "role": "owner"}
-    add_log("warning", f"Failed XOTIIC login attempt: {payload.email}")
-    raise HTTPException(status_code=401, detail="Invalid XOTIIC credentials")
-
-# ─── Add logging function for tracking everything ─────────────────────────────
-LOG_ENTRIES = []
-
-def add_log(level: str, message: str, details: dict = None):
-    """Add entry to activity log"""
-    entry = {
-        "id": str(uuid.uuid4()),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "level": level,  # info, warning, error, success
-        "message": message,
-        "details": details
-    }
-    LOG_ENTRIES.insert(0, entry)
-    # Keep only last 1000 logs
-    while len(LOG_ENTRIES) > 1000:
-        LOG_ENTRIES.pop()
-    print(f"[{level.upper()}] {message}")
-    return entry
-
-@app.get("/api/xotiic/logs")
-async def get_xotiic_logs(authorization: Optional[str] = Header(None)):
-    """Get all activity logs - XOTIIC only"""
-    if authorization != "Bearer xotiic_authenticated":
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    return JSONResponse({"logs": LOG_ENTRIES})
-
-@app.post("/api/xotiic/log")
-async def add_xotiic_log(payload: dict, authorization: Optional[str] = Header(None)):
-    """Add a log entry from frontend"""
-    if authorization != "Bearer xotiic_authenticated":
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    add_log(payload.get("level", "info"), payload.get("message", ""), payload.get("details"))
-    return JSONResponse({"ok": True})
 // ============================================================
-// LOGIN SYSTEM (Uses backend credentials)
+// Utility Functions
 // ============================================================
-async function attemptLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const errorEl = document.getElementById('loginError');
-    
-    if (!email || !password) {
-        errorEl.textContent = '❌ fill in both fields';
-        errorEl.style.display = 'block';
-        return;
-    }
-    
-    errorEl.style.display = 'none';
-    
-    try {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            authToken = data.access_token;
-            sessionStorage.setItem('xotiic_token', authToken);
-            addLog('info', `Login successful - ${email}`);
-            enterDashboard();
-        } else {
-            errorEl.textContent = '❌ invalid credentials - access denied';
-            errorEl.style.display = 'block';
-            addLog('error', `Failed login attempt for ${email}`);
-        }
-    } catch (err) {
-        errorEl.textContent = '❌ connection error - check backend';
-        errorEl.style.display = 'block';
-        console.error('Login error:', err);
-    }
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-function logout() {
-    authToken = null;
-    sessionStorage.removeItem('xotiic_token');
-    document.getElementById('dashboard').classList.remove('visible');
-    document.getElementById('loginOverlay').classList.remove('hidden');
-    addLog('info', 'Logged out');
-}
-
-function enterDashboard() {
-    document.getElementById('loginOverlay').classList.add('hidden');
-    document.getElementById('dashboard').classList.add('visible');
-    loadPanel('dashboard');
-    startAutoRefresh();
-}
-
-// ============================================================
-// LOGGING SYSTEM
-// ============================================================
-function addLog(type, message, details = null) {
-    const entry = {
-        id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-        timestamp: new Date().toISOString(),
-        type: type, // info, warning, error, success
-        message: message,
-        details: details
+function addLog(type, message) {
+    const entry = { 
+        id: Date.now(), 
+        timestamp: new Date().toISOString(), 
+        type: type, 
+        message: message 
     };
     activityLogs.unshift(entry);
     if (activityLogs.length > 500) activityLogs.pop();
-    
-    // Also send to console
-    console.log(`[${type.toUpperCase()}] ${message}`, details || '');
+    console.log(`[${type.toUpperCase()}] ${message}`);
 }
 
-// ============================================================
-// API HELPER
-// ============================================================
-async function apiCall(path, method = 'GET', body = null) {
-    const headers = { 'Content-Type': 'application/json' };
-    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
-    
-    try {
-        const response = await fetch(`${API_URL}${path}`, {
-            method,
-            headers,
-            body: body ? JSON.stringify(body) : undefined
-        });
-        
-        if (response.status === 401) {
-            addLog('error', 'Session expired - please login again');
-            logout();
-            return null;
-        }
-        
-        if (!response.ok) return null;
-        return await response.json();
-    } catch (err) {
-        addLog('error', `API error: ${path} - ${err.message}`);
-        return null;
-    }
-}
-
-// ============================================================
-// DASHBOARD STATS
-// ============================================================
-async function loadDashboardStats() {
-    try {
-        const stats = await apiCall('/api/stats');
-        const threads = await apiCall('/api/threads');
-        const posts = await apiCall('/api/posts');
-        const vlogs = await apiCall('/api/vlogs');
-        const signatures = await apiCall('/api/signatures');
-        const comments = await apiCall('/api/comments?thread_id=dummy');
-        const journal = await apiCall('/api/journal');
-        
-        return {
-            total_visitors: stats?.total || 0,
-            today_visitors: stats?.today || 0,
-            active_now: stats?.active || 0,
-            threads: threads?.data?.length || 0,
-            posts: posts?.data?.length || 0,
-            vlogs: vlogs?.data?.length || 0,
-            signatures: signatures?.data?.length || 0,
-            comments: comments?.data?.length || 0,
-            journal_entries: journal?.data?.length || 0,
-            top_pages: stats?.pages || []
-        };
-    } catch (err) {
-        addLog('error', 'Failed to load dashboard stats');
-        return null;
-    }
-}
-
-// ============================================================
-// LOAD ALL DATA (for data panel)
-// ============================================================
-async function loadAllData() {
-    const [threads, posts, vlogs, journal, signatures, comments, profile, facts, live] = await Promise.all([
-        apiCall('/api/threads'),
-        apiCall('/api/posts'),
-        apiCall('/api/vlogs'),
-        apiCall('/api/journal'),
-        apiCall('/api/signatures'),
-        apiCall('/api/comments?thread_id=dummy'),
-        apiCall('/api/profile'),
-        apiCall('/api/facts'),
-        apiCall('/api/live')
-    ]);
-    
-    return {
-        threads: threads?.data || [],
-        posts: posts?.data || [],
-        vlogs: vlogs?.data || [],
-        journal: journal?.data || [],
-        signatures: signatures?.data || [],
-        comments: comments?.data || [],
-        profile: profile || {},
-        facts: facts?.data || [],
-        live: live || {}
-    };
-}
-
-// ============================================================
-// DELETE OPERATIONS (with logging)
-// ============================================================
-async function deleteThread(id, title) {
-    if (!confirm(`Delete thread "${title?.substring(0, 50)}"?`)) return;
-    const result = await apiCall(`/api/threads/${id}`, 'DELETE');
-    if (result) {
-        addLog('success', `Deleted thread: ${title?.substring(0, 50)}`);
-        refreshCurrentPanel();
-    }
-}
-
-async function deletePost(id, caption) {
-    if (!confirm(`Delete post "${caption?.substring(0, 50)}"?`)) return;
-    const result = await apiCall(`/api/posts/${id}`, 'DELETE');
-    if (result) {
-        addLog('success', `Deleted post: ${caption?.substring(0, 50)}`);
-        refreshCurrentPanel();
-    }
-}
-
-async function deleteVlog(id, title) {
-    if (!confirm(`Delete vlog "${title}"?`)) return;
-    const result = await apiCall(`/api/vlogs/${id}`, 'DELETE');
-    if (result) {
-        addLog('success', `Deleted vlog: ${title}`);
-        refreshCurrentPanel();
-    }
-}
-
-async function deleteJournal(id, title) {
-    if (!confirm(`Delete journal entry "${title}"?`)) return;
-    const result = await apiCall(`/api/journal/${id}`, 'DELETE');
-    if (result) {
-        addLog('success', `Deleted journal entry: ${title}`);
-        refreshCurrentPanel();
-    }
-}
-
-async function deleteSignature(id, name) {
-    if (!confirm(`Delete signature from "${name}"?`)) return;
-    const result = await apiCall(`/api/signatures/${id}`, 'DELETE');
-    if (result) {
-        addLog('success', `Deleted signature from: ${name}`);
-        refreshCurrentPanel();
-    }
-}
-
-async function deleteComment(id) {
-    if (!confirm('Delete this comment?')) return;
-    const result = await apiCall(`/api/comments/${id}`, 'DELETE');
-    if (result) {
-        addLog('success', 'Deleted comment');
-        refreshCurrentPanel();
-    }
-}
-
-// ============================================================
-// PANEL RENDERING
-// ============================================================
-let currentPanel = 'dashboard';
-let refreshInterval = null;
-
-function startAutoRefresh() {
-    if (refreshInterval) clearInterval(refreshInterval);
-    refreshInterval = setInterval(() => {
-        if (currentPanel) refreshCurrentPanel();
-    }, 30000);
-}
-
-async function refreshCurrentPanel() {
-    await loadPanel(currentPanel);
-}
-
-async function loadPanel(panelName) {
-    currentPanel = panelName;
-    const container = document.getElementById('mainContent');
-    
-    // Update active nav state
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.panel === panelName) item.classList.add('active');
-    });
-    
-    addLog('info', `Loading panel: ${panelName}`);
-    
-    switch(panelName) {
-        case 'dashboard':
-            await renderDashboard(container);
-            break;
-        case 'logs':
-            renderLogs(container);
-            break;
-        case 'data':
-            await renderAllData(container);
-            break;
-        case 'threads':
-            await renderThreads(container);
-            break;
-        case 'posts':
-            await renderPosts(container);
-            break;
-        case 'vlogs':
-            await renderVlogs(container);
-            break;
-        case 'journal':
-            await renderJournal(container);
-            break;
-        case 'comments':
-            await renderComments(container);
-            break;
-        case 'signatures':
-            await renderSignatures(container);
-            break;
-        case 'chat':
-            await renderChat(container);
-            break;
-        case 'profile':
-            await renderProfile(container);
-            break;
-        case 'facts':
-            await renderFacts(container);
-            break;
-        case 'live':
-            await renderLive(container);
-            break;
-    }
-}
-
-// ============================================================
-// RENDER FUNCTIONS
-// ============================================================
-
-async function renderDashboard(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const stats = await loadDashboardStats();
-    
-    if (!stats) {
-        container.innerHTML = '<div class="empty-state">❌ Failed to load dashboard</div>';
-        return;
-    }
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">✦ DASHBOARD ✦</div>
-            <div class="panel-sub">welcome back, owner. here's what's happening.</div>
-            
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value">${stats.total_visitors}</div><div class="stat-label">Total Visitors</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.today_visitors}</div><div class="stat-label">Today</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.active_now}</div><div class="stat-label">Active Now</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.threads}</div><div class="stat-label">Threads</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.posts}</div><div class="stat-label">Posts</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.vlogs}</div><div class="stat-label">Vlogs</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.signatures}</div><div class="stat-label">Guest Signatures</div></div>
-                <div class="stat-card"><div class="stat-value">${stats.journal_entries}</div><div class="stat-label">Journal Entries</div></div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">📈 TOP PAGES</div>
-                <div style="margin-top: 10px;">
-                    ${stats.top_pages?.slice(0, 5).map(p => `
-                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,105,180,0.1);">
-                            <span>/${p.label}</span>
-                            <span style="color: #ffd700;">${p.count} views</span>
-                        </div>
-                    `).join('') || '<div class="empty-state">no page data yet</div>'}
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">🕐 RECENT ACTIVITY</div>
-                <div style="max-height: 300px; overflow-y: auto;">
-                    ${activityLogs.slice(0, 20).map(log => `
-                        <div class="log-entry">
-                            <span class="log-time">${new Date(log.timestamp).toLocaleTimeString()}</span>
-                            <span class="log-type ${log.type}">${log.type.toUpperCase()}</span>
-                            <span class="log-message">${escapeHtml(log.message)}</span>
-                        </div>
-                    `).join('') || '<div class="empty-state">no recent activity</div>'}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function renderLogs(container) {
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">📜 ACTIVITY LOGS</div>
-            <div class="panel-sub">complete system activity history</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                <div class="log-container" id="logContainer">
-                    ${activityLogs.map(log => `
-                        <div class="log-entry">
-                            <span class="log-time">${new Date(log.timestamp).toLocaleString()}</span>
-                            <span class="log-type ${log.type}">${log.type.toUpperCase()}</span>
-                            <span class="log-message">${escapeHtml(log.message)}</span>
-                            ${log.details ? `<div style="margin-left: 100px; font-size: 10px; color: #888;">${escapeHtml(JSON.stringify(log.details))}</div>` : ''}
-                        </div>
-                    `).join('') || '<div class="empty-state">no logs yet</div>'}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-async function renderAllData(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await loadAllData();
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">🗄️ ALL DATA</div>
-            <div class="panel-sub">complete database overview - everything stored</div>
-            
-            <div class="card">
-                <div class="card-title">📝 THREADS (${data.threads.length})</div>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Content</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${data.threads.slice(0, 20).map(t => `
-                            <tr>
-                                <td style="font-size: 10px;">${formatDate(t.created_at)}</td>
-                                <td>${escapeHtml((t.content || '').substring(0, 80))}${t.content?.length > 80 ? '...' : ''}</td>
-                                <td><button class="delete-btn" onclick="deleteThread('${t.id}', '${escapeHtml(t.content || '').replace(/'/g, "\\'")}')">DELETE</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-                ${data.threads.length === 0 ? '<div class="empty-state">no threads</div>' : ''}
-            </div>
-            
-            <div class="card">
-                <div class="card-title">📸 FEED POSTS (${data.posts.length})</div>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Caption</th><th>Likes</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${data.posts.slice(0, 20).map(p => `
-                            <tr>
-                                <td style="font-size: 10px;">${formatDate(p.created_at)}</td>
-                                <td>${escapeHtml((p.caption || '').substring(0, 60))}</td>
-                                <td>♥ ${p.like_count || 0}</td>
-                                <td><button class="delete-btn" onclick="deletePost('${p.id}', '${escapeHtml(p.caption || '').replace(/'/g, "\\'")}')">DELETE</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">📖 KAI'S JOURNAL (${data.journal.length})</div>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Title</th><th>Mood</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${data.journal.slice(0, 20).map(j => `
-                            <tr>
-                                <td style="font-size: 10px;">${j.date || formatDate(j.created_at)}</td>
-                                <td>${escapeHtml(j.title || 'Untitled')}</td>
-                                <td>${escapeHtml(j.mood || '✨')}</td>
-                                <td><button class="delete-btn" onclick="deleteJournal('${j.id}', '${escapeHtml(j.title || '').replace(/'/g, "\\'")}')">DELETE</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">✍️ GUESTBOOK SIGNATURES (${data.signatures.length})</div>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Name</th><th>Message</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${data.signatures.slice(0, 20).map(s => `
-                            <tr>
-                                <td style="font-size: 10px;">${formatDate(s.created_at)}</td>
-                                <td>${escapeHtml(s.name)}</td>
-                                <td>${escapeHtml((s.message || '').substring(0, 50))}</td>
-                                <td><button class="delete-btn" onclick="deleteSignature('${s.id}', '${escapeHtml(s.name || '').replace(/'/g, "\\'")}')">DELETE</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    `;
-}
-
-async function renderThreads(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/threads');
-    const threads = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">💬 THREADS</div>
-            <div class="panel-sub">manage all forum threads</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                ${threads.map(t => `
-                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                            <div style="flex: 1;">
-                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(t.created_at)} • 👁 ${t.view_count || 0} views • 💬 ${t.comment_count || 0} comments</div>
-                                <div style="margin-top: 8px;">${escapeHtml(t.content || '')}</div>
-                                ${t.image_url ? `<img src="${escapeHtml(t.image_url)}" style="max-height: 120px; margin-top: 8px; border-radius: 12px;">` : ''}
-                            </div>
-                            <button class="delete-btn" onclick="deleteThread('${t.id}', '${escapeHtml(t.content || '').replace(/'/g, "\\'")}')">DELETE</button>
-                        </div>
-                    </div>
-                `).join('')}
-                ${threads.length === 0 ? '<div class="empty-state">no threads yet</div>' : ''}
-            </div>
-        </div>
-    `;
-}
-
-async function renderPosts(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/posts');
-    const posts = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">📸 FEED POSTS</div>
-            <div class="panel-sub">manage instagram-style posts</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                ${posts.map(p => `
-                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
-                        <div style="display: flex; gap: 12px;">
-                            ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px;">` : ''}
-                            <div style="flex: 1;">
-                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(p.created_at)} • ♥ ${p.like_count || 0} likes</div>
-                                <div>${escapeHtml(p.caption || '')}</div>
-                            </div>
-                            <button class="delete-btn" onclick="deletePost('${p.id}', '${escapeHtml(p.caption || '').replace(/'/g, "\\'")}')">DELETE</button>
-                        </div>
-                    </div>
-                `).join('')}
-                ${posts.length === 0 ? '<div class="empty-state">no posts yet</div>' : ''}
-            </div>
-        </div>
-    `;
-}
-
-async function renderVlogs(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/vlogs');
-    const vlogs = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">🎥 VLOGS</div>
-            <div class="panel-sub">video diary entries</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                ${vlogs.map(v => `
-                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div>
-                                <div style="font-weight: bold; color: #ffd700;">${escapeHtml(v.title || 'Untitled')}</div>
-                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(v.created_at)}</div>
-                                <div style="font-size: 12px; margin-top: 6px;">${escapeHtml(v.description || '')}</div>
-                            </div>
-                            <button class="delete-btn" onclick="deleteVlog('${v.id}', '${escapeHtml(v.title || '').replace(/'/g, "\\'")}')">DELETE</button>
-                        </div>
-                    </div>
-                `).join('')}
-                ${vlogs.length === 0 ? '<div class="empty-state">no vlogs yet</div>' : ''}
-            </div>
-        </div>
-    `;
-}
-
-async function renderJournal(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/journal');
-    const entries = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">📖 KAI'S JOURNAL</div>
-            <div class="panel-sub">private entries - only visible to owner</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                ${entries.map(e => `
-                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div>
-                                <div style="font-weight: bold; color: #ffd700;">${escapeHtml(e.title || 'Untitled')} ${e.mood ? `✨ ${escapeHtml(e.mood)}` : ''}</div>
-                                <div style="font-size: 11px; color: #ff6eb4;">${e.date || formatDate(e.created_at)}</div>
-                                <div style="font-size: 12px; margin-top: 6px; white-space: pre-wrap;">${escapeHtml((e.content || '').substring(0, 200))}${e.content?.length > 200 ? '...' : ''}</div>
-                            </div>
-                            <button class="delete-btn" onclick="deleteJournal('${e.id}', '${escapeHtml(e.title || '').replace(/'/g, "\\'")}')">DELETE</button>
-                        </div>
-                    </div>
-                `).join('')}
-                ${entries.length === 0 ? '<div class="empty-state">no journal entries yet</div>' : ''}
-            </div>
-        </div>
-    `;
-}
-
-async function renderComments(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/comments?thread_id=dummy');
-    const comments = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">💭 COMMENTS</div>
-            <div class="panel-sub">all user comments across threads</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                <table class="data-table">
-                    <thead><tr><th>Date</th><th>Author</th><th>Content</th><th>Votes</th><th>Actions</th></tr></thead>
-                    <tbody>
-                        ${comments.map(c => `
-                            <tr>
-                                <td style="font-size: 10px;">${formatDate(c.created_at)}</td>
-                                <td style="color: ${c.author_color || '#ff69b4'}">${escapeHtml(c.author_name || 'anonymous')}</td>
-                                <td>${escapeHtml((c.content || '').substring(0, 60))}</td>
-                                <td>▲ ${c.upvotes || 0} / ▼ ${c.downvotes || 0}</td>
-                                <td><button class="delete-btn" onclick="deleteComment('${c.id}')">DELETE</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-                ${comments.length === 0 ? '<div class="empty-state">no comments yet</div>' : ''}
-            </div>
-        </div>
-    `;
-}
-
-async function renderSignatures(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/signatures');
-    const sigs = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">✍️ GUESTBOOK</div>
-            <div class="panel-sub">signatures from visitors</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                ${sigs.map(s => `
-                    <div style="padding: 16px; border-bottom: 1px solid rgba(255,105,180,0.1);">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div>
-                                <div style="font-weight: bold; color: #ffd700;">${escapeHtml(s.name || 'Anonymous')}</div>
-                                <div style="font-size: 11px; color: #ff6eb4;">${formatDate(s.created_at)}</div>
-                                <div style="font-size: 12px; margin-top: 6px;">"${escapeHtml(s.message || '')}"</div>
-                            </div>
-                            <button class="delete-btn" onclick="deleteSignature('${s.id}', '${escapeHtml(s.name || '').replace(/'/g, "\\'")}')">DELETE</button>
-                        </div>
-                    </div>
-                `).join('')}
-                ${sigs.length === 0 ? '<div class="empty-state">no signatures yet</div>' : ''}
-            </div>
-        </div>
-    `;
-}
-
-async function renderChat(container) {
-    container.innerHTML = '<div class="loader"></div>';
-    const data = await apiCall('/api/chat');
-    const messages = data?.data || [];
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">💬 LIVE CHAT HISTORY</div>
-            <div class="panel-sub">all live chat messages</div>
-            <div class="card">
-                <button class="refresh-btn" onclick="refreshCurrentPanel()">⟳ REFRESH</button>
-                <button class="refresh-btn" style="margin-right: 8px; background: rgba(255,0,0,0.2);" onclick="clearChatHistory()">🗑️ CLEAR ALL</button>
-                <div class="log-container">
-                    ${messages.map(m => `
-                        <div class="log-entry">
-                            <span class="log-time">${new Date(m.created_at).toLocaleString()}</span>
-                            <span style="color: #ff6eb4;">${escapeHtml(m.author_name || 'anon')}:</span>
-                            <span> ${escapeHtml(m.message || '')}</span>
-                        </div>
-                    `).join('')}
-                    ${messages.length === 0 ? '<div class="empty-state">no chat messages yet</div>' : ''}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-async function clearChatHistory() {
-    if (!confirm('⚠️ PERMANENTLY DELETE ALL CHAT MESSAGES? This cannot be undone.')) return;
-    const result = await apiCall('/api/chat', 'DELETE');
-    if (result) {
-        addLog('success', 'Cleared all chat history');
-        refreshCurrentPanel();
-        showToast('Chat history cleared');
-    }
-}
-
-async function renderProfile(container) {
-    const profile = await apiCall('/api/profile');
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">👤 PROFILE SETTINGS</div>
-            <div class="panel-sub">manage kai's public profile</div>
-            <div class="card">
-                <div class="form-group">
-                    <label class="card-title">Display Name</label>
-                    <input type="text" id="profileName" class="input-field" value="${escapeHtml(profile?.name || 'KAI')}">
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Mood Emoji</label>
-                    <input type="text" id="profileMood" class="input-field" value="${escapeHtml(profile?.mood_emoji || '✨')}">
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Location</label>
-                    <input type="text" id="profileLocation" class="input-field" value="${escapeHtml(profile?.location || '')}">
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Zodiac</label>
-                    <input type="text" id="profileZodiac" class="input-field" value="${escapeHtml(profile?.zodiac || '')}">
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Profile Picture URL</label>
-                    <input type="text" id="profilePic" class="input-field" value="${escapeHtml(profile?.profile_pic_url || '')}">
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Bio</label>
-                    <textarea id="profileBio" class="input-field" rows="4">${escapeHtml(profile?.bio || '')}</textarea>
-                </div>
-                <button class="btn-primary" onclick="saveProfile()">SAVE PROFILE ✦</button>
-            </div>
-        </div>
-    `;
-}
-
-async function saveProfile() {
-    const body = {
-        name: document.getElementById('profileName')?.value || 'KAI',
-        mood_emoji: document.getElementById('profileMood')?.value || null,
-        location: document.getElementById('profileLocation')?.value || null,
-        zodiac: document.getElementById('profileZodiac')?.value || null,
-        profile_pic_url: document.getElementById('profilePic')?.value || null,
-        bio: document.getElementById('profileBio')?.value || null
-    };
-    
-    const result = await apiCall('/api/profile', 'PATCH', body);
-    if (result) {
-        addLog('success', 'Profile updated');
-        showToast('Profile saved!');
-    } else {
-        showToast('Error saving profile');
-    }
-}
-
-async function renderFacts(container) {
-    const data = await apiCall('/api/facts');
-    const facts = data?.data || [];
-    
-    let html = `
-        <div class="panel active">
-            <div class="panel-title">⭐ FUN FACTS</div>
-            <div class="panel-sub">8 facts shown on the about page</div>
-            <div class="card">
-    `;
-    
-    for (let i = 1; i <= 8; i++) {
-        const fact = facts.find(f => f.slot_number === i);
-        html += `
-            <div class="form-group">
-                <label class="card-title">Fact ${i}</label>
-                <input type="text" id="fact_${i}" class="input-field" value="${escapeHtml(fact?.fact_text || '')}" placeholder="Enter fun fact...">
-            </div>
-        `;
-    }
-    
-    html += `<button class="btn-primary" onclick="saveAllFacts()">SAVE ALL FACTS ✦</button></div></div>`;
-    container.innerHTML = html;
-}
-
-async function saveAllFacts() {
-    const facts = [];
-    for (let i = 1; i <= 8; i++) {
-        const input = document.getElementById(`fact_${i}`);
-        if (input && input.value.trim()) {
-            facts.push({ slot_number: i, fact_text: input.value.trim() });
-        }
-    }
-    
-    const result = await apiCall('/api/facts', 'POST', facts);
-    if (result) {
-        addLog('success', `Updated ${facts.length} fun facts`);
-        showToast('Facts saved!');
-    } else {
-        showToast('Error saving facts');
-    }
-}
-
-async function renderLive(container) {
-    const live = await apiCall('/api/live');
-    
-    container.innerHTML = `
-        <div class="panel active">
-            <div class="panel-title">📡 LIVE STAGE CONTROL</div>
-            <div class="panel-sub">manage live streaming status</div>
-            <div class="card">
-                <div class="form-group">
-                    <label class="card-title">Live Status</label>
-                    <div style="display: flex; gap: 12px; align-items: center;">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="liveToggle" ${live?.is_live ? 'checked' : ''}>
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span id="liveStatusText" style="color: ${live?.is_live ? '#00ff64' : '#ff6eb4'}">${live?.is_live ? '🔴 LIVE NOW' : '⚫ OFFLINE'}</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Stream URL (YouTube)</label>
-                    <input type="text" id="streamUrl" class="input-field" value="${escapeHtml(live?.stream_url || '')}" placeholder="https://youtube.com/watch?v=...">
-                </div>
-                <div class="form-group">
-                    <label class="card-title">Offline Image URL</label>
-                    <input type="text" id="offlineImg" class="input-field" value="${escapeHtml(live?.offline_image_url || '')}" placeholder="https://...">
-                </div>
-                <button class="btn-primary" onclick="saveLiveSettings()">UPDATE LIVE STATUS ✦</button>
-            </div>
-        </div>
-    `;
-    
-    document.getElementById('liveToggle')?.addEventListener('change', (e) => {
-        const text = document.getElementById('liveStatusText');
-        if (text) {
-            text.textContent = e.target.checked ? '🔴 LIVE NOW' : '⚫ OFFLINE';
-            text.style.color = e.target.checked ? '#00ff64' : '#ff6eb4';
-        }
-    });
-}
-
-async function saveLiveSettings() {
-    const body = {
-        is_live: document.getElementById('liveToggle')?.checked || false,
-        stream_url: document.getElementById('streamUrl')?.value.trim() || null,
-        offline_image_url: document.getElementById('offlineImg')?.value.trim() || null
-    };
-    
-    const result = await apiCall('/api/live', 'PATCH', body);
-    if (result) {
-        addLog('success', body.is_live ? 'Went LIVE' : 'Ended live stream');
-        showToast(body.is_live ? '🔴 You are now LIVE!' : 'Stream ended');
-    } else {
-        showToast('Error updating live status');
-    }
-}
-
-// ============================================================
-// UTILITIES
-// ============================================================
 function formatDate(iso) {
     if (!iso) return 'N/A';
-    try {
-        return new Date(iso).toLocaleString();
-    } catch(e) {
-        return iso;
+    try { 
+        return new Date(iso).toLocaleString(); 
+    } catch(e) { 
+        return iso; 
     }
 }
 
@@ -1570,20 +687,474 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+// ============================================================
+// API Functions
+// ============================================================
+
+async function apiCall(path, method = 'GET', body = null) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+    
+    try {
+        const response = await fetch(`${API_URL}${path}`, { 
+            method, 
+            headers, 
+            body: body ? JSON.stringify(body) : undefined 
+        });
+        
+        if (response.status === 401) { 
+            logout(); 
+            return null;
+        }
+        if (!response.ok) return null;
+        return await response.json();
+    } catch (err) {
+        addLog('error', `API error: ${path}`);
+        return null;
+    }
 }
 
 // ============================================================
-// INIT
+// Login Functions
 // ============================================================
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-        loadPanel(item.dataset.panel);
+
+async function attemptLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    if (!email || !password) {
+        errorEl.textContent = '❌ fill in both fields';
+        errorEl.style.display = 'block';
+        return;
+    }
+    
+    errorEl.style.display = 'none';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'LOGGING IN...';
+    
+    try {
+        const response = await fetch(`${API_URL}/api/xotiic/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            authToken = data.access_token;
+            sessionStorage.setItem('xotiic_token', authToken);
+            addLog('success', `XOTIIC login successful`);
+            enterDashboard();
+        } else {
+            errorEl.textContent = '❌ invalid XOTIIC credentials';
+            errorEl.style.display = 'block';
+            addLog('error', `Failed XOTIIC login attempt`);
+        }
+    } catch (err) {
+        errorEl.textContent = '❌ connection error - is backend running?';
+        errorEl.style.display = 'block';
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'ENTER /XOTIIC ♡';
+    }
+}
+
+function logout() {
+    authToken = null;
+    sessionStorage.removeItem('xotiic_token');
+    document.getElementById('dashboard').classList.remove('visible');
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    showToast('Logged out');
+}
+
+function enterDashboard() {
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('dashboard').classList.add('visible');
+    loadPanel('dashboard');
+}
+
+// ============================================================
+// Data Loading
+// ============================================================
+
+async function loadDashboardStats() {
+    const stats = await apiCall('/api/stats');
+    const threads = await apiCall('/api/threads');
+    const posts = await apiCall('/api/posts');
+    const vlogs = await apiCall('/api/vlogs');
+    const signatures = await apiCall('/api/signatures');
+    const journal = await apiCall('/api/journal');
+    
+    return {
+        total_visitors: stats?.total || 0,
+        today_visitors: stats?.today || 0,
+        active_now: stats?.active || 0,
+        threads: threads?.data?.length || 0,
+        posts: posts?.data?.length || 0,
+        vlogs: vlogs?.data?.length || 0,
+        signatures: signatures?.data?.length || 0,
+        journal_entries: journal?.data?.length || 0,
+        top_pages: stats?.pages || []
+    };
+}
+
+// ============================================================
+// Delete Operations
+// ============================================================
+
+async function deleteThread(id) {
+    if (!confirm(`Delete this thread?`)) return;
+    const result = await apiCall(`/api/threads/${id}`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Thread deleted'); 
+        loadPanel('threads'); 
+        showToast('Thread deleted'); 
+    }
+}
+
+async function deletePost(id) {
+    if (!confirm(`Delete this post?`)) return;
+    const result = await apiCall(`/api/posts/${id}`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Post deleted'); 
+        loadPanel('posts'); 
+        showToast('Post deleted'); 
+    }
+}
+
+async function deleteVlog(id) {
+    if (!confirm(`Delete this vlog?`)) return;
+    const result = await apiCall(`/api/vlogs/${id}`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Vlog deleted'); 
+        loadPanel('vlogs'); 
+        showToast('Vlog deleted'); 
+    }
+}
+
+async function deleteJournal(id) {
+    if (!confirm(`Delete this journal entry?`)) return;
+    const result = await apiCall(`/api/journal/${id}`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Journal entry deleted'); 
+        loadPanel('journal'); 
+        showToast('Entry deleted'); 
+    }
+}
+
+async function deleteSignature(id) {
+    if (!confirm(`Delete this signature?`)) return;
+    const result = await apiCall(`/api/signatures/${id}`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Signature deleted'); 
+        loadPanel('signatures'); 
+        showToast('Signature deleted'); 
+    }
+}
+
+async function deleteComment(id) {
+    if (!confirm(`Delete this comment?`)) return;
+    const result = await apiCall(`/api/comments/${id}`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Comment deleted'); 
+        loadPanel('comments'); 
+        showToast('Comment deleted'); 
+    }
+}
+
+async function clearChat() {
+    if (!confirm(`⚠️ PERMANENTLY DELETE ALL CHAT MESSAGES?`)) return;
+    const result = await apiCall(`/api/chat`, 'DELETE');
+    if (result) { 
+        addLog('success', 'Chat cleared'); 
+        loadPanel('chat'); 
+        showToast('Chat cleared'); 
+    }
+}
+
+// ============================================================
+// Save Operations
+// ============================================================
+
+async function saveProfile() {
+    const body = {
+        name: document.getElementById('profileName')?.value || 'KAI',
+        mood_emoji: document.getElementById('profileMood')?.value || null,
+        location: document.getElementById('profileLocation')?.value || null,
+        zodiac: document.getElementById('profileZodiac')?.value || null,
+        profile_pic_url: document.getElementById('profilePic')?.value || null,
+        bio: document.getElementById('profileBio')?.value || null
+    };
+    const result = await apiCall('/api/profile', 'PATCH', body);
+    if (result) { 
+        addLog('success', 'Profile updated'); 
+        showToast('Profile saved!'); 
+    } else {
+        showToast('Error saving profile');
+    }
+}
+
+async function saveFacts() {
+    const facts = [];
+    for (let i = 1; i <= 8; i++) {
+        const input = document.getElementById(`fact_${i}`);
+        if (input && input.value.trim()) {
+            facts.push({ slot_number: i, fact_text: input.value.trim() });
+        }
+    }
+    const result = await apiCall('/api/facts', 'POST', facts);
+    if (result) { 
+        addLog('success', `Updated ${facts.length} fun facts`); 
+        showToast('Facts saved!'); 
+    } else {
+        showToast('Error saving facts');
+    }
+}
+
+async function saveLive() {
+    const body = {
+        is_live: document.getElementById('liveToggle')?.checked || false,
+        stream_url: document.getElementById('streamUrl')?.value.trim() || null,
+        offline_image_url: document.getElementById('offlineImg')?.value.trim() || null
+    };
+    const result = await apiCall('/api/live', 'PATCH', body);
+    if (result) { 
+        addLog('success', body.is_live ? 'Went LIVE' : 'Ended live stream'); 
+        showToast(body.is_live ? '🔴 You are now LIVE!' : 'Stream ended'); 
+    } else {
+        showToast('Error updating live status');
+    }
+}
+
+// ============================================================
+// Panel Rendering
+// ============================================================
+
+let currentPanel = 'dashboard';
+
+async function loadPanel(panelName) {
+    currentPanel = panelName;
+    const container = document.getElementById('mainContent');
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.panel === panelName) item.classList.add('active');
     });
+    
+    addLog('info', `Loading panel: ${panelName}`);
+    
+    switch(panelName) {
+        case 'dashboard': await renderDashboard(container); break;
+        case 'logs': renderLogs(container); break;
+        case 'data': await renderAllData(container); break;
+        case 'threads': await renderThreads(container); break;
+        case 'posts': await renderPosts(container); break;
+        case 'vlogs': await renderVlogs(container); break;
+        case 'journal': await renderJournal(container); break;
+        case 'comments': await renderComments(container); break;
+        case 'signatures': await renderSignatures(container); break;
+        case 'chat': await renderChat(container); break;
+        case 'profile': await renderProfile(container); break;
+        case 'facts': await renderFacts(container); break;
+        case 'live': await renderLive(container); break;
+    }
+}
+
+async function renderDashboard(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const stats = await loadDashboardStats();
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">✦ DASHBOARD ✦</div>
+            <div class="panel-sub">welcome, owner</div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">${stats.total_visitors}</div><div class="stat-label">Total Visitors</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.today_visitors}</div><div class="stat-label">Today</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.active_now}</div><div class="stat-label">Active Now</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.threads}</div><div class="stat-label">Threads</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.posts}</div><div class="stat-label">Posts</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.vlogs}</div><div class="stat-label">Vlogs</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.signatures}</div><div class="stat-label">Signatures</div></div>
+                <div class="stat-card"><div class="stat-value">${stats.journal_entries}</div><div class="stat-label">Journal</div></div>
+            </div>
+            <div class="card">
+                <div class="card-title">📈 TOP PAGES</div>
+                <div style="margin-top: 10px;">
+                    ${stats.top_pages?.slice(0, 5).map(p => `
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,105,180,0.1);">
+                            <span>/${p.label}</span>
+                            <span style="color: #ffd700;">${p.count} views</span>
+                        </div>
+                    `).join('') || '<div class="empty-state">no page data yet</div>'}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🕐 RECENT ACTIVITY</div>
+                <div class="log-container">
+                    ${activityLogs.slice(0, 20).map(log => `
+                        <div class="log-entry">
+                            <span class="log-time">${new Date(log.timestamp).toLocaleTimeString()}</span>
+                            <span class="log-type ${log.type}">${log.type.toUpperCase()}</span>
+                            <span>${escapeHtml(log.message)}</span>
+                        </div>
+                    `).join('') || '<div class="empty-state">no activity yet</div>'}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderLogs(container) {
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">📜 ACTIVITY LOGS</div>
+            <div class="panel-sub">complete system history</div>
+            <div class="card">
+                <button class="refresh-btn" onclick="loadPanel('logs')">⟳ REFRESH</button>
+                <div class="log-container">
+                    ${activityLogs.map(log => `
+                        <div class="log-entry">
+                            <span class="log-time">${new Date(log.timestamp).toLocaleString()}</span>
+                            <span class="log-type ${log.type}">${log.type.toUpperCase()}</span>
+                            <span>${escapeHtml(log.message)}</span>
+                        </div>
+                    `).join('') || '<div class="empty-state">no logs yet</div>'}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+async function renderAllData(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const [threads, posts, vlogs, journal, signatures, comments] = await Promise.all([
+        apiCall('/api/threads'), apiCall('/api/posts'), apiCall('/api/vlogs'),
+        apiCall('/api/journal'), apiCall('/api/signatures'), apiCall('/api/comments?thread_id=dummy')
+    ]);
+    
+    container.innerHTML = `
+        <div class="panel active">
+            <div class="panel-title">🗄️ ALL DATA</div>
+            <div class="panel-sub">complete database overview</div>
+            <div class="card">
+                <div class="card-title">📝 THREADS (${threads?.data?.length || 0})</div>
+                <table class="data-table"><thead><tr><th>Date</th><th>Content</th><th></th></tr></thead><tbody>
+                    ${(threads?.data || []).slice(0, 20).map(t => `<tr><td style="font-size:10px">${formatDate(t.created_at)}</td><td>${escapeHtml((t.content || '').substring(0, 60))}</td><td><button class="delete-btn" onclick="deleteThread('${t.id}')">DELETE</button></td></tr>`).join('')}
+                </tbody></table>
+            </div>
+            <div class="card">
+                <div class="card-title">📸 POSTS (${posts?.data?.length || 0})</div>
+                <table class="data-table"><thead><tr><th>Date</th><th>Caption</th><th>Likes</th><th></th></tr></thead><tbody>
+                    ${(posts?.data || []).slice(0, 20).map(p => `<tr><td style="font-size:10px">${formatDate(p.created_at)}</td><td>${escapeHtml((p.caption || '').substring(0, 40))}</td><td>♥ ${p.like_count || 0}</td><td><button class="delete-btn" onclick="deletePost('${p.id}')">DELETE</button></td></tr>`).join('')}
+                </tbody></table>
+            </div>
+            <div class="card">
+                <div class="card-title">💬 COMMENTS (${comments?.data?.length || 0})</div>
+                <table class="data-table"><thead><tr><th>Date</th><th>Author</th><th>Content</th><th></th></tr></thead><tbody>
+                    ${(comments?.data || []).slice(0, 20).map(c => `<tr><td style="font-size:10px">${formatDate(c.created_at)}</td><td>${escapeHtml(c.author_name || 'anon')}</td><td>${escapeHtml((c.content || '').substring(0, 40))}</td><td><button class="delete-btn" onclick="deleteComment('${c.id}')">DELETE</button></td></tr>`).join('')}
+                </tbody></table>
+            </div>
+        </div>
+    `;
+}
+
+async function renderThreads(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/threads');
+    const threads = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">💬 THREADS</div><div class="panel-sub">manage threads</div><div class="card"><button class="refresh-btn" onclick="loadPanel('threads')">⟳ REFRESH</button>${threads.map(t => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-size:11px; color:#ff6eb4;">${formatDate(t.created_at)} • 👁 ${t.view_count || 0} views</div><div>${escapeHtml(t.content || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deleteThread('${t.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no threads</div>'}</div></div>`;
+}
+
+async function renderPosts(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/posts');
+    const posts = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">📸 FEED POSTS</div><div class="panel-sub">manage posts</div><div class="card"><button class="refresh-btn" onclick="loadPanel('posts')">⟳ REFRESH</button>${posts.map(p => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-size:11px; color:#ff6eb4;">${formatDate(p.created_at)} • ♥ ${p.like_count || 0}</div><div>${escapeHtml(p.caption || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deletePost('${p.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no posts</div>'}</div></div>`;
+}
+
+async function renderVlogs(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/vlogs');
+    const vlogs = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">🎥 VLOGS</div><div class="panel-sub">manage vlogs</div><div class="card"><button class="refresh-btn" onclick="loadPanel('vlogs')">⟳ REFRESH</button>${vlogs.map(v => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-weight:bold; color:#ffd700;">${escapeHtml(v.title || 'Untitled')}</div><div style="font-size:11px; color:#ff6eb4;">${formatDate(v.created_at)}</div><div>${escapeHtml(v.description || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deleteVlog('${v.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no vlogs</div>'}</div></div>`;
+}
+
+async function renderJournal(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/journal');
+    const entries = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">📖 JOURNAL</div><div class="panel-sub">private entries</div><div class="card"><button class="refresh-btn" onclick="loadPanel('journal')">⟳ REFRESH</button>${entries.map(e => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-weight:bold; color:#ffd700;">${escapeHtml(e.title || 'Untitled')} ${e.mood ? `✨ ${escapeHtml(e.mood)}` : ''}</div><div style="font-size:11px; color:#ff6eb4;">${e.date || formatDate(e.created_at)}</div><div>${escapeHtml((e.content || '').substring(0, 100))}...</div><button class="delete-btn" style="margin-top:8px" onclick="deleteJournal('${e.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no entries</div>'}</div></div>`;
+}
+
+async function renderComments(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/comments?thread_id=dummy');
+    const comments = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">💭 COMMENTS</div><div class="panel-sub">all comments</div><div class="card"><button class="refresh-btn" onclick="loadPanel('comments')">⟳ REFRESH</button>${comments.map(c => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-size:11px; color:#ff6eb4;">${formatDate(c.created_at)} • ${escapeHtml(c.author_name || 'anon')}</div><div>${escapeHtml(c.content || '')}</div><button class="delete-btn" style="margin-top:8px" onclick="deleteComment('${c.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no comments</div>'}</div></div>`;
+}
+
+async function renderSignatures(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/signatures');
+    const sigs = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">✍️ GUESTBOOK</div><div class="panel-sub">signatures</div><div class="card"><button class="refresh-btn" onclick="loadPanel('signatures')">⟳ REFRESH</button>${sigs.map(s => `<div style="padding:12px; border-bottom:1px solid rgba(255,105,180,0.1);"><div style="font-weight:bold; color:#ffd700;">${escapeHtml(s.name || 'Anonymous')}</div><div style="font-size:11px; color:#ff6eb4;">${formatDate(s.created_at)}</div><div>"${escapeHtml(s.message || '')}"</div><button class="delete-btn" style="margin-top:8px" onclick="deleteSignature('${s.id}')">DELETE</button></div>`).join('') || '<div class="empty-state">no signatures</div>'}</div></div>`;
+}
+
+async function renderChat(container) {
+    container.innerHTML = '<div class="loader"></div>';
+    const data = await apiCall('/api/chat');
+    const messages = data?.data || [];
+    container.innerHTML = `<div class="panel active"><div class="panel-title">💬 LIVE CHAT</div><div class="panel-sub">chat history</div><div class="card"><button class="refresh-btn" onclick="loadPanel('chat')">⟳ REFRESH</button><button class="refresh-btn" style="margin-right:8px; background:rgba(255,0,0,0.2);" onclick="clearChat()">🗑️ CLEAR ALL</button><div class="log-container">${messages.map(m => `<div class="log-entry"><span class="log-time">${new Date(m.created_at).toLocaleString()}</span><span style="color:#ff6eb4;">${escapeHtml(m.author_name || 'anon')}:</span><span> ${escapeHtml(m.message || '')}</span></div>`).join('') || '<div class="empty-state">no messages</div>'}</div></div></div>`;
+}
+
+async function renderProfile(container) {
+    const profile = await apiCall('/api/profile');
+    container.innerHTML = `<div class="panel active"><div class="panel-title">👤 PROFILE SETTINGS</div><div class="panel-sub">manage kai's public profile</div><div class="card"><div class="form-group"><label class="card-title">Display Name</label><input type="text" id="profileName" class="input-field" value="${escapeHtml(profile?.name || 'KAI')}"></div><div class="form-group"><label class="card-title">Mood Emoji</label><input type="text" id="profileMood" class="input-field" value="${escapeHtml(profile?.mood_emoji || '✨')}"></div><div class="form-group"><label class="card-title">Location</label><input type="text" id="profileLocation" class="input-field" value="${escapeHtml(profile?.location || '')}"></div><div class="form-group"><label class="card-title">Zodiac</label><input type="text" id="profileZodiac" class="input-field" value="${escapeHtml(profile?.zodiac || '')}"></div><div class="form-group"><label class="card-title">Profile Picture URL</label><input type="text" id="profilePic" class="input-field" value="${escapeHtml(profile?.profile_pic_url || '')}"></div><div class="form-group"><label class="card-title">Bio</label><textarea id="profileBio" class="input-field" rows="4">${escapeHtml(profile?.bio || '')}</textarea></div><button class="btn-primary" onclick="saveProfile()">SAVE PROFILE ✦</button></div></div>`;
+}
+
+async function renderFacts(container) {
+    const data = await apiCall('/api/facts');
+    const facts = data?.data || [];
+    let html = `<div class="panel active"><div class="panel-title">⭐ FUN FACTS</div><div class="panel-sub">8 facts shown on the about page</div><div class="card">`;
+    for (let i = 1; i <= 8; i++) {
+        const fact = facts.find(f => f.slot_number === i);
+        html += `<div class="form-group"><label class="card-title">Fact ${i}</label><input type="text" id="fact_${i}" class="input-field" value="${escapeHtml(fact?.fact_text || '')}" placeholder="Enter fun fact..."></div>`;
+    }
+    html += `<button class="btn-primary" onclick="saveFacts()">SAVE ALL FACTS ✦</button></div></div>`;
+    container.innerHTML = html;
+}
+
+async function renderLive(container) {
+    const live = await apiCall('/api/live');
+    container.innerHTML = `<div class="panel active"><div class="panel-title">📡 LIVE STAGE CONTROL</div><div class="panel-sub">manage live streaming status</div><div class="card"><div class="form-group"><label class="card-title">Live Status</label><div style="display:flex; gap:12px; align-items:center;"><label class="toggle-switch"><input type="checkbox" id="liveToggle" ${live?.is_live ? 'checked' : ''}><span class="toggle-slider"></span></label><span id="liveStatusText" style="color: ${live?.is_live ? '#00ff64' : '#ff6eb4'}">${live?.is_live ? '🔴 LIVE NOW' : '⚫ OFFLINE'}</span></div></div><div class="form-group"><label class="card-title">Stream URL (YouTube)</label><input type="text" id="streamUrl" class="input-field" value="${escapeHtml(live?.stream_url || '')}" placeholder="https://youtube.com/watch?v=..."></div><div class="form-group"><label class="card-title">Offline Image URL</label><input type="text" id="offlineImg" class="input-field" value="${escapeHtml(live?.offline_image_url || '')}" placeholder="https://..."></div><button class="btn-primary" onclick="saveLive()">UPDATE LIVE STATUS ✦</button></div></div>`;
+    
+    const toggle = document.getElementById('liveToggle');
+    if (toggle) {
+        toggle.addEventListener('change', (e) => {
+            const text = document.getElementById('liveStatusText');
+            if (text) {
+                text.textContent = e.target.checked ? '🔴 LIVE NOW' : '⚫ OFFLINE';
+                text.style.color = e.target.checked ? '#00ff64' : '#ff6eb4';
+            }
+        });
+    }
+}
+
+// ============================================================
+// Event Listeners & Initialization
+// ============================================================
+
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => loadPanel(item.dataset.panel));
+});
+
+document.getElementById('logoutBtn')?.addEventListener('click', logout);
+document.getElementById('loginBtn')?.addEventListener('click', attemptLogin);
+document.getElementById('loginPassword')?.addEventListener('keypress', (e) => { 
+    if (e.key === 'Enter') attemptLogin(); 
 });
 
 // Check for saved token
@@ -1600,17 +1171,13 @@ window.deleteVlog = deleteVlog;
 window.deleteJournal = deleteJournal;
 window.deleteSignature = deleteSignature;
 window.deleteComment = deleteComment;
+window.clearChat = clearChat;
 window.saveProfile = saveProfile;
-window.saveAllFacts = saveAllFacts;
-window.saveLiveSettings = saveLiveSettings;
-window.clearChatHistory = clearChatHistory;
-window.refreshCurrentPanel = refreshCurrentPanel;
+window.saveFacts = saveFacts;
+window.saveLive = saveLive;
+window.loadPanel = loadPanel;
 window.logout = logout;
 window.attemptLogin = attemptLogin;
-window.loadPanel = loadPanel;
-window.showToast = showToast;
-window.addLog = addLog;
-window.apiCall = apiCall;
 </script>
 </body>
 </html>
