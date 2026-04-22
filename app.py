@@ -218,10 +218,11 @@ async def kai_heartbeat(authorization: Optional[str] = Header(None)):
 
 @app.get("/api/kai/status")
 async def kai_status():
-    """Check if Kai is currently online (active in last 5 minutes)."""
     global KAI_LAST_ACTIVE
-    if KAI_LAST_ACTIVE and (datetime.now(timezone.utc) - KAI_LAST_ACTIVE).seconds < 300:
-        return JSONResponse({"online": True})
+    if KAI_LAST_ACTIVE:
+        diff = (datetime.now(timezone.utc) - KAI_LAST_ACTIVE).total_seconds()
+        if diff < 300:
+            return JSONResponse({"online": True, "last_active": KAI_LAST_ACTIVE.isoformat()})
     return JSONResponse({"online": False})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -395,6 +396,15 @@ async def upsert_facts(payload: List[FactsPayload], authorization: Optional[str]
     for item in payload:
         slot = item.slot_number
         text = item.fact_text
+        # Check if fact exists
+        existing = await sb_get("fun_facts", f"select=id&slot_number=eq.{slot}&limit=1")
+        if isinstance(existing, list) and existing:
+            # Update existing fact
+            await sb_patch("fun_facts", f"slot_number=eq.{slot}", {"fact_text": text, "updated_at": datetime.now(timezone.utc).isoformat()})
+        else:
+            # Create new fact
+            await sb_post("fun_facts", {"slot_number": slot, "fact_text": text})
+    return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  LIVE STATUS
