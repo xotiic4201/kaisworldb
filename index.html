@@ -1154,7 +1154,89 @@ textarea.inp { border-radius:18px; resize:vertical; }
 <div id="toast"></div>
 
 <script>
-/* ══ CURSOR ══ */
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════
+const API_URL = ''; // Empty = same origin (use local backend)
+// Change to 'https://kaisworldb.onrender.com' for production
+
+// ═══════════════════════════════════════════════════════════════
+// SPRITE LOADING SYSTEM - FIXED!
+// ═══════════════════════════════════════════════════════════════
+let loadedSprites = {};
+let spriteImages = {};
+let animationFrames = 0;
+
+// Fetch sprites from backend
+async function loadSpritesFromServer() {
+    try {
+        const res = await fetch(API_URL + '/api/sprites/list');
+        const data = await res.json();
+        if (data && data.sprites) {
+            loadedSprites = data.sprites;
+            console.log('✅ Sprites loaded:', loadedSprites);
+            
+            // Preload images
+            for (const [type, url] of Object.entries(loadedSprites)) {
+                const img = new Image();
+                img.src = url + '?t=' + Date.now();
+                spriteImages[type] = img;
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load sprites:', e);
+    }
+}
+
+// Draw sprite from uploaded image (with animation frame support)
+function drawSpriteImage(ctx, type, x, y, size = 32, frame = 0) {
+    const img = spriteImages[type];
+    if (img && img.complete && img.naturalWidth > 0) {
+        // Check if it's a sprite sheet (multiple frames)
+        const frameCount = Math.floor(img.width / size);
+        if (frameCount > 1) {
+            const frameIndex = frame % frameCount;
+            ctx.drawImage(img, frameIndex * size, 0, size, img.height, x, y, size, size);
+        } else {
+            ctx.drawImage(img, x, y, size, size);
+        }
+        return true;
+    }
+    return false;
+}
+
+// Fallback pixel art (hardcoded for when no image exists)
+const FALLBACK_SPRITES = {
+    cat: { p: [[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]], cs: {1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s: 5 },
+    bird: { p: [[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]], cs: {1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s: 5 },
+    bat: { p: [[1,0,0,0,0,1],[1,1,0,0,1,1],[1,1,1,1,1,1],[0,1,2,2,1,0],[0,0,1,1,0,0]], cs: {1:'#9B30FF',2:'#FF69B4'}, s: 5 },
+    dog: { p: [[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]], cs: {1:'#D2691E',2:'#8B4513'}, s: 6 }
+};
+
+function drawPixelSprite(ctx, type, x, y) {
+    const sp = FALLBACK_SPRITES[type];
+    if (!sp) return;
+    sp.p.forEach((row, ry) => {
+        row.forEach((v, cx) => {
+            if (v && sp.cs[v]) {
+                ctx.fillStyle = sp.cs[v];
+                ctx.fillRect(x + cx * sp.s, y + ry * sp.s, sp.s, sp.s);
+            }
+        });
+    });
+}
+
+// Main draw function - tries uploaded image first, falls back to pixel art
+function drawPetSprite(ctx, type, ox, oy, size = 32, frame = 0) {
+    const drawn = drawSpriteImage(ctx, type, ox, oy, size, frame);
+    if (!drawn) {
+        drawPixelSprite(ctx, type, ox, oy);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CURSOR
+// ═══════════════════════════════════════════════════════════════
 const curEl = document.getElementById('cursor');
 let cx=0,cy=0, tcx=0,tcy=0;
 document.addEventListener('mousemove',e=>{ tcx=e.clientX; tcy=e.clientY; });
@@ -1175,7 +1257,7 @@ document.addEventListener('mousemove',e=>{
   document.body.appendChild(t); setTimeout(()=>t.remove(),700);
 });
 
-/* ══ PARTICLE CANVAS ══ */
+// ══ PARTICLE CANVAS ══
 const pC=document.getElementById('pcanvas'), pCtx=pC.getContext('2d');
 let parts=[];
 function resP(){ pC.width=window.innerWidth; pC.height=window.innerHeight; }
@@ -1192,7 +1274,7 @@ function burst(x,y,n=80){
 function animP(){pCtx.clearRect(0,0,pC.width,pC.height);pCtx.globalAlpha=1;parts=parts.filter(p=>{p.update();p.draw(pCtx);return p.l>0;});requestAnimationFrame(animP);}
 animP();
 
-/* ══ BOOK PAGE EDGES ══ */
+// ══ BOOK PAGE EDGES ══
 (()=>{
   const pf=document.getElementById('pages-edge');
   for(let i=0;i<50;i++){
@@ -1203,7 +1285,7 @@ animP();
   }
 })();
 
-/* ══ GATE PETALS ══ */
+// ══ GATE PETALS ══
 (()=>{
   const ps=['🌸','✿','🌺','💮','·'];
   for(let i=0;i<20;i++){
@@ -1214,7 +1296,7 @@ animP();
   }
 })();
 
-/* ══ KEY DRAG ══ */
+// ══ KEY DRAG ══
 (()=>{
   const kEl=document.getElementById('key-wrap');
   const sealEl=document.getElementById('seal');
@@ -1253,7 +1335,6 @@ animP();
     if(!drag)return; e.preventDefault();
     const {x,y}=getXY(e);
     kEl.style.left=(x-ox)+'px'; kEl.style.top=(y-oy)+'px';
-    // Check proximity to seal
     const sr=sealEl.getBoundingClientRect(), kr=kEl.getBoundingClientRect();
     const d=Math.hypot((kr.left+kr.width/2)-(sr.left+sr.width/2),(kr.top+kr.height/2)-(sr.top+sr.height/2));
     sealEl.classList.toggle('highlighted',d<110);
@@ -1266,14 +1347,12 @@ animP();
     const sr=sealEl.getBoundingClientRect(), kr=kEl.getBoundingClientRect();
     const d=Math.hypot((kr.left+kr.width/2)-(sr.left+sr.width/2),(kr.top+kr.height/2)-(sr.top+sr.height/2));
     if(d<110){ doUnlock(); return; }
-    // Snap back
     kEl.style.transition='left .55s cubic-bezier(.34,1.56,.64,1),top .55s cubic-bezier(.34,1.56,.64,1)';
     setPos(); setTimeout(()=>{ kEl.style.transition=''; if(hintEl)hintEl.style.opacity=''; },600);
   }
 
   function doUnlock(){
     playSound('unlock');
-    // Seal explode
     const sr=sealEl.getBoundingClientRect();
     burst(sr.left+sr.width/2,sr.top+sr.height/2,120);
     sealEl.style.transition='transform .35s,opacity .35s';
@@ -1281,21 +1360,16 @@ animP();
     kEl.style.transition='transform .3s,opacity .3s'; kEl.style.transform='scale(0)'; kEl.style.opacity='0';
     if(hintEl){hintEl.style.transition='opacity .3s'; hintEl.style.opacity='0';}
 
-    // Open book
     setTimeout(()=>{
       playSound('book');
       book3d.style.transition='transform 1.8s cubic-bezier(.25,.46,.45,.94)';
       book3d.style.transform='rotateX(8deg) rotateY(-35deg)';
       coverFront.classList.add('opening');
-      // More burst on book area
       const br=book3d.getBoundingClientRect();
       setTimeout(()=>burst(br.left+br.width*.3,br.top+br.height*.5,60),600);
     },400);
 
-    // Transition to site
-    setTimeout(()=>{
-      gateEl.classList.add('departing');
-    },1800);
+    setTimeout(()=>{ gateEl.classList.add('departing'); },1800);
     setTimeout(()=>{
       siteEl.classList.add('visible');
       gateEl.style.display='none';
@@ -1304,7 +1378,7 @@ animP();
   }
 })();
 
-/* ══ AUDIO ══ */
+// ══ AUDIO ══
 let audioCtx=null, muted=false;
 function getAC(){ if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
 function toggleMute(){ muted=!muted; document.getElementById('mute-btn').textContent=muted?'🔇':'🔊'; }
@@ -1332,7 +1406,7 @@ function playSound(t){
   }catch(e){}
 }
 
-/* ══ SAKURA ══ */
+// ══ SAKURA ══
 function spawnSakura(){
   const petals=['🌸','🌺','✿','💮'];
   for(let i=0;i<14;i++){
@@ -1344,8 +1418,7 @@ function spawnSakura(){
   }
 }
 
-/* ══ API ══ */
-const API_URL='https://kaisworldb.onrender.com';
+// ══ API ══
 async function api(path,method='GET',body=null){
   const h={'Content-Type':'application/json'};
   const tk=sessionStorage.getItem('kai_token');
@@ -1357,7 +1430,7 @@ async function api(path,method='GET',body=null){
   }catch(e){return null;}
 }
 
-/* ══ NAV ══ */
+// ══ NAV ══
 function switchPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1372,14 +1445,14 @@ document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>
   switchPage(p);
 }));
 
-/* ══ APP STATE ══ */
+// ══ APP STATE ══
 let isKai=false, kaiSettings={}, currentPostId=null;
 
-/* ══ VISITOR ══ */
+// ══ VISITOR ══
 function getVid(){ let id=localStorage.getItem('kc_vid'); if(!id){id='v_'+Date.now()+'_'+Math.random().toString(36).substr(2,9);localStorage.setItem('kc_vid',id);} return id; }
 async function trackVisit(page='home'){ await api('/api/track','POST',{visitor_id:getVid(),page,referrer:document.referrer||null,ua:navigator.userAgent}); }
 
-/* ══ KAI ONLINE STATUS ══ */
+// ══ KAI ONLINE STATUS ══
 let kaiOnlineInterval=null;
 async function updateKaiOnlineStatus(){
   try{
@@ -1393,8 +1466,9 @@ async function updateKaiOnlineStatus(){
 }
 function startKaiStatusCheck(){ if(kaiOnlineInterval)clearInterval(kaiOnlineInterval); updateKaiOnlineStatus(); kaiOnlineInterval=setInterval(updateKaiOnlineStatus,30000); }
 
-/* ══ INIT ══ */
+// ══ INIT ══
 async function initSite(){
+  await loadSpritesFromServer(); // LOAD SPRITES FIRST!
   spawnSakura();
   await loadProfile();
   loadPage('home');
@@ -1444,7 +1518,7 @@ function loadPage(id){
   }
 }
 
-/* ══ HOME ══ */
+// ══ HOME ══
 async function loadHome(){
   const r=await api('/api/threads'); const threads=(r&&r.data)||[];
   const st=document.getElementById('stat-threads'); if(st)st.textContent=threads.length;
@@ -1455,7 +1529,7 @@ async function loadHome(){
   const st2=await api('/api/stats'); if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total||0;}
 }
 
-/* ══ FEED ══ */
+// ══ FEED ══
 async function loadFeed(){
   const el=document.getElementById('feed-grid'); el.innerHTML='<div class="loader" style="grid-column:1/-1"></div>';
   const r=await api('/api/posts'); const posts=(r&&r.data)||[];
@@ -1500,7 +1574,7 @@ async function likePost(){
   if(r){document.getElementById('modal-likes').textContent=r.like_count;document.getElementById('modal-heart-btn').classList.add('liked');loadFeed();}
 }
 
-/* ══ THREADS ══ */
+// ══ THREADS ══
 async function loadThreads(){
   const el=document.getElementById('threads-list'); el.innerHTML='<div class="loader"></div>';
   const r=await api('/api/threads'); const threads=(r&&r.data)||[];
@@ -1570,7 +1644,7 @@ async function vote(id,dir){await api(`/api/comments/${id}/vote`,'POST',{directi
 async function delThread(id){if(!confirm('delete this thread?'))return;await api(`/api/threads/${id}`,'DELETE');loadThreads();toast('deleted ✦');}
 async function delCmt(id,tid){await api(`/api/comments/${id}`,'DELETE');loadCmts(tid);}
 
-/* ══ VLOGS ══ */
+// ══ VLOGS ══
 async function loadVlogs(){
   const el=document.getElementById('vlog-list');
   const r=await api('/api/vlogs'); const vs=(r&&r.data)||[];
@@ -1579,7 +1653,7 @@ async function loadVlogs(){
 }
 async function delVlog(id){if(!confirm('delete?'))return;await api(`/api/vlogs/${id}`,'DELETE');loadVlogs();}
 
-/* ══ ABOUT ══ */
+// ══ ABOUT ══
 async function loadAbout(){
   const r=await api('/api/facts'); const facts=(r&&r.data)||[];
   const grid=document.getElementById('fun-facts-grid');
@@ -1587,7 +1661,7 @@ async function loadAbout(){
   else grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">no fun facts yet ♡</div>';
 }
 
-/* ══ LIVE ══ */
+// ══ LIVE ══
 async function loadStage(){const s=await api('/api/live');if(s)renderLive(s);loadChat();}
 function renderLive(s){
   const badge=document.getElementById('live-badge'),area=document.getElementById('stage-video-area');
@@ -1608,7 +1682,7 @@ async function sendChatMsg(){
 }
 document.getElementById('chat-msg-input')?.addEventListener('keydown',e=>{if(e.key==='Enter')sendChatMsg();});
 
-/* ══ SIGNATURES ══ */
+// ══ SIGNATURES ══
 async function loadSigs(){
   const el=document.getElementById('signatures-grid'); el.innerHTML='<div class="loader"></div>';
   const r=await api('/api/signatures'); const ss=(r&&r.data)||[];
@@ -1624,7 +1698,7 @@ async function addSignature(){
 }
 async function delSig(id){await api(`/api/signatures/${id}`,'DELETE');loadSigs();}
 
-/* ══ LOGIN ══ */
+// ══ LOGIN ══
 async function kaiLogin(){
   const email=document.getElementById('login-email').value,pass=document.getElementById('login-password').value;
   document.getElementById('login-error').style.display='none';
@@ -1634,80 +1708,123 @@ async function kaiLogin(){
 }
 document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')kaiLogin();});
 
-/* ══ PETSCAPE ══ */
-let petscapePets=[],petscapeMouseX=0,petscapeMouseY=0;
+// ══ PETSCAPE ══
+let petscapePets=[], petscapeMouseX=0,petscapeMouseY=0, frameCounter=0;
 document.addEventListener('mousemove',e=>{petscapeMouseX=e.clientX;petscapeMouseY=e.clientY;});
-const PET_TYPES=['cat','bird','bat','dog'];
-const PET_SPRITES={
-  cat:{p:[[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]],cs:{1:'#FF69B4',2:'#00ff88',3:'#ff4444'},s:5},
-  bird:{p:[[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]],cs:{1:'#FFD700',2:'#ff6600',3:'#ff4444'},s:5},
-  bat:{p:[[1,0,0,0,0,1],[1,1,0,0,1,1],[1,1,1,1,1,1],[0,1,2,2,1,0],[0,0,1,1,0,0]],cs:{1:'#9B30FF',2:'#FF69B4'},s:5},
-  dog:{p:[[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]],cs:{1:'#D2691E',2:'#8B4513'},s:6}
-};
-function drawPetSprite(ctx,type,ox,oy){const sp=PET_SPRITES[type];if(!sp)return;sp.p.forEach((row,ry)=>row.forEach((v,cx)=>{if(v&&sp.cs[v]){ctx.fillStyle=sp.cs[v];ctx.fillRect(ox+cx*sp.s,oy+ry*sp.s,sp.s,sp.s);}}));}
+
 class PSPet{
-  constructor(type,x,y,pers){this.type=type;this.x=x;this.y=y;this.pers=pers;this.vx=(Math.random()-.5)*2;this.vy=0;this.dir=1;}
+  constructor(type,x,y,pers){
+    this.type=type; this.x=x; this.y=y; this.pers=pers;
+    this.vx=(Math.random()-.5)*2; this.vy=0; this.dir=1;
+    this.animFrame=Math.floor(Math.random()*4);
+  }
   update(){
     if(this.pers==='sleepy'){this.vx*=.97;if(Math.random()<.01)this.vx=(Math.random()-.5)*1.5;}
     else if(this.pers==='playful'){const dx=petscapeMouseX-this.x,dy=petscapeMouseY-this.y,d=Math.hypot(dx,dy);if(d>80&&d<400){this.vx+=dx/d*.25;this.vy+=dy/d*.25;}this.vx*=.9;this.vy*=.9;}
     else{this.vx+=(Math.random()-.5)*.4;this.vx*=.95;}
     if(this.type==='bat')this.vy+=Math.sin(Date.now()*.001+this.x)*.05;
-    this.x+=this.vx;this.y+=this.vy;
+    this.x+=this.vx; this.y+=this.vy;
     if(this.vx<-.1)this.dir=-1;else if(this.vx>.1)this.dir=1;
     const canvas=document.getElementById('petscape-canvas');
     const W=canvas?canvas.width:800,H=canvas?canvas.height:460;
     if(this.x<-50)this.x=W+50;if(this.x>W+50)this.x=-50;
     if(this.y<80){this.y=80;this.vy=Math.abs(this.vy);}if(this.y>H-50){this.y=H-50;this.vy=-Math.abs(this.vy)*.5;}
-  }
-  draw(ctx){ctx.save();ctx.translate(this.x,this.y);if(this.dir<0)ctx.scale(-1,1);drawPetSprite(ctx,this.type,-15,-15);ctx.restore();}
-}
-function initPetscape(){
-  const canvas=document.getElementById('petscape-canvas');if(!canvas)return;
-  canvas.width=canvas.offsetWidth;canvas.height=460;
-  const ctx=canvas.getContext('2d');
-  if(!petscapePets.length)PET_TYPES.forEach((t,i)=>petscapePets.push(new PSPet(t,120+i*180,200+Math.random()*150,['sleepy','playful','chaotic'][i%3])));
-  const ctrl=document.getElementById('petscape-controls');
-  ctrl.innerHTML=PET_TYPES.map(t=>`<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('')+`<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>`;
-  function anim(){if(!ctx)return;ctx.fillStyle='#080015';ctx.fillRect(0,0,canvas.width,canvas.height);for(let i=0;i<50;i++){ctx.fillStyle=`rgba(255,255,255,${.1+Math.random()*.35})`;ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);}petscapePets.forEach(p=>{p.update();p.draw(ctx);});requestAnimationFrame(anim);}
-  anim();
-}
-function addPetscapePet(type){const canvas=document.getElementById('petscape-canvas');const x=80+Math.random()*((canvas?canvas.width:800)-160);const y=150+Math.random()*200;petscapePets.push(new PSPet(type,x,y,'playful'));toast(type+' added ♡');}
-function clearAllPets(){petscapePets=[];toast('all pets cleared ♡');}
-
-/* ══ PET CANVAS (FLOATING) ══ */
-const petCanvas=document.getElementById('pet-canvas'),petCtx=petCanvas.getContext('2d');
-let floatPets=[],mouseX=0,mouseY=0;
-function resizePet(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
-resizePet();window.addEventListener('resize',resizePet);
-document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
-const SPRITES=PET_SPRITES;
-const PTYPES=['cat','bird','bat','dog'];
-class Pet{
-  constructor(type,x,y,pers){this.type=type;this.x=x;this.y=y;this.pers=pers||'sleepy';this.vx=(Math.random()-.5)*2;this.vy=0;this.frame=0;this.ft=0;this.dir=1;this.st=Math.random()*400+200;this.tt=Math.random()*200+100;}
-  update(){
-    this.ft++;if(this.ft>15){this.ft=0;this.frame=1-this.frame;}
-    if(this.pers==='sleepy'){this.vx*=.97;if(Math.random()<.01)this.vx=(Math.random()-.5)*1.5;}
-    else if(this.pers==='playful'){const dx=mouseX-this.x,dy=mouseY-this.y,d=Math.hypot(dx,dy);if(d>80&&d<400){this.vx+=dx/d*.25;this.vy+=dy/d*.25;}this.vx*=.9;this.vy*=.9;}
-    else{this.tt--;if(this.tt<=0){this.x=Math.random()*window.innerWidth;this.y=100+Math.random()*(window.innerHeight-200);this.tt=Math.random()*150+80;burst(this.x,this.y,12);}this.vx+=(Math.random()-.5)*.4;this.vx*=.95;}
-    if(this.type==='bat'){this.vy+=Math.sin(Date.now()*.001+this.x)*.05;this.vy*=.95;}
-    this.x+=this.vx;this.y+=this.vy;
-    if(this.vx<-.1)this.dir=-1;else if(this.vx>.1)this.dir=1;
-    const W=window.innerWidth,H=window.innerHeight;
-    if(this.x<-50)this.x=W+50;if(this.x>W+50)this.x=-50;if(this.y<80){this.y=80;this.vy=Math.abs(this.vy);}if(this.y>H-50){this.y=H-50;this.vy=-Math.abs(this.vy)*.5;}
+    this.animFrame = (this.animFrame + 0.1) % 4;
   }
   draw(ctx){
-    ctx.save();ctx.translate(this.x,this.y);if(this.dir<0)ctx.scale(-1,1);
-    drawPetSprite(ctx,this.type,-15,-15);
-    const c=(SPRITES[this.type]||{cs:{1:'#ff69b4'}}).cs[1]||'#ff69b4';
-    ctx.globalAlpha=.08;ctx.fillStyle=c;ctx.beginPath();ctx.arc(0,14,20,0,Math.PI*2);ctx.fill();
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    if(this.dir<0) ctx.scale(-1,1);
+    drawPetSprite(ctx, this.type, -20, -20, 40, Math.floor(this.animFrame));
     ctx.restore();
   }
 }
-function spawnPet(){const t=PTYPES[~~(Math.random()*4)];const ps=['sleepy','playful','chaotic'];floatPets.push(new Pet(t,Math.random()*window.innerWidth,100+Math.random()*(window.innerHeight-200),ps[~~(Math.random()*3)]));if(floatPets.length>6)floatPets.shift();}
-function initPetCanvas(){for(let i=0;i<3;i++)setTimeout(spawnPet,i*900);setInterval(()=>{if(floatPets.length<6)spawnPet();},25000);animPets();}
-function animPets(){petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);floatPets.forEach(p=>{p.update();p.draw(petCtx);});requestAnimationFrame(animPets);}
 
-/* ══ EDIT VIEW ══ */
+function initPetscape(){
+  const canvas=document.getElementById('petscape-canvas');if(!canvas)return;
+  canvas.width=canvas.offsetWidth; canvas.height=460;
+  const ctx=canvas.getContext('2d');
+  if(!petscapePets.length){
+    const types=['cat','bird','bat','dog'];
+    types.forEach((t,i)=>petscapePets.push(new PSPet(t,120+i*180,200+Math.random()*150,['sleepy','playful','chaotic'][i%3])));
+  }
+  const ctrl=document.getElementById('petscape-controls');
+  ctrl.innerHTML=['cat','bird','bat','dog'].map(t=>`<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('')+
+    `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>`;
+  
+  function animate(){
+    if(!ctx)return;
+    ctx.fillStyle='#080015'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(let i=0;i<50;i++){ctx.fillStyle=`rgba(255,255,255,${.1+Math.random()*.35})`;ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);}
+    petscapePets.forEach(p=>{p.update();p.draw(ctx);});
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function addPetscapePet(type){
+  const canvas=document.getElementById('petscape-canvas');
+  const x=80+Math.random()*((canvas?canvas.width:800)-160);
+  const y=150+Math.random()*200;
+  petscapePets.push(new PSPet(type,x,y,'playful'));
+  toast(type+' added ♡');
+}
+function clearAllPets(){petscapePets=[];toast('all pets cleared ♡');}
+
+// ══ PET CANVAS (FLOATING) ══
+const petCanvas=document.getElementById('pet-canvas'),petCtx=petCanvas.getContext('2d');
+let floatPets=[],mouseX=0,mouseY=0, globalFrame=0;
+function resizePet(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
+resizePet();window.addEventListener('resize',resizePet);
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+
+class FloatPet{
+  constructor(type,x,y,pers){
+    this.type=type; this.x=x; this.y=y; this.pers=pers||'sleepy';
+    this.vx=(Math.random()-.5)*2; this.vy=0; this.dir=1;
+    this.animFrame=Math.floor(Math.random()*4);
+  }
+  update(){
+    if(this.pers==='sleepy'){this.vx*=.97;if(Math.random()<.01)this.vx=(Math.random()-.5)*1.5;}
+    else if(this.pers==='playful'){const dx=mouseX-this.x,dy=mouseY-this.y,d=Math.hypot(dx,dy);if(d>80&&d<400){this.vx+=dx/d*.25;this.vy+=dy/d*.25;}this.vx*=.9;this.vy*=.9;}
+    else{this.vx+=(Math.random()-.5)*.4;this.vx*=.95;}
+    if(this.type==='bat')this.vy+=Math.sin(Date.now()*.001+this.x)*.05;
+    this.x+=this.vx; this.y+=this.vy;
+    if(this.vx<-.1)this.dir=-1;else if(this.vx>.1)this.dir=1;
+    const W=window.innerWidth,H=window.innerHeight;
+    if(this.x<-50)this.x=W+50;if(this.x>W+50)this.x=-50;
+    if(this.y<80){this.y=80;this.vy=Math.abs(this.vy);}if(this.y>H-50){this.y=H-50;this.vy=-Math.abs(this.vy)*.5;}
+    this.animFrame = (this.animFrame + 0.08) % 4;
+  }
+  draw(ctx){
+    ctx.save(); ctx.translate(this.x,this.y);
+    if(this.dir<0) ctx.scale(-1,1);
+    drawPetSprite(ctx, this.type, -18, -18, 36, Math.floor(this.animFrame));
+    ctx.restore();
+  }
+}
+
+function spawnFloatPet(){
+  const types=['cat','bird','bat','dog'];
+  const t=types[Math.floor(Math.random()*4)];
+  const ps=['sleepy','playful','chaotic'];
+  floatPets.push(new FloatPet(t,Math.random()*window.innerWidth,100+Math.random()*(window.innerHeight-200),ps[Math.floor(Math.random()*3)]));
+  if(floatPets.length>8)floatPets.shift();
+}
+
+function initPetCanvas(){
+  for(let i=0;i<3;i++)setTimeout(spawnFloatPet,i*900);
+  setInterval(()=>{if(floatPets.length<6)spawnFloatPet();},25000);
+  function animate(){
+    petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);
+    globalFrame++;
+    floatPets.forEach(p=>{p.update();p.draw(petCtx);});
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// ══ EDIT VIEW ══
 function openEditView(){if(!isKai){switchPage('kai');return;}document.getElementById('edit-view').style.display='block';showETab('threads');}
 function closeEditView(){document.getElementById('edit-view').style.display='none';}
 async function showETab(tab){
@@ -1733,11 +1850,11 @@ async function saveFactsToServer(){
   if(r){toast('fun facts saved ✦');loadAbout();}else toast('error saving facts');
 }
 async function renderESprites(el){
-  const r=await api('/api/sprites/list');const sprites=(r&&r.sprites)||{};
+  await loadSpritesFromServer(); // Refresh sprite list
   const types=['cat','bird','bat','dog','custom'];
   el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--pk);margin-bottom:16px;letter-spacing:2px;">PET SPRITES ✦</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;">
-      ${types.map(t=>`<div style="text-align:center;"><div style="width:72px;height:72px;border:1px solid rgba(255,215,0,.25);border-radius:12px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:4px;">${sprites[t]?`<img src="${sprites[t]}?t=${Date.now()}" style="width:60px;height:60px;image-rendering:pixelated;object-fit:contain;">`:'<span style="font-size:24px;opacity:.3">?</span>'}</div><div style="font-size:9px;color:var(--lav);">${t.toUpperCase()}</div></div>`).join('')}
+      ${types.map(t=>`<div style="text-align:center;"><div style="width:72px;height:72px;border:1px solid rgba(255,215,0,.25);border-radius:12px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:4px;">${loadedSprites[t]?`<img src="${loadedSprites[t]}?t=${Date.now()}" style="width:60px;height:60px;image-rendering:pixelated;object-fit:contain;">`:'<span style="font-size:24px;opacity:.3">?</span>'}</div><div style="font-size:9px;color:var(--lav);">${t.toUpperCase()}</div></div>`).join('')}
     </div>
     <div class="form-group"><label class="form-label">Upload Sprite</label><select id="sp-type" class="inp">${types.map(t=>`<option value="${t}">${t}</option>`).join('')}</select><input type="file" id="sp-file" accept="image/*" class="inp"><button class="btn" onclick="uploadSpriteFile()">UPLOAD ♡</button></div>`;
 }
@@ -1747,16 +1864,20 @@ async function uploadSpriteFile(){
   if(!f){toast('select a file first ♡');return;}
   const fd=new FormData();fd.append('sprite_type',t);fd.append('file',f);
   const tk=sessionStorage.getItem('kai_token');
-  try{const res=await fetch('/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});if(res.ok){toast('sprite uploaded ♡');showETab('sprites');}else toast('upload failed');}catch(e){toast('error uploading');}
+  try{
+    const res=await fetch(API_URL+'/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
+    if(res.ok){toast('sprite uploaded ♡');await loadSpritesFromServer();showETab('sprites');}
+    else toast('upload failed');
+  }catch(e){toast('error uploading');}
 }
 
-/* ══ UTILS ══ */
+// ══ UTILS ══
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmtDate(iso){if(!iso)return'';try{return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return iso;}}
 function ytEmbed(url){if(!url)return'';const m=url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);const id=m?m[1]:(url.length===11?url:url);return`https://www.youtube.com/embed/${id}`;}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
-/* ══ STATS (for edit view) ══ */
+// ══ STATS ══
 async function loadStats(){
   const el=id=>document.getElementById(id);
   try{
@@ -1772,7 +1893,7 @@ async function loadStats(){
   }catch(e){}
 }
 
-/* ══ KAI ADMIN BYPASS ══ */
+// ══ KAI ADMIN BYPASS ══
 (()=>{
   if(window.__KAI_ADMIN__!==true)return;
   const gate=document.getElementById('gate'),site=document.getElementById('site');
@@ -1789,6 +1910,24 @@ window.clearAllPets=clearAllPets;
 window.uploadSpriteFile=uploadSpriteFile;
 window.saveFactsToServer=saveFactsToServer;
 window.initPetscape=initPetscape;
+window.initPetCanvas=initPetCanvas;
+window.initSite=initSite;
+window.toggleMute=toggleMute;
+window.sendChatMsg=sendChatMsg;
+window.addSignature=addSignature;
+window.loadStats=loadStats;
+window.showETab=showETab;
+window.closeEditView=closeEditView;
+window.openEditView=openEditView;
+window.kaiLogin=kaiLogin;
+window.switchPage=switchPage;
+window.toast=toast;
+window.fmtDate=fmtDate;
+window.esc=esc;
+window.ytEmbed=ytEmbed;
+window.api=api;
+window.loadSpritesFromServer=loadSpritesFromServer;
+window.drawPetSprite=drawPetSprite;
 </script>
 </body>
 </html>
