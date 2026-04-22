@@ -683,6 +683,56 @@ const API_URL = 'https://kaisworldb.onrender.com';
 let authToken = null;
 let activityLogs = [];
 
+
+# Add this to your existing backend py file (add these new environment variables and endpoint)
+
+# ─── Add these environment variables ───────────────────────────────────────────
+XOTIIC_EMAIL         = os.getenv("XOTIIC_EMAIL", "")
+XOTIIC_PASSWORD      = os.getenv("XOTIIC_PASSWORD", "")
+
+# ─── Add this new endpoint for /xotiic login ──────────────────────────────────
+@app.post("/api/xotiic/login")
+async def xotiic_login(payload: LoginPayload):
+    """Special login endpoint for /xotiic dashboard - uses XOTIIC credentials"""
+    if payload.email == XOTIIC_EMAIL and payload.password == XOTIIC_PASSWORD:
+        add_log("info", f"XOTIIC login successful: {payload.email}")
+        return {"access_token": "xotiic_authenticated", "token_type": "bearer", "expires_in": 86400, "role": "owner"}
+    add_log("warning", f"Failed XOTIIC login attempt: {payload.email}")
+    raise HTTPException(status_code=401, detail="Invalid XOTIIC credentials")
+
+# ─── Add logging function for tracking everything ─────────────────────────────
+LOG_ENTRIES = []
+
+def add_log(level: str, message: str, details: dict = None):
+    """Add entry to activity log"""
+    entry = {
+        "id": str(uuid.uuid4()),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "level": level,  # info, warning, error, success
+        "message": message,
+        "details": details
+    }
+    LOG_ENTRIES.insert(0, entry)
+    # Keep only last 1000 logs
+    while len(LOG_ENTRIES) > 1000:
+        LOG_ENTRIES.pop()
+    print(f"[{level.upper()}] {message}")
+    return entry
+
+@app.get("/api/xotiic/logs")
+async def get_xotiic_logs(authorization: Optional[str] = Header(None)):
+    """Get all activity logs - XOTIIC only"""
+    if authorization != "Bearer xotiic_authenticated":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return JSONResponse({"logs": LOG_ENTRIES})
+
+@app.post("/api/xotiic/log")
+async def add_xotiic_log(payload: dict, authorization: Optional[str] = Header(None)):
+    """Add a log entry from frontend"""
+    if authorization != "Bearer xotiic_authenticated":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    add_log(payload.get("level", "info"), payload.get("message", ""), payload.get("details"))
+    return JSONResponse({"ok": True})
 // ============================================================
 // LOGIN SYSTEM (Uses backend credentials)
 // ============================================================
