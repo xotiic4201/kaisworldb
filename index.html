@@ -1163,7 +1163,7 @@ const API_URL = 'https://kaisworldb.onrender.com'; // Empty = same origin (use l
 // ═══════════════════════════════════════════════════════════════
 // SPRITE LOADING SYSTEM - FIXED!
 // ═══════════════════════════════════════════════════════════════
-// ==================== DYNAMIC SPRITE LOADING SYSTEM ====================
+// ==================== DYNAMIC SPRITE LOADING SYSTEM - FIXED ====================
 let loadedSprites = {};
 let spriteImages = {};
 let spriteConfig = {}; // Store frame size and count per sprite
@@ -1318,15 +1318,93 @@ function drawPixelSprite(ctx, type, x, y, size = 30) {
     });
 }
 
-// Main draw function
-function drawPetSprite(ctx, type, ox, oy, size = 32, frame = 0) {
+// MAIN DRAW FUNCTION - NOW WITH BIGGER SIZE (48px default) AND ANIMATION SUPPORT
+function drawPetSprite(ctx, type, ox, oy, size = 48, frame = 0) {
     const drawn = drawSpriteImage(ctx, type, ox, oy, size, frame);
     if (!drawn) {
         drawPixelSprite(ctx, type, ox, oy, size);
     }
 }
 
+// FIX: Enhanced sprite drawing with animation and scaling - MAKES THEM BIGGER!
+function drawPetSpriteEnhanced(ctx, type, x, y, size = 56, frame = 0) {
+    // Make sprites BIGGER (56px default - 75% larger than original)
+    const actualSize = size;
+    
+    const drawn = drawSpriteImage(ctx, type, x, y, actualSize, frame);
+    if (!drawn) {
+        drawPixelSprite(ctx, type, x, y, actualSize);
+    }
+}
+
+// Override the original drawPetSprite to use enhanced version with animation
+window.drawPetSprite = drawPetSpriteEnhanced;
+
 const PET_TYPES = ['cat', 'bird', 'bat', 'dog'];
+
+// FIX: Update PSPet class for larger size and faster animation
+if (typeof PSPet !== 'undefined') {
+    const originalPSPetConstructor = PSPet;
+    window.PSPet = function(type, x, y, pers) {
+        originalPSPetConstructor.call(this, type, x, y, pers);
+        this.size = 56; // MUCH LARGER!
+        this.animSpeed = 0.15; // FASTER animation!
+    };
+    PSPet.prototype = originalPSPetConstructor.prototype;
+    PSPet.prototype.constructor = PSPet;
+    
+    // Override draw method
+    PSPet.prototype.draw = function(ctx) {
+        ctx.save(); 
+        ctx.translate(this.x, this.y);
+        if (this.dir < 0) ctx.scale(-1, 1);
+        drawPetSpriteEnhanced(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
+        ctx.restore();
+    };
+}
+
+// FIX: Update Pet class for floating pets
+if (typeof Pet !== 'undefined') {
+    const originalPetConstructor = Pet;
+    window.Pet = function(type, x, y, pers) {
+        originalPetConstructor.call(this, type, x, y, pers);
+        this.size = 56;
+        this.animSpeed = 0.15;
+    };
+    Pet.prototype = originalPetConstructor.prototype;
+    Pet.prototype.constructor = Pet;
+    
+    Pet.prototype.draw = function(ctx) {
+        ctx.save(); 
+        ctx.translate(this.x, this.y);
+        if (this.dir < 0) ctx.scale(-1, 1);
+        drawPetSpriteEnhanced(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
+        ctx.restore();
+    };
+}
+
+// Force all existing pets to update when loaded
+setTimeout(() => {
+    // Update any existing pets in petscape
+    if (typeof petscapePets !== 'undefined' && petscapePets) {
+        petscapePets.forEach(pet => {
+            pet.size = 56;
+            pet.animSpeed = 0.15;
+            if (pet.animFrame === undefined) pet.animFrame = 0;
+        });
+    }
+    
+    // Update floating pets
+    if (typeof floatPets !== 'undefined' && floatPets) {
+        floatPets.forEach(pet => {
+            pet.size = 56;
+            pet.animSpeed = 0.15;
+            if (pet.animFrame === undefined) pet.animFrame = 0;
+        });
+    }
+    
+    console.log('✅ Sprites are now LARGER (56px) and ANIMATING FASTER!');
+}, 500);
 
 // ═══════════════════════════════════════════════════════════════
 // CURSOR
