@@ -390,17 +390,11 @@ async def get_facts():
     return JSONResponse({"data": data if isinstance(data, list) else []})
 
 @app.post("/api/facts")
-async def upsert_facts(payload: list, authorization: Optional[str] = Header(None)):
+async def upsert_facts(payload: List[FactsPayload], authorization: Optional[str] = Header(None)):
     await require_kai(authorization)
     for item in payload:
-        slot = item.get("slot_number")
-        text = item.get("fact_text", "")
-        existing = await sb_get("fun_facts", f"select=id&slot_number=eq.{slot}&limit=1")
-        if isinstance(existing, list) and existing:
-            await sb_patch("fun_facts", f"slot_number=eq.{slot}", {"fact_text": text, "updated_at": datetime.now(timezone.utc).isoformat()})
-        else:
-            await sb_post("fun_facts", {"slot_number": slot, "fact_text": text})
-    return JSONResponse({"ok": True})
+        slot = item.slot_number
+        text = item.fact_text
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  LIVE STATUS
