@@ -268,11 +268,13 @@ async def auth_login(payload: LoginPayload):
 
 @app.post("/api/xotiic/login")
 async def xotiic_login(payload: LoginPayload):
-    """Special login endpoint for /xotiic dashboard - uses XOTIIC credentials"""
+    """Special login endpoint for /xotiic dashboard"""
+    print(f"XOTIIC Login attempt: {payload.email}")
+    print(f"Expected: {XOTIIC_EMAIL}")
     if payload.email == XOTIIC_EMAIL and payload.password == XOTIIC_PASSWORD:
-        add_log("success", f"XOTIIC login successful: {payload.email}", {"role": "owner"})
+        print("XOTIIC login SUCCESS")
         return {"access_token": "xotiic_authenticated", "token_type": "bearer", "expires_in": 86400, "role": "owner"}
-    add_log("warning", f"Failed XOTIIC login attempt: {payload.email}", {"ip": None})
+    print("XOTIIC login FAILED")
     raise HTTPException(status_code=401, detail="Invalid XOTIIC credentials")
 
 # ══════════════════════════════════════════════════════════════════════════════
