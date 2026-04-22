@@ -205,11 +205,12 @@ async def auth_login(payload: LoginPayload):
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  KAI ONLINE STATUS
+#  KAI ONLINE STATUS (heartbeat-based)
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.post("/api/kai/heartbeat")
 async def kai_heartbeat(authorization: Optional[str] = Header(None)):
+    """Track when Kai is active in the lounge."""
     global KAI_LAST_ACTIVE
     await require_kai(authorization)
     KAI_LAST_ACTIVE = datetime.now(timezone.utc)
@@ -217,11 +218,10 @@ async def kai_heartbeat(authorization: Optional[str] = Header(None)):
 
 @app.get("/api/kai/status")
 async def kai_status():
+    """Check if Kai is currently online (active in last 5 minutes)."""
     global KAI_LAST_ACTIVE
-    if KAI_LAST_ACTIVE:
-        diff = (datetime.now(timezone.utc) - KAI_LAST_ACTIVE).total_seconds()
-        if diff < 300:
-            return JSONResponse({"online": True, "last_active": KAI_LAST_ACTIVE.isoformat()})
+    if KAI_LAST_ACTIVE and (datetime.now(timezone.utc) - KAI_LAST_ACTIVE).seconds < 300:
+        return JSONResponse({"online": True})
     return JSONResponse({"online": False})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -528,7 +528,7 @@ async def track_visit(payload: TrackPayload, request: Request):
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  STATS  ← FIXED: today/active now count unique visitor_ids, not page hits
+#  STATS - FIXED: Uses unique visitor counts
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/stats")
