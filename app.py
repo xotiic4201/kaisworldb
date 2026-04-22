@@ -536,8 +536,7 @@ async def track_visit(payload: TrackPayload, request: Request):
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/stats")
-async def get_stats(authorization: Optional[str] = Header(None)):
-    await require_kai(authorization)
+async def get_stats():
     if not SUPABASE_URL:
         return JSONResponse({"total": 0, "today": 0, "active": 0, "threads": 0, "comments": 0, "vlogs": 0, "signatures": 0, "pages": []})
 
