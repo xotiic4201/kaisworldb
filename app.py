@@ -37,12 +37,11 @@ def add_log(level: str, message: str, details: dict = None):
     entry = {
         "id": str(uuid.uuid4()),
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "level": level,  # info, warning, error, success
+        "level": level,
         "message": message,
         "details": details
     }
     LOG_ENTRIES.insert(0, entry)
-    # Keep only last 2000 logs
     while len(LOG_ENTRIES) > 2000:
         LOG_ENTRIES.pop()
     print(f"[{level.upper()}] {message}")
@@ -63,7 +62,6 @@ def load_html(name):
 
 _HTML_TEMPLATE   = load_html("index.html")
 _LOUNGE_TEMPLATE = load_html("kais_lounge.html")
-_XOTIIC_TEMPLATE = load_html("xotiic_dashboard.html")  # Your XOTIIC dashboard HTML file
 
 def inject_config(html: str, admin: bool = False) -> str:
     html = html.replace("'SUPABASE_URL'",         f"'{SUPABASE_URL}'")
@@ -126,16 +124,9 @@ async def require_kai(authorization: Optional[str] = Header(None)):
     return True
 
 async def require_xotiic(authorization: Optional[str] = Header(None)):
-    """Special auth for XOTIIC owner panel"""
     if not authorization or authorization != "Bearer xotiic_authenticated":
         raise HTTPException(status_code=401, detail="Unauthorized - XOTIIC access only")
     return True
-
-async def is_kai(authorization: Optional[str] = Header(None)) -> bool:
-    return authorization == "Bearer kai_authenticated"
-
-async def is_xotiic(authorization: Optional[str] = Header(None)) -> bool:
-    return authorization == "Bearer xotiic_authenticated"
 
 # ─── Models ────────────────────────────────────────────────────────────────────
 class LoginPayload(BaseModel):
@@ -209,7 +200,7 @@ class JournalPayload(BaseModel):
     content: str
 
 class VotePayload(BaseModel):
-    direction: str  # "up" or "down"
+    direction: str
 
 class LogPayload(BaseModel):
     level: str
@@ -237,19 +228,37 @@ async def serve_lounge():
 
 @app.get("/xotiic", response_class=HTMLResponse, include_in_schema=False)
 async def serve_xotiic_dashboard():
-    """Special XOTIIC owner dashboard endpoint"""
+    """XOTIIC Owner Dashboard - visit /xotiic to access"""
     add_log("info", "XOTIIC dashboard page served")
-    if os.path.exists(os.path.join(os.path.dirname(__file__), "xotiic_dashboard.html")):
-        with open(os.path.join(os.path.dirname(__file__), "xotiic_dashboard.html"), "r", encoding="utf-8") as f:
+    xotiic_path = os.path.join(os.path.dirname(__file__), "xotiic.html")
+    if os.path.exists(xotiic_path):
+        with open(xotiic_path, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
-    # Fallback if file doesn't exist
+    # Fallback built-in dashboard
     return HTMLResponse(content="""
     <!DOCTYPE html>
     <html>
-    <head><title>XOTIIC Dashboard</title></head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>✦ XOTIIC DASHBOARD ✦</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { background: #0a0018; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+            .container { background: linear-gradient(135deg, #1a0030, #0a0018); border: 2px solid #ff6eb4; border-radius: 20px; padding: 40px; text-align: center; max-width: 500px; }
+            h1 { color: #ffd700; font-size: 28px; margin-bottom: 10px; }
+            p { color: #ff6eb4; margin-bottom: 20px; }
+            code { background: #1a0030; padding: 10px; display: block; border-radius: 10px; color: #ffd700; margin: 20px 0; }
+            .btn { background: linear-gradient(135deg, #ff6eb4, #8b00ff); border: none; padding: 12px 24px; border-radius: 30px; color: #ffd700; cursor: pointer; font-weight: bold; }
+        </style>
+    </head>
     <body>
-        <h1>XOTIIC Dashboard</h1>
-        <p>Please save the XOTIIC dashboard HTML file as 'xotiic_dashboard.html' in the same directory.</p>
+        <div class="container">
+            <h1>✦ XOTIIC DASHBOARD ✦</h1>
+            <p>Owner Control Panel</p>
+            <code>Please save the HTML file as 'xotiic.html' in the same directory as app.py</code>
+            <button class="btn" onclick="fetch('/api/xotiic/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:prompt('Email:'),password:prompt('Password:')})}).then(r=>r.json()).then(d=>console.log(d))">Test Login</button>
+        </div>
     </body>
     </html>
     """)
@@ -270,11 +279,12 @@ async def auth_login(payload: LoginPayload):
 async def xotiic_login(payload: LoginPayload):
     """Special login endpoint for /xotiic dashboard"""
     print(f"XOTIIC Login attempt: {payload.email}")
-    print(f"Expected: {XOTIIC_EMAIL}")
     if payload.email == XOTIIC_EMAIL and payload.password == XOTIIC_PASSWORD:
         print("XOTIIC login SUCCESS")
+        add_log("success", f"XOTIIC login successful: {payload.email}")
         return {"access_token": "xotiic_authenticated", "token_type": "bearer", "expires_in": 86400, "role": "owner"}
     print("XOTIIC login FAILED")
+    add_log("warning", f"Failed XOTIIC login attempt: {payload.email}")
     raise HTTPException(status_code=401, detail="Invalid XOTIIC credentials")
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -283,23 +293,19 @@ async def xotiic_login(payload: LoginPayload):
 
 @app.get("/api/xotiic/logs")
 async def get_xotiic_logs(authorization: Optional[str] = Header(None)):
-    """Get all activity logs - XOTIIC only"""
     await require_xotiic(authorization)
     return JSONResponse({"logs": LOG_ENTRIES})
 
 @app.post("/api/xotiic/log")
 async def add_xotiic_log(payload: LogPayload, authorization: Optional[str] = Header(None)):
-    """Add a log entry from frontend"""
     await require_xotiic(authorization)
     add_log(payload.level, payload.message, payload.details)
     return JSONResponse({"ok": True})
 
 @app.get("/api/xotiic/stats")
 async def get_xotiic_stats(authorization: Optional[str] = Header(None)):
-    """Get detailed stats for XOTIIC dashboard"""
     await require_xotiic(authorization)
     
-    # Get all data counts
     threads = await sb_get("threads", "select=id")
     posts = await sb_get("posts", "select=id")
     vlogs = await sb_get("vlogs", "select=id")
@@ -324,12 +330,11 @@ async def get_xotiic_stats(authorization: Optional[str] = Header(None)):
     })
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  KAI ONLINE STATUS (heartbeat-based)
+#  KAI ONLINE STATUS
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.post("/api/kai/heartbeat")
 async def kai_heartbeat(authorization: Optional[str] = Header(None)):
-    """Track when Kai is active in the lounge."""
     global KAI_LAST_ACTIVE
     await require_kai(authorization)
     KAI_LAST_ACTIVE = datetime.now(timezone.utc)
@@ -346,7 +351,7 @@ async def kai_status():
     return JSONResponse({"online": False})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  PROFILE  (kai_settings table)
+#  PROFILE
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/profile")
@@ -419,7 +424,6 @@ async def create_comment(payload: CommentPayload):
         "upvotes": 0,
         "downvotes": 0,
     })
-    # Increment comment_count on thread
     rows = await sb_get("threads", f"select=comment_count&id=eq.{payload.thread_id}")
     if isinstance(rows, list) and rows:
         cnt = (rows[0].get("comment_count") or 0) + 1
@@ -447,7 +451,7 @@ async def delete_comment(comment_id: str, authorization: Optional[str] = Header(
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  POSTS (feed)
+#  POSTS
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/posts")
@@ -594,7 +598,7 @@ async def clear_chat(authorization: Optional[str] = Header(None)):
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  SIGNATURES (I Was Here)
+#  SIGNATURES
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/signatures")
@@ -620,7 +624,7 @@ async def delete_signature(sig_id: str, authorization: Optional[str] = Header(No
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  JOURNAL (Kai-only)
+#  JOURNAL
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/journal")
@@ -665,7 +669,7 @@ async def track_visit(payload: TrackPayload, request: Request):
         "ua": (payload.ua or "")[:300] or None,
         "ip": (ip or "")[:64] or None,
     })
-    add_log("info", f"Visitor tracked: {payload.page} - {payload.visitor_id[:20]}...")
+    add_log("info", f"Visitor tracked: {payload.page}")
     return JSONResponse({"ok": True})
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -748,7 +752,7 @@ async def list_sprites():
     return JSONResponse({"sprites": sprites})
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  SUPABASE GENERIC PROXY (for lounge)
+#  SUPABASE GENERIC PROXY
 # ══════════════════════════════════════════════════════════════════════════════
 
 @app.post("/api/supabase/{table}")
@@ -804,16 +808,6 @@ async def health():
 @app.get("/api/config")
 async def get_config():
     return JSONResponse({"supabase_url": SUPABASE_URL, "supabase_anon": SUPABASE_ANON_KEY})
-
-@app.get("/xotiic", response_class=HTMLResponse, include_in_schema=False)
-async def serve_xotiic():
-    """XOTIIC Owner Dashboard"""
-    # Read the HTML file directly
-    xotiic_path = os.path.join(os.path.dirname(__file__), "xotiic.html")
-    if os.path.exists(xotiic_path):
-        with open(xotiic_path, "r", encoding="utf-8") as f:
-            return HTMLResponse(content=f.read())
-    return HTMLResponse(content="<h1>XOTIIC Dashboard</h1><p>Please upload xotiic.html file</p>")
 
 # ─── Dev server ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
