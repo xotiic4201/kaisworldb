@@ -824,37 +824,23 @@ textarea.inp { border-radius:18px; resize:vertical; }
 <canvas id="pcanvas"></canvas>
 <div id="scanlines"></div>
 
-<!-- ═══════════════ GATE ═══════════════ -->
+<!-- GATE -->
 <div id="gate">
-  <!-- Ambient orbs -->
   <div class="orb" style="width:400px;height:400px;left:5%;top:10%;background:radial-gradient(rgba(139,0,255,.15),transparent);animation-duration:12s;"></div>
   <div class="orb" style="width:300px;height:300px;right:8%;bottom:15%;background:radial-gradient(rgba(255,20,147,.12),transparent);animation-duration:9s;animation-delay:-4s;"></div>
   <div class="orb" style="width:200px;height:200px;left:40%;bottom:5%;background:radial-gradient(rgba(255,215,0,.08),transparent);animation-duration:15s;animation-delay:-7s;"></div>
 
-  <!-- BOOK -->
   <div id="book-scene">
     <div id="book-3d">
-
-      <!-- SPINE -->
-      <div id="book-spine">
-        <div class="spine-text">KAI'S WORLD ✦</div>
-      </div>
-
-      <!-- PAGES EDGE -->
+      <div id="book-spine"><div class="spine-text">KAI'S WORLD ✦</div></div>
       <div id="pages-edge"></div>
-
-      <!-- BACK of book (static, behind) -->
       <div id="cover-back"></div>
-
-      <!-- FRONT COVER (opens) -->
       <div id="cover-front">
-        <!-- Back face of cover (visible when open) -->
         <div id="inner-page" style="font-family:'IM Fell English',serif;font-style:italic;font-size:16px;color:#5a2a00;text-align:center;flex-direction:column;gap:10px;">
           <div style="font-size:28px;opacity:.6;">✦</div>
           <div>welcome, dear visitor</div>
           <div style="font-size:12px;opacity:.6;font-family:'Dancing Script',cursive;">— kai's world —</div>
         </div>
-        <!-- Front face -->
         <div class="cover-face">
           <div class="cover-inlay">
             <div class="corner ctlc"><svg viewBox="0 0 32 32"><path d="M3,3 L16,3 L3,16 Z" fill="none" stroke="#FFD700" stroke-width="1.5" opacity=".6"/><circle cx="3" cy="3" r="2" fill="#FFD700" opacity=".5"/><path d="M3,3 L10,3" stroke="#FFD700" stroke-width=".8" opacity=".4"/><path d="M3,3 L3,10" stroke="#FFD700" stroke-width=".8" opacity=".4"/></svg></div>
@@ -879,11 +865,9 @@ textarea.inp { border-radius:18px; resize:vertical; }
           <div style="position:absolute;bottom:46px;left:0;right:0;text-align:center;font-size:12px;opacity:.2;letter-spacing:8px;">· · ·</div>
         </div>
       </div>
-
     </div>
-  </div><!-- /book-scene -->
+  </div>
 
-  <!-- KEY -->
   <div id="key-wrap">
     <svg id="key-svg" viewBox="0 0 100 58" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -899,31 +883,23 @@ textarea.inp { border-radius:18px; resize:vertical; }
         </radialGradient>
         <filter id="kglow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <!-- Ring -->
       <circle cx="22" cy="27" r="15.5" fill="url(#kg1)" stroke="#A06A00" stroke-width="1.5" filter="url(#kglow)"/>
       <circle cx="22" cy="27" r="9.5" fill="none" stroke="#8B5E00" stroke-width="7.5"/>
       <circle cx="22" cy="27" r="9.5" fill="none" stroke="url(#kg1)" stroke-width="6"/>
-      <!-- Shaft -->
       <rect x="36" y="24" width="52" height="7.5" rx="3.75" fill="url(#kg1)" stroke="#A06A00" stroke-width="1"/>
-      <!-- Teeth -->
       <rect x="52" y="30" width="6" height="8" rx="2.5" fill="url(#kg1)" stroke="#A06A00" stroke-width=".8"/>
       <rect x="63" y="30" width="6" height="10" rx="2.5" fill="url(#kg1)" stroke="#A06A00" stroke-width=".8"/>
       <rect x="74" y="30" width="6" height="6" rx="2" fill="url(#kg1)" stroke="#A06A00" stroke-width=".8"/>
-      <!-- Highlight on shaft -->
       <rect x="38" y="24.5" width="48" height="2.5" rx="1.25" fill="rgba(255,255,220,.5)"/>
-      <!-- Gem -->
       <circle cx="22" cy="27" r="6.5" fill="url(#kgem)" stroke="rgba(255,255,255,.5)" stroke-width=".8"/>
       <circle cx="20" cy="24.5" r="2" fill="rgba(255,255,255,.75)"/>
-      <!-- Heart charm -->
       <path d="M88,6 C88,3.5 85.5,2.8 84,5 C82.5,2.8 80,3.5 80,6 C80,8 84,12.5 84,12.5 C84,12.5 88,8 88,6Z" fill="#FF69B4" stroke="#CC0055" stroke-width=".5" opacity=".92"/>
     </svg>
   </div>
   <div class="key-hint" id="key-hint">✦ drag the key to the seal ✦</div>
-
-  <!-- Floating petals -->
 </div>
 
-<!-- ═══════════════ SITE ═══════════════ -->
+<!-- SITE -->
 <div id="site">
   <div id="bg-mesh"></div>
   <canvas id="pet-canvas"></canvas>
@@ -943,7 +919,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
   </nav>
 
   <div id="pages">
-
     <!-- HOME -->
     <div class="page active" id="page-home">
       <div id="home-hero">
@@ -1124,9 +1099,8 @@ textarea.inp { border-radius:18px; resize:vertical; }
         </div>
       </div>
     </div>
-
-  </div><!-- /#pages -->
-</div><!-- /#site -->
+  </div>
+</div>
 
 <!-- EDIT VIEW -->
 <div id="edit-view">
@@ -1157,18 +1131,15 @@ textarea.inp { border-radius:18px; resize:vertical; }
 // ═══════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════
-const API_URL = 'https://kaisworldb.onrender.com'; // Empty = same origin (use local backend)
-// Change to 'https://kaisworldb.onrender.com' for production
+const API_URL = 'https://kaisworldb.onrender.com';
 
 // ═══════════════════════════════════════════════════════════════
-// SPRITE LOADING SYSTEM - FIXED!
+// SPRITE LOADING SYSTEM - FIXED & WORKING!
 // ═══════════════════════════════════════════════════════════════
-// ==================== DYNAMIC SPRITE LOADING SYSTEM - FIXED ====================
 let loadedSprites = {};
 let spriteImages = {};
-let spriteConfig = {}; // Store frame size and count per sprite
+let spriteConfig = {};
 
-// Fetch sprites from backend
 async function loadSpritesFromServer() {
     try {
         const res = await fetch(API_URL + '/api/sprites/list');
@@ -1177,7 +1148,6 @@ async function loadSpritesFromServer() {
             loadedSprites = data.sprites;
             console.log('✅ Sprites loaded:', loadedSprites);
             
-            // Preload images and detect frame count based on actual dimensions
             for (const [type, url] of Object.entries(loadedSprites)) {
                 const img = new Image();
                 img.src = url + '?t=' + Date.now();
@@ -1187,10 +1157,7 @@ async function loadSpritesFromServer() {
                         const w = img.width;
                         const h = img.height;
                         
-                        // Detect if this is a spritesheet (multiple frames horizontally)
-                        // Check if width is multiple of height (square frames)
                         if (h > 0 && w % h === 0 && w > h) {
-                            // Square frames arranged horizontally
                             const frameCount = Math.floor(w / h);
                             spriteConfig[type] = {
                                 frameWidth: h,
@@ -1198,9 +1165,8 @@ async function loadSpritesFromServer() {
                                 frameCount: frameCount,
                                 type: 'horizontal-square'
                             };
-                            console.log(`🎬 ${type}: spritesheet! ${frameCount} frames, ${h}x${h}px each`);
+                            console.log(`🎬 ${type}: ${frameCount} frames, ${h}x${h}px each`);
                         } 
-                        // Check if frames are arranged vertically
                         else if (w > 0 && h % w === 0 && h > w) {
                             const frameCount = Math.floor(h / w);
                             spriteConfig[type] = {
@@ -1209,10 +1175,9 @@ async function loadSpritesFromServer() {
                                 frameCount: frameCount,
                                 type: 'vertical-square'
                             };
-                            console.log(`🎬 ${type}: vertical spritesheet! ${frameCount} frames, ${w}x${w}px each`);
+                            console.log(`🎬 ${type}: vertical ${frameCount} frames`);
                         }
                         else {
-                            // Single image - use full dimensions
                             spriteConfig[type] = {
                                 frameWidth: w,
                                 frameHeight: h,
@@ -1237,8 +1202,7 @@ async function loadSpritesFromServer() {
     }
 }
 
-// Draw sprite from uploaded image (supports different layouts)
-function drawSpriteImage(ctx, type, x, y, targetSize = 32, frame = 0) {
+function drawSpriteImage(ctx, type, x, y, targetSize = 48, frame = 0) {
     const img = spriteImages[type];
     const config = spriteConfig[type];
     
@@ -1257,7 +1221,6 @@ function drawSpriteImage(ctx, type, x, y, targetSize = 32, frame = 0) {
                 sy = frameIndex * config.frameHeight;
             }
             
-            // Maintain aspect ratio when drawing
             const aspect = sw / sh;
             let drawW = targetSize;
             let drawH = targetSize;
@@ -1274,7 +1237,6 @@ function drawSpriteImage(ctx, type, x, y, targetSize = 32, frame = 0) {
             
             ctx.drawImage(img, sx, sy, sw, sh, drawX, drawY, drawW, drawH);
         } else {
-            // Single image - draw maintaining aspect ratio
             const aspect = config.frameWidth / config.frameHeight;
             let drawW = targetSize;
             let drawH = targetSize;
@@ -1296,7 +1258,6 @@ function drawSpriteImage(ctx, type, x, y, targetSize = 32, frame = 0) {
     return false;
 }
 
-// Fallback pixel art (hardcoded)
 const FALLBACK_SPRITES = {
     cat: { p: [[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]], cs: {1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s: 5 },
     bird: { p: [[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]], cs: {1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s: 5 },
@@ -1304,7 +1265,7 @@ const FALLBACK_SPRITES = {
     dog: { p: [[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]], cs: {1:'#D2691E',2:'#8B4513'}, s: 6 }
 };
 
-function drawPixelSprite(ctx, type, x, y, size = 30) {
+function drawPixelSprite(ctx, type, x, y, size = 48) {
     const sp = FALLBACK_SPRITES[type];
     if (!sp) return;
     const scale = size / (sp.s * 6);
@@ -1318,101 +1279,23 @@ function drawPixelSprite(ctx, type, x, y, size = 30) {
     });
 }
 
-// MAIN DRAW FUNCTION - NOW WITH BIGGER SIZE (48px default) AND ANIMATION SUPPORT
-function drawPetSprite(ctx, type, ox, oy, size = 48, frame = 0) {
+// MAIN DRAW FUNCTION - BIGGER SIZE (56px default)!
+function drawPetSprite(ctx, type, ox, oy, size = 56, frame = 0) {
     const drawn = drawSpriteImage(ctx, type, ox, oy, size, frame);
     if (!drawn) {
         drawPixelSprite(ctx, type, ox, oy, size);
     }
 }
 
-// FIX: Enhanced sprite drawing with animation and scaling - MAKES THEM BIGGER!
-function drawPetSpriteEnhanced(ctx, type, x, y, size = 56, frame = 0) {
-    // Make sprites BIGGER (56px default - 75% larger than original)
-    const actualSize = size;
-    
-    const drawn = drawSpriteImage(ctx, type, x, y, actualSize, frame);
-    if (!drawn) {
-        drawPixelSprite(ctx, type, x, y, actualSize);
-    }
-}
-
-// Override the original drawPetSprite to use enhanced version with animation
-window.drawPetSprite = drawPetSpriteEnhanced;
-
 const PET_TYPES = ['cat', 'bird', 'bat', 'dog'];
 
-// FIX: Update PSPet class for larger size and faster animation
-if (typeof PSPet !== 'undefined') {
-    const originalPSPetConstructor = PSPet;
-    window.PSPet = function(type, x, y, pers) {
-        originalPSPetConstructor.call(this, type, x, y, pers);
-        this.size = 56; // MUCH LARGER!
-        this.animSpeed = 0.15; // FASTER animation!
-    };
-    PSPet.prototype = originalPSPetConstructor.prototype;
-    PSPet.prototype.constructor = PSPet;
-    
-    // Override draw method
-    PSPet.prototype.draw = function(ctx) {
-        ctx.save(); 
-        ctx.translate(this.x, this.y);
-        if (this.dir < 0) ctx.scale(-1, 1);
-        drawPetSpriteEnhanced(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
-        ctx.restore();
-    };
-}
-
-// FIX: Update Pet class for floating pets
-if (typeof Pet !== 'undefined') {
-    const originalPetConstructor = Pet;
-    window.Pet = function(type, x, y, pers) {
-        originalPetConstructor.call(this, type, x, y, pers);
-        this.size = 56;
-        this.animSpeed = 0.15;
-    };
-    Pet.prototype = originalPetConstructor.prototype;
-    Pet.prototype.constructor = Pet;
-    
-    Pet.prototype.draw = function(ctx) {
-        ctx.save(); 
-        ctx.translate(this.x, this.y);
-        if (this.dir < 0) ctx.scale(-1, 1);
-        drawPetSpriteEnhanced(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
-        ctx.restore();
-    };
-}
-
-// Force all existing pets to update when loaded
-setTimeout(() => {
-    // Update any existing pets in petscape
-    if (typeof petscapePets !== 'undefined' && petscapePets) {
-        petscapePets.forEach(pet => {
-            pet.size = 56;
-            pet.animSpeed = 0.15;
-            if (pet.animFrame === undefined) pet.animFrame = 0;
-        });
-    }
-    
-    // Update floating pets
-    if (typeof floatPets !== 'undefined' && floatPets) {
-        floatPets.forEach(pet => {
-            pet.size = 56;
-            pet.animSpeed = 0.15;
-            if (pet.animFrame === undefined) pet.animFrame = 0;
-        });
-    }
-    
-    console.log('✅ Sprites are now LARGER (56px) and ANIMATING FASTER!');
-}, 500);
-
 // ═══════════════════════════════════════════════════════════════
-// CURSOR
+// CURSOR & PARTICLES
 // ═══════════════════════════════════════════════════════════════
 const curEl = document.getElementById('cursor');
 let cx=0,cy=0, tcx=0,tcy=0;
 document.addEventListener('mousemove',e=>{ tcx=e.clientX; tcy=e.clientY; });
-;(function animCursor(){
+(function animCursor(){
   cx+=(tcx-cx)*.22; cy+=(tcy-cy)*.22;
   curEl.style.left=cx+'px'; curEl.style.top=cy+'px';
   requestAnimationFrame(animCursor);
@@ -1429,7 +1312,6 @@ document.addEventListener('mousemove',e=>{
   document.body.appendChild(t); setTimeout(()=>t.remove(),700);
 });
 
-// ══ PARTICLE CANVAS ══
 const pC=document.getElementById('pcanvas'), pCtx=pC.getContext('2d');
 let parts=[];
 function resP(){ pC.width=window.innerWidth; pC.height=window.innerHeight; }
@@ -1640,7 +1522,7 @@ function startKaiStatusCheck(){ if(kaiOnlineInterval)clearInterval(kaiOnlineInte
 
 // ══ INIT ══
 async function initSite(){
-  await loadSpritesFromServer(); // LOAD SPRITES FIRST!
+  await loadSpritesFromServer();
   spawnSakura();
   await loadProfile();
   loadPage('home');
@@ -1704,28 +1586,23 @@ async function loadHome(){
     rEl.innerHTML=`<div style="text-align:center;padding:18px;font-family:'Dancing Script',cursive;font-size:15px;color:var(--lav);">no threads yet ♡</div>`;
   }
   
-  // Posts count
   const ps=await api('/api/posts'); 
   if(ps&&ps.data){
     const sp=document.getElementById('stat-posts');
     if(sp)sp.textContent=ps.data.length;
   }
   
-  // Visitor count - NOW PUBLIC (no auth needed)
   try {
     const response = await fetch(API_URL + '/api/stats');
     if (response.ok) {
       const st2 = await response.json();
       const sv = document.getElementById('stat-visitors');
       if (sv) sv.textContent = st2.total || 0;
-      console.log('📊 Visitor count loaded:', st2.total);
     } else {
-      console.warn('Stats API returned:', response.status);
       const sv = document.getElementById('stat-visitors');
       if (sv) sv.textContent = '0';
     }
   } catch (e) {
-    console.error('Failed to load stats:', e);
     const sv = document.getElementById('stat-visitors');
     if (sv) sv.textContent = '0';
   }
@@ -1910,99 +1787,64 @@ async function kaiLogin(){
 }
 document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')kaiLogin();});
 
-// ══ PETSCAPE (CANVAS VERSION) - FIXED WITH BIGGER SPRITES ══
-let petscapePets = [], petscapeMouseX = 0, petscapeMouseY = 0, frameCounter = 0;
+// ══ PETSCAPE - FIXED WITH BIGGER SPRITES & ANIMATION ══
+let petscapePets = [], petscapeMouseX = 0, petscapeMouseY = 0;
 document.addEventListener('mousemove', e => { petscapeMouseX = e.clientX; petscapeMouseY = e.clientY; });
 
 class PSPet {
     constructor(type, x, y, pers) {
-        this.type = type; 
-        this.x = x; 
-        this.y = y; 
-        this.pers = pers;
+        this.type = type; this.x = x; this.y = y; this.pers = pers;
         this.vx = (Math.random() - 0.5) * 2.5; 
-        this.vy = (Math.random() - 0.5) * 1.5; // Allow vertical movement too
+        this.vy = (Math.random() - 0.5) * 1.5;
         this.dir = 1;
-        this.animFrame = Math.random() * 10; // Random start frame
-        this.animSpeed = 0.12; // FASTER animation (was 0.08)
-        this.size = 56; // BIGGER size (was 36)
+        this.animFrame = Math.random() * 10;
+        this.animSpeed = 0.12; // FASTER!
+        this.size = 56; // BIGGER!
     }
     
     update() {
-        // Movement based on personality
         if (this.pers === 'sleepy') { 
-            this.vx *= 0.98; 
-            this.vy *= 0.98;
+            this.vx *= 0.98; this.vy *= 0.98;
             if (Math.random() < 0.02) {
                 this.vx = (Math.random() - 0.5) * 1.8;
                 this.vy = (Math.random() - 0.5) * 1.2;
             }
         } 
         else if (this.pers === 'playful') { 
-            const dx = petscapeMouseX - this.x;
-            const dy = petscapeMouseY - this.y;
-            const d = Math.hypot(dx, dy); 
+            const dx = petscapeMouseX - this.x, dy = petscapeMouseY - this.y, d = Math.hypot(dx, dy);
             if (d > 60 && d < 450) { 
                 this.vx += dx / d * 0.35; 
                 this.vy += dy / d * 0.35;
             } 
-            this.vx *= 0.92; 
-            this.vy *= 0.92;
+            this.vx *= 0.92; this.vy *= 0.92;
         } 
-        else { // chaotic
+        else {
             this.vx += (Math.random() - 0.5) * 0.6; 
             this.vy += (Math.random() - 0.5) * 0.5;
-            this.vx *= 0.96;
-            this.vy *= 0.96;
+            this.vx *= 0.96; this.vy *= 0.96;
         }
         
-        // Special movement for bat
-        if (this.type === 'bat') {
-            this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.08;
-        }
+        if (this.type === 'bat') this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.08;
         
-        // Apply movement
-        this.x += this.vx;
-        this.y += this.vy;
-        
-        // Update direction
+        this.x += this.vx; this.y += this.vy;
         if (this.vx < -0.1) this.dir = -1;
         else if (this.vx > 0.1) this.dir = 1;
         
-        // Get canvas boundaries
         const canvas = document.getElementById('petscape-canvas');
-        const W = canvas ? canvas.width : 800;
-        const H = canvas ? canvas.height : 460;
-        
-        // BOUNCE OFF EDGES (more natural than teleporting)
+        const W = canvas ? canvas.width : 800, H = canvas ? canvas.height : 460;
         const padding = 40;
-        if (this.x < padding) {
-            this.x = padding;
-            this.vx = Math.abs(this.vx) * 0.8;
-        }
-        if (this.x > W - padding) {
-            this.x = W - padding;
-            this.vx = -Math.abs(this.vx) * 0.8;
-        }
-        if (this.y < padding + 20) {
-            this.y = padding + 20;
-            this.vy = Math.abs(this.vy) * 0.8;
-        }
-        if (this.y > H - padding) {
-            this.y = H - padding;
-            this.vy = -Math.abs(this.vy) * 0.8;
-        }
+        if (this.x < padding) { this.x = padding; this.vx = Math.abs(this.vx) * 0.8; }
+        if (this.x > W - padding) { this.x = W - padding; this.vx = -Math.abs(this.vx) * 0.8; }
+        if (this.y < padding + 20) { this.y = padding + 20; this.vy = Math.abs(this.vy) * 0.8; }
+        if (this.y > H - padding) { this.y = H - padding; this.vy = -Math.abs(this.vy) * 0.8; }
         
-        // Animation frame update
         const maxFrames = (spriteConfig[this.type] && spriteConfig[this.type].frameCount) || 4;
         this.animFrame = (this.animFrame + this.animSpeed) % maxFrames;
     }
     
     draw(ctx) {
-        ctx.save(); 
-        ctx.translate(this.x, this.y);
+        ctx.save(); ctx.translate(this.x, this.y);
         if (this.dir < 0) ctx.scale(-1, 1);
-        // BIGGER size (56px instead of 36)
         drawPetSprite(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
         ctx.restore();
     }
@@ -2018,36 +1860,24 @@ function initPetscape() {
     if (!petscapePets.length) {
         const types = ['cat', 'bird', 'bat', 'dog'];
         types.forEach((t, i) => {
-            petscapePets.push(new PSPet(t, 
-                100 + i * 150, 
-                150 + Math.random() * 200,
-                ['sleepy', 'playful', 'chaotic'][i % 3]
-            ));
+            petscapePets.push(new PSPet(t, 100 + i * 150, 150 + Math.random() * 200, ['sleepy', 'playful', 'chaotic'][i % 3]));
         });
     }
     
     const ctrl = document.getElementById('petscape-controls');
-    ctrl.innerHTML = ['cat', 'bird', 'bat', 'dog'].map(t => 
-        `<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`
-    ).join('') +
-    `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>` +
-    `<button class="btn btn-sm" onclick="spawnRandomPetscapePet()">🎲 RANDOM</button>`;
+    ctrl.innerHTML = ['cat', 'bird', 'bat', 'dog'].map(t => `<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('') +
+        `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>` +
+        `<button class="btn btn-sm" onclick="spawnRandomPetscapePet()">🎲 RANDOM</button>`;
     
     function animate() {
         if (!ctx) return;
         ctx.fillStyle = '#080015';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw stars
         for (let i = 0; i < 50; i++) {
             ctx.fillStyle = `rgba(255,255,255,${0.1 + Math.random() * 0.35})`;
             ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
         }
-        
-        petscapePets.forEach(p => {
-            p.update();
-            p.draw(ctx);
-        });
+        petscapePets.forEach(p => { p.update(); p.draw(ctx); });
         requestAnimationFrame(animate);
     }
     animate();
@@ -2063,217 +1893,118 @@ function addPetscapePet(type) {
 
 function spawnRandomPetscapePet() {
     const types = ['cat', 'bird', 'bat', 'dog'];
-    const randomType = types[Math.floor(Math.random() * 4)];
-    addPetscapePet(randomType);
+    addPetscapePet(types[Math.floor(Math.random() * 4)]);
 }
 
-function clearAllPets() {
-    petscapePets = [];
-    if (typeof toast === 'function') toast('all pets cleared ♡');
-}
+function clearAllPets() { petscapePets = []; if (typeof toast === 'function') toast('all pets cleared ♡'); }
 
-// ══ PET CANVAS (FLOATING PETS EVERYWHERE) - FIXED ══
+// ══ FLOATING PETS - SPAWN EVERYWHERE! ══
 const petCanvas = document.getElementById('pet-canvas');
 const petCtx = petCanvas.getContext('2d');
 let floatPets = [];
 let mouseX = 0, mouseY = 0;
 let globalFrame = 0;
 
-function resizePet() {
-    petCanvas.width = window.innerWidth;
-    petCanvas.height = window.innerHeight;
-}
-resizePet();
-window.addEventListener('resize', resizePet);
+function resizePet() { petCanvas.width = window.innerWidth; petCanvas.height = window.innerHeight; }
+resizePet(); window.addEventListener('resize', resizePet);
 document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
 class Pet {
     constructor(type, x, y, pers) {
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        this.pers = pers || 'sleepy';
+        this.type = type; this.x = x; this.y = y; this.pers = pers || 'sleepy';
         this.vx = (Math.random() - 0.5) * 3;
         this.vy = (Math.random() - 0.5) * 2;
         this.dir = 1;
         this.animFrame = Math.random() * 10;
-        this.animSpeed = 0.15; // FASTER animation (was 0.06)
-        this.size = 56; // BIGGER size
+        this.animSpeed = 0.15; // FASTER!
+        this.size = 56; // BIGGER!
     }
     
     update() {
-        // Movement based on personality
         if (this.pers === 'sleepy') {
-            this.vx *= 0.98;
-            this.vy *= 0.98;
+            this.vx *= 0.98; this.vy *= 0.98;
             if (Math.random() < 0.02) {
                 this.vx += (Math.random() - 0.5) * 1.5;
                 this.vy += (Math.random() - 0.5) * 1;
             }
         } 
         else if (this.pers === 'playful') {
-            const dx = mouseX - this.x;
-            const dy = mouseY - this.y;
-            const d = Math.hypot(dx, dy);
+            const dx = mouseX - this.x, dy = mouseY - this.y, d = Math.hypot(dx, dy);
             if (d > 60 && d < 450) {
                 this.vx += dx / d * 0.4;
                 this.vy += dy / d * 0.4;
             }
-            this.vx *= 0.93;
-            this.vy *= 0.93;
+            this.vx *= 0.93; this.vy *= 0.93;
         } 
-        else { // chaotic
+        else {
             this.vx += (Math.random() - 0.5) * 0.7;
             this.vy += (Math.random() - 0.5) * 0.6;
-            this.vx *= 0.96;
-            this.vy *= 0.96;
+            this.vx *= 0.96; this.vy *= 0.96;
         }
         
-        // Special movement for bat
-        if (this.type === 'bat') {
-            this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.1;
-        }
+        if (this.type === 'bat') this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.1;
         
-        // Apply movement
-        this.x += this.vx;
-        this.y += this.vy;
-        
-        // Update direction
+        this.x += this.vx; this.y += this.vy;
         if (this.vx < -0.1) this.dir = -1;
         else if (this.vx > 0.1) this.dir = 1;
         
-        // BOUNCE OFF EDGES (natural movement)
-        const W = window.innerWidth;
-        const H = window.innerHeight;
+        const W = window.innerWidth, H = window.innerHeight;
         const padding = 50;
+        if (this.x < padding) { this.x = padding; this.vx = Math.abs(this.vx) * 0.8; }
+        if (this.x > W - padding) { this.x = W - padding; this.vx = -Math.abs(this.vx) * 0.8; }
+        if (this.y < padding) { this.y = padding; this.vy = Math.abs(this.vy) * 0.8; }
+        if (this.y > H - padding) { this.y = H - padding; this.vy = -Math.abs(this.vy) * 0.8; }
         
-        if (this.x < padding) {
-            this.x = padding;
-            this.vx = Math.abs(this.vx) * 0.8;
-        }
-        if (this.x > W - padding) {
-            this.x = W - padding;
-            this.vx = -Math.abs(this.vx) * 0.8;
-        }
-        if (this.y < padding) {
-            this.y = padding;
-            this.vy = Math.abs(this.vy) * 0.8;
-        }
-        if (this.y > H - padding) {
-            this.y = H - padding;
-            this.vy = -Math.abs(this.vy) * 0.8;
-        }
-        
-        // Animation frame
         const maxFrames = (spriteConfig[this.type] && spriteConfig[this.type].frameCount) || 4;
         this.animFrame = (this.animFrame + this.animSpeed) % maxFrames;
     }
     
     draw(ctx) {
-        ctx.save();
-        ctx.translate(this.x, this.y);
+        ctx.save(); ctx.translate(this.x, this.y);
         if (this.dir < 0) ctx.scale(-1, 1);
-        // BIGGER size (56px instead of 36)
         drawPetSprite(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
         ctx.restore();
     }
 }
 
-// SPAWN PETS ANYWHERE on the page (not just top)
 function spawnFloatPetAnywhere() {
     const types = ['cat', 'bird', 'bat', 'dog'];
     const t = types[Math.floor(Math.random() * 4)];
     const pers = ['sleepy', 'playful', 'chaotic'][Math.floor(Math.random() * 3)];
-    
-    // Random position ANYWHERE on screen
     const x = Math.random() * window.innerWidth;
     const y = Math.random() * window.innerHeight;
-    
     floatPets.push(new Pet(t, x, y, pers));
-    
-    // Keep max 15 pets for performance
     if (floatPets.length > 15) floatPets.shift();
 }
 
-// Old spawn function (replaced)
-function spawnFloatPet() {
-    spawnFloatPetAnywhere();
-}
-
-// Initialize pet canvas with pets EVERYWHERE
 function initPetCanvas() {
-    // Clear existing pets
     floatPets = [];
+    for (let i = 0; i < 6; i++) setTimeout(() => spawnFloatPetAnywhere(), i * 300);
+    setInterval(() => { if (floatPets.length < 12) spawnFloatPetAnywhere(); }, 12000);
     
-    // Spawn 6 pets in random positions initially
-    for (let i = 0; i < 6; i++) {
-        setTimeout(() => spawnFloatPetAnywhere(), i * 300);
-    }
-    
-    // Continuously spawn new pets
-    setInterval(() => {
-        if (floatPets.length < 12) {
-            spawnFloatPetAnywhere();
-            console.log('🐾 New pet roaming the page!');
-        }
-    }, 12000);
-    
-    // Animation loop
     function animate() {
         if (petCtx) {
             petCtx.clearRect(0, 0, petCanvas.width, petCanvas.height);
             globalFrame++;
-            floatPets.forEach(p => {
-                p.update();
-                p.draw(petCtx);
-            });
+            floatPets.forEach(p => { p.update(); p.draw(petCtx); });
         }
         requestAnimationFrame(animate);
     }
     animate();
-    
-    console.log('✅ Pets now spawn EVERYWHERE on the page!');
+    console.log('✅ Pets spawn EVERYWHERE on the page!');
 }
 
-// Add manual spawn button
 function addPetSpawnButton() {
     const btn = document.createElement('button');
-    btn.id = 'pet-spawn-btn';
     btn.innerHTML = '🐾';
-    btn.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        right: 18px;
-        z-index: 9000;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #ff6eb4, #8b00ff);
-        backdrop-filter: blur(12px);
-        border: 2px solid rgba(255,215,0,.6);
-        color: white;
-        font-size: 22px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-        box-shadow: 0 0 20px rgba(255,105,180,.5);
-    `;
+    btn.style.cssText = `position:fixed;bottom:80px;right:18px;z-index:9000;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff6eb4,#8b00ff);backdrop-filter:blur(12px);border:2px solid rgba(255,215,0,.6);color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 20px rgba(255,105,180,.5);`;
     btn.onmouseenter = () => btn.style.transform = 'scale(1.1)';
     btn.onmouseleave = () => btn.style.transform = 'scale(1)';
-    btn.onclick = () => {
-        spawnFloatPetAnywhere();
-        if (typeof toast === 'function') toast('✨ New pet appeared! ✨');
-    };
+    btn.onclick = () => { spawnFloatPetAnywhere(); if (typeof toast === 'function') toast('✨ New pet appeared! ✨'); };
     document.body.appendChild(btn);
 }
 
-// Add spawn button when page loads
-setTimeout(() => {
-    if (document.getElementById('pet-spawn-btn')) return;
-    addPetSpawnButton();
-}, 2000);
+setTimeout(() => { if (!document.getElementById('pet-spawn-btn')) addPetSpawnButton(); }, 2000);
 
 // ══ EDIT VIEW ══
 function openEditView(){if(!isKai){switchPage('kai');return;}document.getElementById('edit-view').style.display='block';showETab('threads');}
@@ -2301,7 +2032,7 @@ async function saveFactsToServer(){
   if(r){toast('fun facts saved ✦');loadAbout();}else toast('error saving facts');
 }
 async function renderESprites(el){
-  await loadSpritesFromServer(); // Refresh sprite list
+  await loadSpritesFromServer();
   const types=['cat','bird','bat','dog','custom'];
   el.innerHTML=`<div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--pk);margin-bottom:16px;letter-spacing:2px;">PET SPRITES ✦</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;">
@@ -2335,7 +2066,6 @@ async function loadStats(){
     const tk = sessionStorage.getItem('kai_token');
     const headers = {};
     if (tk) headers['Authorization'] = `Bearer ${tk}`;
-    
     const res=await fetch(API_URL + '/api/stats', { headers });
     if(!res.ok) throw new Error();
     const d=await res.json();
@@ -2347,19 +2077,6 @@ async function loadStats(){
     if(el('s-vlogs'))el('s-vlogs').textContent=d.vlogs??'0';
     if(el('s-posts'))el('s-posts').textContent=d.posts??'0';
     if(el('s-sigs'))el('s-sigs').textContent=d.signatures??'0';
-    
-    // Update pages chart
-    const chartEl = document.getElementById('pages-chart');
-    if (chartEl && d.pages && d.pages.length) {
-      const max = d.pages[0].count;
-      chartEl.innerHTML = d.pages.map(p => `
-        <div class="bar-row">
-          <span class="bar-lbl">${esc(p.label)}</span>
-          <div class="bar-track"><div class="bar-fill" style="width:${max>0?Math.round(p.count/max*100):0}%"></div></div>
-          <span class="bar-val">${p.count}</span>
-        </div>
-      `).join('');
-    }
   } catch(e){ console.error('Stats error:', e); }
 }
 
@@ -2398,6 +2115,7 @@ window.ytEmbed=ytEmbed;
 window.api=api;
 window.loadSpritesFromServer=loadSpritesFromServer;
 window.drawPetSprite=drawPetSprite;
+window.spawnFloatPetAnywhere=spawnFloatPetAnywhere;
 </script>
 </body>
 </html>
