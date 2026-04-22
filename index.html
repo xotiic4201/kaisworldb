@@ -1520,13 +1520,43 @@ function loadPage(id){
 
 // ══ HOME ══
 async function loadHome(){
-  const r=await api('/api/threads'); const threads=(r&&r.data)||[];
-  const st=document.getElementById('stat-threads'); if(st)st.textContent=threads.length;
+  const r=await api('/api/threads'); 
+  const threads=(r&&r.data)||[];
+  const st=document.getElementById('stat-threads'); 
+  if(st)st.textContent=threads.length;
+  
   const rEl=document.getElementById('home-recent-threads');
-  if(threads.length){rEl.innerHTML=threads.slice(0,3).map(t=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,105,180,.1);cursor:pointer" onclick="switchPage('threads')"><div style="font-family:'Dancing Script',cursive;font-size:11px;color:var(--lav);margin-bottom:2px;">${fmtDate(t.created_at)}</div><div style="font-size:12.5px;color:#e0c0d0;line-height:1.55;">${esc((t.content||'').substr(0,100))}…</div></div>`).join('');}
-  else rEl.innerHTML=`<div style="text-align:center;padding:18px;font-family:'Dancing Script',cursive;font-size:15px;color:var(--lav);">no threads yet ♡</div>`;
-  const ps=await api('/api/posts'); if(ps&&ps.data){const sp=document.getElementById('stat-posts');if(sp)sp.textContent=ps.data.length;}
-  const st2=await api('/api/stats'); if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total||0;}
+  if(threads.length){
+    rEl.innerHTML=threads.slice(0,3).map(t=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,105,180,.1);cursor:pointer" onclick="switchPage('threads')"><div style="font-family:'Dancing Script',cursive;font-size:11px;color:var(--lav);margin-bottom:2px;">${fmtDate(t.created_at)}</div><div style="font-size:12.5px;color:#e0c0d0;line-height:1.55;">${esc((t.content||'').substr(0,100))}…</div></div>`).join('');
+  } else {
+    rEl.innerHTML=`<div style="text-align:center;padding:18px;font-family:'Dancing Script',cursive;font-size:15px;color:var(--lav);">no threads yet ♡</div>`;
+  }
+  
+  // Posts count
+  const ps=await api('/api/posts'); 
+  if(ps&&ps.data){
+    const sp=document.getElementById('stat-posts');
+    if(sp)sp.textContent=ps.data.length;
+  }
+  
+  // Visitor count - NOW PUBLIC (no auth needed)
+  try {
+    const response = await fetch(API_URL + '/api/stats');
+    if (response.ok) {
+      const st2 = await response.json();
+      const sv = document.getElementById('stat-visitors');
+      if (sv) sv.textContent = st2.total || 0;
+      console.log('📊 Visitor count loaded:', st2.total);
+    } else {
+      console.warn('Stats API returned:', response.status);
+      const sv = document.getElementById('stat-visitors');
+      if (sv) sv.textContent = '0';
+    }
+  } catch (e) {
+    console.error('Failed to load stats:', e);
+    const sv = document.getElementById('stat-visitors');
+    if (sv) sv.textContent = '0';
+  }
 }
 
 // ══ FEED ══
@@ -1881,16 +1911,35 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 async function loadStats(){
   const el=id=>document.getElementById(id);
   try{
-    const res=await fetch(`${API_URL}/api/stats`,{headers:{'Authorization':`Bearer ${sessionStorage.getItem('kai_token')||''}`}});
-    if(!res.ok)throw new Error();
+    const tk = sessionStorage.getItem('kai_token');
+    const headers = {};
+    if (tk) headers['Authorization'] = `Bearer ${tk}`;
+    
+    const res=await fetch(API_URL + '/api/stats', { headers });
+    if(!res.ok) throw new Error();
     const d=await res.json();
     if(el('s-total'))el('s-total').textContent=d.total??'0';
     if(el('s-today'))el('s-today').textContent=d.today??'0';
     if(el('s-active'))el('s-active').textContent=d.active??'0';
     if(el('s-threads'))el('s-threads').textContent=d.threads??'0';
-    const homeVisitors=document.getElementById('stat-visitors');
-    if(homeVisitors)homeVisitors.textContent=d.total??'0';
-  }catch(e){}
+    if(el('s-comments'))el('s-comments').textContent=d.comments??'0';
+    if(el('s-vlogs'))el('s-vlogs').textContent=d.vlogs??'0';
+    if(el('s-posts'))el('s-posts').textContent=d.posts??'0';
+    if(el('s-sigs'))el('s-sigs').textContent=d.signatures??'0';
+    
+    // Update pages chart
+    const chartEl = document.getElementById('pages-chart');
+    if (chartEl && d.pages && d.pages.length) {
+      const max = d.pages[0].count;
+      chartEl.innerHTML = d.pages.map(p => `
+        <div class="bar-row">
+          <span class="bar-lbl">${esc(p.label)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${max>0?Math.round(p.count/max*100):0}%"></div></div>
+          <span class="bar-val">${p.count}</span>
+        </div>
+      `).join('');
+    }
+  } catch(e){ console.error('Stats error:', e); }
 }
 
 // ══ KAI ADMIN BYPASS ══
