@@ -1910,129 +1910,370 @@ async function kaiLogin(){
 }
 document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')kaiLogin();});
 
-// ══ PETSCAPE ══
-let petscapePets=[], petscapeMouseX=0,petscapeMouseY=0, frameCounter=0;
-document.addEventListener('mousemove',e=>{petscapeMouseX=e.clientX;petscapeMouseY=e.clientY;});
+// ══ PETSCAPE (CANVAS VERSION) - FIXED WITH BIGGER SPRITES ══
+let petscapePets = [], petscapeMouseX = 0, petscapeMouseY = 0, frameCounter = 0;
+document.addEventListener('mousemove', e => { petscapeMouseX = e.clientX; petscapeMouseY = e.clientY; });
 
 class PSPet {
     constructor(type, x, y, pers) {
-        this.type = type; this.x = x; this.y = y; this.pers = pers;
-        this.vx = (Math.random() - .5) * 2; this.vy = 0; this.dir = 1;
-        this.animFrame = 0;
-        this.animSpeed = 0.08;
+        this.type = type; 
+        this.x = x; 
+        this.y = y; 
+        this.pers = pers;
+        this.vx = (Math.random() - 0.5) * 2.5; 
+        this.vy = (Math.random() - 0.5) * 1.5; // Allow vertical movement too
+        this.dir = 1;
+        this.animFrame = Math.random() * 10; // Random start frame
+        this.animSpeed = 0.12; // FASTER animation (was 0.08)
+        this.size = 56; // BIGGER size (was 36)
     }
+    
     update() {
-        if (this.pers === 'sleepy') { this.vx *= .97; if (Math.random() < .01) this.vx = (Math.random() - .5) * 1.5; }
-        else if (this.pers === 'playful') { const dx = petscapeMouseX - this.x, dy = petscapeMouseY - this.y, d = Math.hypot(dx, dy); if (d > 80 && d < 400) { this.vx += dx / d * .25; this.vy += dy / d * .25; } this.vx *= .9; this.vy *= .9; }
-        else { this.vx += (Math.random() - .5) * .4; this.vx *= .95; }
-        if (this.type === 'bat') this.vy += Math.sin(Date.now() * .001 + this.x) * .05;
-        this.x += this.vx; this.y += this.vy;
-        if (this.vx < -.1) this.dir = -1; else if (this.vx > .1) this.dir = 1;
-        const canvas = document.getElementById('petscape-canvas');
-        const W = canvas ? canvas.width : 800, H = canvas ? canvas.height : 460;
-        if (this.x < -50) this.x = W + 50; if (this.x > W + 50) this.x = -50;
-        if (this.y < 80) { this.y = 80; this.vy = Math.abs(this.vy); }
-        if (this.y > H - 50) { this.y = H - 50; this.vy = -Math.abs(this.vy) * .5; }
+        // Movement based on personality
+        if (this.pers === 'sleepy') { 
+            this.vx *= 0.98; 
+            this.vy *= 0.98;
+            if (Math.random() < 0.02) {
+                this.vx = (Math.random() - 0.5) * 1.8;
+                this.vy = (Math.random() - 0.5) * 1.2;
+            }
+        } 
+        else if (this.pers === 'playful') { 
+            const dx = petscapeMouseX - this.x;
+            const dy = petscapeMouseY - this.y;
+            const d = Math.hypot(dx, dy); 
+            if (d > 60 && d < 450) { 
+                this.vx += dx / d * 0.35; 
+                this.vy += dy / d * 0.35;
+            } 
+            this.vx *= 0.92; 
+            this.vy *= 0.92;
+        } 
+        else { // chaotic
+            this.vx += (Math.random() - 0.5) * 0.6; 
+            this.vy += (Math.random() - 0.5) * 0.5;
+            this.vx *= 0.96;
+            this.vy *= 0.96;
+        }
         
-        // Animation frame update based on actual frame count
+        // Special movement for bat
+        if (this.type === 'bat') {
+            this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.08;
+        }
+        
+        // Apply movement
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // Update direction
+        if (this.vx < -0.1) this.dir = -1;
+        else if (this.vx > 0.1) this.dir = 1;
+        
+        // Get canvas boundaries
+        const canvas = document.getElementById('petscape-canvas');
+        const W = canvas ? canvas.width : 800;
+        const H = canvas ? canvas.height : 460;
+        
+        // BOUNCE OFF EDGES (more natural than teleporting)
+        const padding = 40;
+        if (this.x < padding) {
+            this.x = padding;
+            this.vx = Math.abs(this.vx) * 0.8;
+        }
+        if (this.x > W - padding) {
+            this.x = W - padding;
+            this.vx = -Math.abs(this.vx) * 0.8;
+        }
+        if (this.y < padding + 20) {
+            this.y = padding + 20;
+            this.vy = Math.abs(this.vy) * 0.8;
+        }
+        if (this.y > H - padding) {
+            this.y = H - padding;
+            this.vy = -Math.abs(this.vy) * 0.8;
+        }
+        
+        // Animation frame update
         const maxFrames = (spriteConfig[this.type] && spriteConfig[this.type].frameCount) || 4;
         this.animFrame = (this.animFrame + this.animSpeed) % maxFrames;
     }
+    
     draw(ctx) {
-        ctx.save(); ctx.translate(this.x, this.y);
+        ctx.save(); 
+        ctx.translate(this.x, this.y);
         if (this.dir < 0) ctx.scale(-1, 1);
-        drawPetSprite(ctx, this.type, -18, -18, 36, Math.floor(this.animFrame));
+        // BIGGER size (56px instead of 36)
+        drawPetSprite(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
         ctx.restore();
     }
 }
 
-function initPetscape(){
-  const canvas=document.getElementById('petscape-canvas');if(!canvas)return;
-  canvas.width=canvas.offsetWidth; canvas.height=460;
-  const ctx=canvas.getContext('2d');
-  if(!petscapePets.length){
-    const types=['cat','bird','bat','dog'];
-    types.forEach((t,i)=>petscapePets.push(new PSPet(t,120+i*180,200+Math.random()*150,['sleepy','playful','chaotic'][i%3])));
-  }
-  const ctrl=document.getElementById('petscape-controls');
-  ctrl.innerHTML=['cat','bird','bat','dog'].map(t=>`<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('')+
-    `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>`;
-  
-  function animate(){
-    if(!ctx)return;
-    ctx.fillStyle='#080015'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    for(let i=0;i<50;i++){ctx.fillStyle=`rgba(255,255,255,${.1+Math.random()*.35})`;ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);}
-    petscapePets.forEach(p=>{p.update();p.draw(ctx);});
-    requestAnimationFrame(animate);
-  }
-  animate();
+function initPetscape() {
+    const canvas = document.getElementById('petscape-canvas');
+    if (!canvas) return;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 460;
+    const ctx = canvas.getContext('2d');
+    
+    if (!petscapePets.length) {
+        const types = ['cat', 'bird', 'bat', 'dog'];
+        types.forEach((t, i) => {
+            petscapePets.push(new PSPet(t, 
+                100 + i * 150, 
+                150 + Math.random() * 200,
+                ['sleepy', 'playful', 'chaotic'][i % 3]
+            ));
+        });
+    }
+    
+    const ctrl = document.getElementById('petscape-controls');
+    ctrl.innerHTML = ['cat', 'bird', 'bat', 'dog'].map(t => 
+        `<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`
+    ).join('') +
+    `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>` +
+    `<button class="btn btn-sm" onclick="spawnRandomPetscapePet()">🎲 RANDOM</button>`;
+    
+    function animate() {
+        if (!ctx) return;
+        ctx.fillStyle = '#080015';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw stars
+        for (let i = 0; i < 50; i++) {
+            ctx.fillStyle = `rgba(255,255,255,${0.1 + Math.random() * 0.35})`;
+            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
+        }
+        
+        petscapePets.forEach(p => {
+            p.update();
+            p.draw(ctx);
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
 }
 
-function addPetscapePet(type){
-  const canvas=document.getElementById('petscape-canvas');
-  const x=80+Math.random()*((canvas?canvas.width:800)-160);
-  const y=150+Math.random()*200;
-  petscapePets.push(new PSPet(type,x,y,'playful'));
-  toast(type+' added ♡');
+function addPetscapePet(type) {
+    const canvas = document.getElementById('petscape-canvas');
+    const x = 50 + Math.random() * ((canvas ? canvas.width : 800) - 100);
+    const y = 80 + Math.random() * 300;
+    petscapePets.push(new PSPet(type, x, y, ['sleepy', 'playful', 'chaotic'][Math.floor(Math.random() * 3)]));
+    if (typeof toast === 'function') toast(type + ' added ♡');
 }
-function clearAllPets(){petscapePets=[];toast('all pets cleared ♡');}
 
-// ══ PET CANVAS (FLOATING) ══
-const petCanvas=document.getElementById('pet-canvas'),petCtx=petCanvas.getContext('2d');
-let floatPets=[],mouseX=0,mouseY=0, globalFrame=0;
-function resizePet(){petCanvas.width=window.innerWidth;petCanvas.height=window.innerHeight;}
-resizePet();window.addEventListener('resize',resizePet);
-document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+function spawnRandomPetscapePet() {
+    const types = ['cat', 'bird', 'bat', 'dog'];
+    const randomType = types[Math.floor(Math.random() * 4)];
+    addPetscapePet(randomType);
+}
+
+function clearAllPets() {
+    petscapePets = [];
+    if (typeof toast === 'function') toast('all pets cleared ♡');
+}
+
+// ══ PET CANVAS (FLOATING PETS EVERYWHERE) - FIXED ══
+const petCanvas = document.getElementById('pet-canvas');
+const petCtx = petCanvas.getContext('2d');
+let floatPets = [];
+let mouseX = 0, mouseY = 0;
+let globalFrame = 0;
+
+function resizePet() {
+    petCanvas.width = window.innerWidth;
+    petCanvas.height = window.innerHeight;
+}
+resizePet();
+window.addEventListener('resize', resizePet);
+document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
 class Pet {
     constructor(type, x, y, pers) {
-        this.type = type; this.x = x; this.y = y; this.pers = pers || 'sleepy';
-        this.vx = (Math.random() - .5) * 2; this.vy = 0; this.dir = 1;
-        this.animFrame = 0;
-        this.animSpeed = 0.06;
+        this.type = type;
+        this.x = x;
+        this.y = y;
+        this.pers = pers || 'sleepy';
+        this.vx = (Math.random() - 0.5) * 3;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.dir = 1;
+        this.animFrame = Math.random() * 10;
+        this.animSpeed = 0.15; // FASTER animation (was 0.06)
+        this.size = 56; // BIGGER size
     }
+    
     update() {
-        if (this.pers === 'sleepy') { this.vx *= .97; if (Math.random() < .01) this.vx = (Math.random() - .5) * 1.5; }
-        else if (this.pers === 'playful') { const dx = mouseX - this.x, dy = mouseY - this.y, d = Math.hypot(dx, dy); if (d > 80 && d < 400) { this.vx += dx / d * .25; this.vy += dy / d * .25; } this.vx *= .9; this.vy *= .9; }
-        else { this.vx += (Math.random() - .5) * .4; this.vx *= .95; }
-        if (this.type === 'bat') this.vy += Math.sin(Date.now() * .001 + this.x) * .05;
-        this.x += this.vx; this.y += this.vy;
-        if (this.vx < -.1) this.dir = -1; else if (this.vx > .1) this.dir = 1;
-        const W = window.innerWidth, H = window.innerHeight;
-        if (this.x < -50) this.x = W + 50; if (this.x > W + 50) this.x = -50;
-        if (this.y < 80) { this.y = 80; this.vy = Math.abs(this.vy); }
-        if (this.y > H - 50) { this.y = H - 50; this.vy = -Math.abs(this.vy) * .5; }
+        // Movement based on personality
+        if (this.pers === 'sleepy') {
+            this.vx *= 0.98;
+            this.vy *= 0.98;
+            if (Math.random() < 0.02) {
+                this.vx += (Math.random() - 0.5) * 1.5;
+                this.vy += (Math.random() - 0.5) * 1;
+            }
+        } 
+        else if (this.pers === 'playful') {
+            const dx = mouseX - this.x;
+            const dy = mouseY - this.y;
+            const d = Math.hypot(dx, dy);
+            if (d > 60 && d < 450) {
+                this.vx += dx / d * 0.4;
+                this.vy += dy / d * 0.4;
+            }
+            this.vx *= 0.93;
+            this.vy *= 0.93;
+        } 
+        else { // chaotic
+            this.vx += (Math.random() - 0.5) * 0.7;
+            this.vy += (Math.random() - 0.5) * 0.6;
+            this.vx *= 0.96;
+            this.vy *= 0.96;
+        }
         
+        // Special movement for bat
+        if (this.type === 'bat') {
+            this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.1;
+        }
+        
+        // Apply movement
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // Update direction
+        if (this.vx < -0.1) this.dir = -1;
+        else if (this.vx > 0.1) this.dir = 1;
+        
+        // BOUNCE OFF EDGES (natural movement)
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const padding = 50;
+        
+        if (this.x < padding) {
+            this.x = padding;
+            this.vx = Math.abs(this.vx) * 0.8;
+        }
+        if (this.x > W - padding) {
+            this.x = W - padding;
+            this.vx = -Math.abs(this.vx) * 0.8;
+        }
+        if (this.y < padding) {
+            this.y = padding;
+            this.vy = Math.abs(this.vy) * 0.8;
+        }
+        if (this.y > H - padding) {
+            this.y = H - padding;
+            this.vy = -Math.abs(this.vy) * 0.8;
+        }
+        
+        // Animation frame
         const maxFrames = (spriteConfig[this.type] && spriteConfig[this.type].frameCount) || 4;
         this.animFrame = (this.animFrame + this.animSpeed) % maxFrames;
     }
+    
     draw(ctx) {
-        ctx.save(); ctx.translate(this.x, this.y);
+        ctx.save();
+        ctx.translate(this.x, this.y);
         if (this.dir < 0) ctx.scale(-1, 1);
-        drawPetSprite(ctx, this.type, -18, -18, 36, Math.floor(this.animFrame));
+        // BIGGER size (56px instead of 36)
+        drawPetSprite(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
         ctx.restore();
     }
 }
 
-function spawnFloatPet(){
-  const types=['cat','bird','bat','dog'];
-  const t=types[Math.floor(Math.random()*4)];
-  const ps=['sleepy','playful','chaotic'];
-  floatPets.push(new FloatPet(t,Math.random()*window.innerWidth,100+Math.random()*(window.innerHeight-200),ps[Math.floor(Math.random()*3)]));
-  if(floatPets.length>8)floatPets.shift();
+// SPAWN PETS ANYWHERE on the page (not just top)
+function spawnFloatPetAnywhere() {
+    const types = ['cat', 'bird', 'bat', 'dog'];
+    const t = types[Math.floor(Math.random() * 4)];
+    const pers = ['sleepy', 'playful', 'chaotic'][Math.floor(Math.random() * 3)];
+    
+    // Random position ANYWHERE on screen
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    
+    floatPets.push(new Pet(t, x, y, pers));
+    
+    // Keep max 15 pets for performance
+    if (floatPets.length > 15) floatPets.shift();
 }
 
-function initPetCanvas(){
-  for(let i=0;i<3;i++)setTimeout(spawnFloatPet,i*900);
-  setInterval(()=>{if(floatPets.length<6)spawnFloatPet();},25000);
-  function animate(){
-    petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);
-    globalFrame++;
-    floatPets.forEach(p=>{p.update();p.draw(petCtx);});
-    requestAnimationFrame(animate);
-  }
-  animate();
+// Old spawn function (replaced)
+function spawnFloatPet() {
+    spawnFloatPetAnywhere();
 }
+
+// Initialize pet canvas with pets EVERYWHERE
+function initPetCanvas() {
+    // Clear existing pets
+    floatPets = [];
+    
+    // Spawn 6 pets in random positions initially
+    for (let i = 0; i < 6; i++) {
+        setTimeout(() => spawnFloatPetAnywhere(), i * 300);
+    }
+    
+    // Continuously spawn new pets
+    setInterval(() => {
+        if (floatPets.length < 12) {
+            spawnFloatPetAnywhere();
+            console.log('🐾 New pet roaming the page!');
+        }
+    }, 12000);
+    
+    // Animation loop
+    function animate() {
+        if (petCtx) {
+            petCtx.clearRect(0, 0, petCanvas.width, petCanvas.height);
+            globalFrame++;
+            floatPets.forEach(p => {
+                p.update();
+                p.draw(petCtx);
+            });
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+    
+    console.log('✅ Pets now spawn EVERYWHERE on the page!');
+}
+
+// Add manual spawn button
+function addPetSpawnButton() {
+    const btn = document.createElement('button');
+    btn.id = 'pet-spawn-btn';
+    btn.innerHTML = '🐾';
+    btn.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        right: 18px;
+        z-index: 9000;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6eb4, #8b00ff);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(255,215,0,.6);
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        box-shadow: 0 0 20px rgba(255,105,180,.5);
+    `;
+    btn.onmouseenter = () => btn.style.transform = 'scale(1.1)';
+    btn.onmouseleave = () => btn.style.transform = 'scale(1)';
+    btn.onclick = () => {
+        spawnFloatPetAnywhere();
+        if (typeof toast === 'function') toast('✨ New pet appeared! ✨');
+    };
+    document.body.appendChild(btn);
+}
+
+// Add spawn button when page loads
+setTimeout(() => {
+    if (document.getElementById('pet-spawn-btn')) return;
+    addPetSpawnButton();
+}, 2000);
 
 // ══ EDIT VIEW ══
 function openEditView(){if(!isKai){switchPage('kai');return;}document.getElementById('edit-view').style.display='block';showETab('threads');}
