@@ -1001,12 +1001,13 @@ textarea.bubble-input{border-radius:22px;resize:vertical;}
 /* ══════════════════════════════════════════════════════════
    API HELPER
 ══════════════════════════════════════════════════════════ */
+const API_URL = 'https://kaisworldb.onrender.com';
 async function api(path, method='GET', body=null) {
   const h = {'Content-Type':'application/json'};
   const tk = sessionStorage.getItem('kai_token');
   if (tk) h['Authorization'] = `Bearer ${tk}`;
   try {
-    const r = await fetch(path, {method, headers:h, body:body?JSON.stringify(body):undefined});
+    const r = await fetch(API_URL + path, {method, headers:h, body:body?JSON.stringify(body):undefined});
     if (!r.ok) return null;
     return await r.json();
   } catch(e) { return null; }
@@ -1017,7 +1018,7 @@ async function apiForm(path, method='POST', formData=null) {
   const headers = {};
   if (tk) headers['Authorization'] = `Bearer ${tk}`;
   try {
-    const r = await fetch(path, {method, headers, body:formData});
+    const r = await fetch(API_URL + path, {method, headers, body:formData});
     if (!r.ok) return null;
     return await r.json();
   } catch(e) { return null; }
@@ -1229,17 +1230,92 @@ async function trackVisit(page='home'){
 }
 
 /* ══════════════════════════════════════════════════════════
-   KAI ONLINE STATUS
+   KAI ONLINE STATUS (FIXED - checks heartbeat endpoint)
 ══════════════════════════════════════════════════════════ */
-async function checkKaiOnlineStatus(){
-  const r=await api('/api/kai/status');
-  if(r && r.online){
-    document.getElementById('home-online-badge').style.display='inline-flex';
-    document.getElementById('kai-status').classList.add('visible');
-  } else {
-    document.getElementById('home-online-badge').style.display='none';
-    document.getElementById('kai-status').classList.remove('visible');
-  }
+let kaiOnlineCheckInterval = null;
+
+async function updateKaiOnlineStatus() {
+    try {
+        const res = await fetch(`${API_URL}/api/kai/status`);
+        const data = await res.json();
+        const statusEl = document.getElementById('kai-status');
+        const homeBadge = document.getElementById('home-online-badge');
+        
+        if (data.online === true) {
+            if (statusEl) statusEl.classList.add('visible');
+            if (homeBadge) homeBadge.style.display = 'inline-flex';
+        } else {
+            if (statusEl) statusEl.classList.remove('visible');
+            if (homeBadge) homeBadge.style.display = 'none';
+        }
+    } catch(e) {
+        console.log('Status check failed:', e);
+        const statusEl = document.getElementById('kai-status');
+        if (statusEl) statusEl.classList.remove('visible');
+    }
+}
+
+function startKaiStatusCheck() {
+    if (kaiOnlineCheckInterval) clearInterval(kaiOnlineCheckInterval);
+    updateKaiOnlineStatus();
+    kaiOnlineCheckInterval = setInterval(updateKaiOnlineStatus, 30000);
+}
+
+/* ══════════════════════════════════════════════════════════
+   STATS (FIXED - uses backend API)
+══════════════════════════════════════════════════════════ */
+async function loadStats() {
+    const el = (id) => document.getElementById(id);
+    try {
+        const token = sessionStorage.getItem('kai_token') || '';
+        const res = await fetch(`${API_URL}/api/stats`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!res.ok) throw new Error('stats ' + res.status);
+        const d = await res.json();
+        
+        // Stats page elements if they exist
+        if (el('s-total')) el('s-total').textContent = d.total ?? '0';
+        if (el('s-today')) el('s-today').textContent = d.today ?? '0';
+        if (el('s-active')) el('s-active').textContent = d.active ?? '0';
+        if (el('s-threads')) el('s-threads').textContent = d.threads ?? '0';
+        
+        // Home page stats
+        const homeThreads = document.getElementById('stat-threads');
+        const homeVisitors = document.getElementById('stat-visitors');
+        const homeComments = document.getElementById('stat-comments');
+        if (homeThreads) homeThreads.textContent = d.threads ?? '0';
+        if (homeVisitors) homeVisitors.textContent = d.total ?? '0';
+        if (homeComments) homeComments.textContent = d.comments ?? '0';
+        
+        // Top pages chart
+        if (d.pages && d.pages.length && document.getElementById('pages-chart')) {
+            const max = Math.max(...d.pages.map(p => p.count));
+            const chartEl = document.getElementById('pages-chart');
+            if (chartEl) {
+                chartEl.innerHTML = d.pages.slice(0, 8).map(p => `
+                    <div class="bar-row">
+                        <span class="bar-label">${escapeHtml(p.label)}</span>
+                        <div class="bar-track"><div class="bar-fill" style="width: ${max > 0 ? (p.count / max * 100) : 0}%"></div></div>
+                        <span class="bar-val">${p.count}</span>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch(e) {
+        console.error('Stats error:', e);
+    }
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1252,12 +1328,7 @@ async function initSite(){
   initPetCanvas();
   startLivePoll();
   trackVisit('home');
-  checkKaiOnlineStatus();
-  setInterval(()=>{ 
-    const ap=document.querySelector('.page.active');
-    if(ap)loadPage(ap.id.replace('page-',''));
-    checkKaiOnlineStatus();
-  }, 30000);
+  startKaiStatusCheck();  // Start checking Kai's online status
   const tk=sessionStorage.getItem('kai_token');
   if(tk){isKai=true;document.getElementById('admin-nav-btn').style.display='block';}
   if(window.__KAI_ADMIN__){
@@ -1269,14 +1340,16 @@ async function initSite(){
 async function loadProfile(){
   const d=await api('/api/profile');
   if(!d)return;
-  kaiSettings=d;applyProfile(d);
+  kaiSettings=d;
+  // REMOVED: The line that forced online status from database
+  // Now online status is determined by heartbeat endpoint only
+  applyProfile(d);
 }
 function applyProfile(s){
   if(!s)return;
-  if(s.kai_online_status){
-    document.getElementById('home-online-badge').style.display='inline-flex';
-    document.getElementById('kai-status').classList.add('visible');
-  }
+  // NOTE: kai_online_status from database is IGNORED for the badge
+  // The badge is controlled by updateKaiOnlineStatus() only
+  
   if(s.profile_pic_url){
     const img=`<img src="${s.profile_pic_url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
     ['home-avatar','about-avatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=img;});
@@ -1320,7 +1393,7 @@ async function loadHome(){
   // Posts count
   const ps=await api('/api/posts');if(ps&&ps.data){const sp=document.getElementById('stat-posts');if(sp)sp.textContent=ps.data.length;}
   
-  // Visitor count - FIXED: Now shows for EVERYONE, not just Kai
+  // Visitor count - uses backend API
   const st2=await api('/api/stats');
   if(st2){const sv=document.getElementById('stat-visitors');if(sv)sv.textContent=st2.total || 0;}
 }
