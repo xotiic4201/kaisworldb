@@ -684,11 +684,7 @@ let authToken = null;
 let activityLogs = [];
 
 
-# Add this to your existing backend py file (add these new environment variables and endpoint)
 
-# ─── Add these environment variables ───────────────────────────────────────────
-XOTIIC_EMAIL         = os.getenv("XOTIIC_EMAIL", "")
-XOTIIC_PASSWORD      = os.getenv("XOTIIC_PASSWORD", "")
 
 # ─── Add this new endpoint for /xotiic login ──────────────────────────────────
 @app.post("/api/xotiic/login")
