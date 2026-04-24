@@ -163,7 +163,7 @@ textarea.form-input { resize:vertical; border-radius:16px; }
   margin-bottom:5px; overflow:hidden;
 }
 .sprite-preview-box img {
-  width:64px; height:64px; image-rendering:pixelated; object-fit:contain;
+  max-width:64px; max-height:64px; image-rendering:pixelated; object-fit:contain;
 }
 .sprite-preview-label {
   font-size:10px; color:var(--lavender); letter-spacing:1px;
@@ -454,8 +454,8 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
               <input type="file" id="sp-file" accept=".png,.gif,.webp,.jpg" class="form-input">
             </div>
           </div>
-          <button class="bubble-btn" onclick="eUploadSprite()">UPLOAD SPRITE ♡</button>
-          <div class="empty-msg" style="font-size:10px; padding:8px 0 0; text-align:left;">PNG/GIF/WebP · max 10MB · replaces existing sprite of that type</div>
+          <button class="bubble-btn" onclick="uploadSprite()">UPLOAD SPRITE ♡</button>
+          <div class="empty-msg" style="font-size:10px; padding:8px 0 0; text-align:left;">PNG/GIF/WebP · max 10MB · GIFs will animate automatically!</div>
         </div>
 
         <div class="card">
@@ -466,9 +466,9 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
               <div class="form-label">PALETTE</div>
               <div id="px-palette" class="palette-grid"></div>
               <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-                <button class="bubble-btn" id="px-erase-btn" onclick="window._pxToggleEraser()">ERASER</button>
-                <button class="bubble-btn" onclick="window._pxClear()">CLEAR</button>
-                <button class="bubble-btn" onclick="window._pxFill()">FILL BG</button>
+                <button class="bubble-btn" id="px-erase-btn" onclick="toggleEraser()">ERASER</button>
+                <button class="bubble-btn" onclick="clearCanvas()">CLEAR</button>
+                <button class="bubble-btn" onclick="fillCanvas()">FILL BG</button>
               </div>
               <div class="form-label">SAVE AS</div>
               <select id="px-save-type" class="form-input" style="margin-bottom:12px;">
@@ -478,7 +478,7 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
                 <option value="dog">🐶 Dog</option>
                 <option value="custom">✨ Custom</option>
               </select>
-              <button class="bubble-btn" onclick="window._pxSave()" style="width:100%">SAVE SPRITE ♡</button>
+              <button class="bubble-btn" onclick="saveDrawnSprite()" style="width:100%">SAVE SPRITE ♡</button>
             </div>
           </div>
         </div>
@@ -515,7 +515,7 @@ input:checked + .toggle-slider::before { transform:translateX(24px); background:
 /* ═══════════════════════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════════════════════ */
-const API = 'https://kaisworldb.onrender.com';  // empty = same origin
+const API = 'https://kaisworldb.onrender.com';
 let authToken = null;
 
 /* ═══════════════════════════════════════════════════════════
@@ -537,16 +537,6 @@ async function api(path, method = 'GET', body = null) {
     console.error('fetch error', e);
     return null;
   }
-}
-
-async function apiForm(path, method = 'POST', formData = null) {
-  const headers = {};
-  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
-  try {
-    const r = await fetch(API + path, { method, headers, body: formData });
-    if (!r.ok) return null;
-    return await r.json();
-  } catch (e) { return null; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -618,7 +608,7 @@ function enterLounge() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HEARTBEAT (sends every 60 seconds to keep Kai marked online)
+   HEARTBEAT
 ═══════════════════════════════════════════════════════════ */
 let heartbeatTimer = null;
 
@@ -627,9 +617,8 @@ async function sendHeartbeat() {
 }
 
 function startHeartbeat() {
-  sendHeartbeat(); // send immediately
+  sendHeartbeat();
   heartbeatTimer = setInterval(sendHeartbeat, 60000);
-  window.addEventListener('beforeunload', stopHeartbeat);
 }
 
 function stopHeartbeat() {
@@ -655,7 +644,7 @@ function showPanel(id) {
     case 'facts':     loadFacts(); break;
     case 'live':      loadLive(); break;
     case 'guestbook': loadGuestbook(); break;
-    case 'sprites':   renderSpritesPanel(); break;
+    case 'sprites':   loadSpritesPanel(); break;
     case 'stats':     loadStats(); break;
   }
   document.getElementById('sidebar').classList.remove('open');
@@ -884,7 +873,7 @@ async function saveLinks() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FUN FACTS - FIXED VERSION
+   FUN FACTS
 ═══════════════════════════════════════════════════════════ */
 let existingFacts = [];
 
@@ -902,7 +891,6 @@ async function loadFacts() {
     
     el.innerHTML = '';
     
-    // Create input fields for all 8 slots
     for (let i = 1; i <= 8; i++) {
       const fact = existingFacts.find(f => f.slot_number === i);
       const div = document.createElement('div');
@@ -923,7 +911,6 @@ async function saveFacts() {
   try {
     const facts = [];
     
-    // Collect all non-empty facts
     for (let i = 1; i <= 8; i++) {
       const input = document.getElementById(`ef-${i}`);
       if (input && input.value.trim()) {
@@ -939,12 +926,11 @@ async function saveFacts() {
       return;
     }
     
-    // Send the array directly - backend expects an array of objects
     const r = await api('/api/facts', 'POST', facts);
     
     if (r) {
       toast(`Saved ${facts.length} fun facts ✦`);
-      await loadFacts(); // Reload to refresh the display
+      await loadFacts();
     } else {
       toast('Error saving facts - server error');
     }
@@ -1014,68 +1000,136 @@ async function deleteSig(id) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PET SPRITES
+   PET SPRITES - FIXED VERSION
 ═══════════════════════════════════════════════════════════ */
 let spritesState = {};
 
-async function renderSpritesPanel() {
-  const r = await api('/api/sprites/list');
-  spritesState = (r && r.sprites) || {};
+async function loadSpritesPanel() {
+  try {
+    const r = await api('/api/sprites/list');
+    spritesState = (r && r.sprites) || {};
+    renderSpritePreviews();
+    initPixelEditor();
+  } catch (error) {
+    console.error('Error loading sprites:', error);
+    document.getElementById('sprite-current').innerHTML = '<div class="empty-msg">Error loading sprites</div>';
+  }
+}
+
+function renderSpritePreviews() {
   const types = ['cat', 'bird', 'bat', 'dog', 'custom'];
   const labels = { cat: '🐱 Cat', bird: '🐦 Bird', bat: '🦇 Bat', dog: '🐶 Dog', custom: '✨ Custom' };
-  
   const previewEl = document.getElementById('sprite-current');
+  
   previewEl.innerHTML = types.map(t => `
     <div class="sprite-preview-item">
       <div class="sprite-preview-box">
-        ${spritesState[t] ? `<img src="${spritesState[t]}?t=${Date.now()}" style="width:64px;height:64px;image-rendering:pixelated;object-fit:contain;">` :
-          `<span style="font-size:28px;opacity:.3">${labels[t].split(' ')[0]}</span>`}
+        ${spritesState[t] ? `<img src="${spritesState[t]}?t=${Date.now()}" loading="lazy">` :
+          `<span style="font-size:28px;opacity:.3">${labels[t].charAt(0)}</span>`}
       </div>
       <div class="sprite-preview-label">${t.toUpperCase()}</div>
+      ${spritesState[t] ? `<button class="act-btn act-del" style="margin-top:5px;padding:3px 8px;font-size:8px;" onclick="deleteSprite('${t}')">DELETE</button>` : ''}
     </div>
   `).join('');
-
-  // Initialize pixel editor if canvas exists
-  initPixelEditor();
 }
 
+async function uploadSprite() {
+  const t = document.getElementById('sp-type').value;
+  const f = document.getElementById('sp-file').files[0];
+  if (!f) { toast('pick a file first ♡'); return; }
+  
+  // Check file size (10MB max)
+  if (f.size > 10 * 1024 * 1024) {
+    toast('File too large (max 10MB) ♡');
+    return;
+  }
+  
+  const fd = new FormData();
+  fd.append('sprite_type', t);
+  fd.append('file', f);
+  
+  try {
+    const res = await fetch(API + '/api/sprites/upload', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${authToken}` },
+      body: fd
+    });
+    if (res.ok) {
+      toast('sprite uploaded ♡');
+      loadSpritesPanel();
+      document.getElementById('sp-file').value = '';
+    } else {
+      const error = await res.text();
+      toast('upload failed: ' + error);
+    }
+  } catch (e) { 
+    toast('error uploading ♡');
+    console.error(e);
+  }
+}
+
+async function deleteSprite(type) {
+  if (!confirm(`Delete ${type} sprite?`)) return;
+  try {
+    const res = await fetch(API + `/api/sprites/${type}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (res.ok) {
+      toast(`${type} sprite deleted ♡`);
+      loadSpritesPanel();
+    } else {
+      toast('Delete failed');
+    }
+  } catch (e) {
+    toast('Error deleting');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PIXEL EDITOR - FIXED
+═══════════════════════════════════════════════════════════ */
 const GRID = 16, PIX = 20;
 const PALETTE = ['#FF69B4','#FF1493','#FFD700','#8B00FF','#DDA0DD','#000000','#ffffff','#FF6347','#00CED1','#32CD32','#FF8C00','#9B30FF','#C8729A','#4a0000','transparent'];
 let selColor = '#FF69B4';
 let pixels = Array(GRID).fill(null).map(() => Array(GRID).fill('transparent'));
 let erasing = false;
 let pixelEditorInitialized = false;
+let pixelCanvas = null;
+let pixelCtx = null;
 
 function initPixelEditor() {
   const cvs = document.getElementById('px-canvas');
   if (!cvs || pixelEditorInitialized) return;
   pixelEditorInitialized = true;
+  pixelCanvas = cvs;
   
   cvs.width = GRID * PIX;
   cvs.height = GRID * PIX;
-  const ctx = cvs.getContext('2d');
+  pixelCtx = cvs.getContext('2d');
   
   function redraw() {
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    ctx.fillStyle = '#0a0015';
-    ctx.fillRect(0, 0, cvs.width, cvs.height);
-    ctx.strokeStyle = 'rgba(255,255,255,.06)';
-    ctx.lineWidth = 0.5;
+    if (!pixelCtx) return;
+    pixelCtx.clearRect(0, 0, cvs.width, cvs.height);
+    pixelCtx.fillStyle = '#0a0015';
+    pixelCtx.fillRect(0, 0, cvs.width, cvs.height);
+    pixelCtx.strokeStyle = 'rgba(255,255,255,.06)';
+    pixelCtx.lineWidth = 0.5;
     for (let i = 0; i <= GRID; i++) {
-      ctx.beginPath();
-      ctx.moveTo(i * PIX, 0);
-      ctx.lineTo(i * PIX, GRID * PIX);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(0, i * PIX);
-      ctx.lineTo(GRID * PIX, i * PIX);
-      ctx.stroke();
+      pixelCtx.beginPath();
+      pixelCtx.moveTo(i * PIX, 0);
+      pixelCtx.lineTo(i * PIX, GRID * PIX);
+      pixelCtx.stroke();
+      pixelCtx.beginPath();
+      pixelCtx.moveTo(0, i * PIX);
+      pixelCtx.lineTo(GRID * PIX, i * PIX);
+      pixelCtx.stroke();
     }
     for (let y = 0; y < GRID; y++) {
       for (let x = 0; x < GRID; x++) {
         if (pixels[y][x] === 'transparent') continue;
-        ctx.fillStyle = pixels[y][x];
-        ctx.fillRect(x * PIX, y * PIX, PIX, PIX);
+        pixelCtx.fillStyle = pixels[y][x];
+        pixelCtx.fillRect(x * PIX, y * PIX, PIX, PIX);
       }
     }
   }
@@ -1104,16 +1158,26 @@ function initPixelEditor() {
   
   // Drawing events
   let painting = false;
-  function paint(e) {
+  function getPixelPos(e) {
     const rect = cvs.getBoundingClientRect();
     const cx = e.touches ? e.touches[0].clientX : e.clientX;
     const cy = e.touches ? e.touches[0].clientY : e.clientY;
-    const px = Math.floor((cx - rect.left) / (rect.width / GRID));
-    const py = Math.floor((cy - rect.top) / (rect.height / GRID));
-    if (px < 0 || py < 0 || px >= GRID || py >= GRID) return;
-    pixels[py][px] = erasing ? 'transparent' : selColor;
-    redraw();
+    const scaleX = rect.width / cvs.width;
+    const scaleY = rect.height / cvs.height;
+    const px = Math.floor((cx - rect.left) / scaleX / PIX);
+    const py = Math.floor((cy - rect.top) / scaleY / PIX);
+    return { px, py };
   }
+  
+  function paint(e) {
+    e.preventDefault();
+    const { px, py } = getPixelPos(e);
+    if (px >= 0 && py >= 0 && px < GRID && py < GRID) {
+      pixels[py][px] = erasing ? 'transparent' : selColor;
+      redraw();
+    }
+  }
+  
   cvs.addEventListener('mousedown', e => { painting = true; paint(e); });
   cvs.addEventListener('mousemove', e => { if (painting) paint(e); });
   cvs.addEventListener('mouseup', () => painting = false);
@@ -1122,73 +1186,76 @@ function initPixelEditor() {
   cvs.addEventListener('touchmove', e => { e.preventDefault(); if (painting) paint(e); }, { passive: false });
   cvs.addEventListener('touchend', () => painting = false);
   
-  window._pxToggleEraser = () => {
-    erasing = !erasing;
-    const btn = document.getElementById('px-erase-btn');
-    if (btn) btn.style.borderColor = erasing ? '#FFD700' : 'rgba(255,105,180,.4)';
-  };
-  window._pxClear = () => {
-    pixels = Array(GRID).fill(null).map(() => Array(GRID).fill('transparent'));
-    redraw();
-  };
-  window._pxFill = () => {
-    pixels = pixels.map(row => row.map(c => c === 'transparent' ? selColor : c));
-    redraw();
-  };
-  window._pxSave = async () => {
-    const offC = document.createElement('canvas');
-    offC.width = GRID;
-    offC.height = GRID;
-    const offCtx = offC.getContext('2d');
-    for (let y = 0; y < GRID; y++) {
-      for (let x = 0; x < GRID; x++) {
-        if (pixels[y][x] === 'transparent') continue;
+  redraw();
+}
+
+function toggleEraser() {
+  erasing = !erasing;
+  const btn = document.getElementById('px-erase-btn');
+  if (btn) btn.style.borderColor = erasing ? '#FFD700' : 'rgba(255,105,180,.4)';
+}
+
+function clearCanvas() {
+  pixels = Array(GRID).fill(null).map(() => Array(GRID).fill('transparent'));
+  redrawPixelCanvas();
+}
+
+function fillCanvas() {
+  pixels = pixels.map(row => row.map(c => c === 'transparent' ? selColor : c));
+  redrawPixelCanvas();
+}
+
+function redrawPixelCanvas() {
+  if (!pixelCtx || !pixelCanvas) return;
+  pixelCtx.clearRect(0, 0, pixelCanvas.width, pixelCanvas.height);
+  pixelCtx.fillStyle = '#0a0015';
+  pixelCtx.fillRect(0, 0, pixelCanvas.width, pixelCanvas.height);
+  for (let y = 0; y < GRID; y++) {
+    for (let x = 0; x < GRID; x++) {
+      if (pixels[y][x] !== 'transparent') {
+        pixelCtx.fillStyle = pixels[y][x];
+        pixelCtx.fillRect(x * PIX, y * PIX, PIX, PIX);
+      }
+    }
+  }
+}
+
+async function saveDrawnSprite() {
+  const offC = document.createElement('canvas');
+  offC.width = GRID;
+  offC.height = GRID;
+  const offCtx = offC.getContext('2d');
+  for (let y = 0; y < GRID; y++) {
+    for (let x = 0; x < GRID; x++) {
+      if (pixels[y][x] !== 'transparent') {
         offCtx.fillStyle = pixels[y][x];
         offCtx.fillRect(x, y, 1, 1);
       }
     }
-    offC.toBlob(async (blob) => {
-      if (!blob) return;
-      const t = document.getElementById('px-save-type').value;
-      const fd = new FormData();
-      fd.append('sprite_type', t);
-      fd.append('file', blob, 'sprite.png');
-      try {
-        const res = await fetch(API + '/api/sprites/upload', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${authToken}` },
-          body: fd
-        });
-        if (res.ok) {
-          toast('sprite saved ♡');
-          renderSpritesPanel();
-        } else toast('upload failed ♡');
-      } catch (e) { toast('error uploading ♡'); }
-    }, 'image/png');
-  };
-  redraw();
+  }
+  
+  offC.toBlob(async (blob) => {
+    if (!blob) return;
+    const t = document.getElementById('px-save-type').value;
+    const fd = new FormData();
+    fd.append('sprite_type', t);
+    fd.append('file', blob, 'sprite.png');
+    try {
+      const res = await fetch(API + '/api/sprites/upload', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        body: fd
+      });
+      if (res.ok) {
+        toast('sprite saved ♡');
+        loadSpritesPanel();
+      } else toast('upload failed ♡');
+    } catch (e) { 
+      toast('error uploading ♡');
+      console.error(e);
+    }
+  }, 'image/png');
 }
-
-window.eUploadSprite = async () => {
-  const t = document.getElementById('sp-type').value;
-  const f = document.getElementById('sp-file').files[0];
-  if (!f) { toast('pick a file first ♡'); return; }
-  const fd = new FormData();
-  fd.append('sprite_type', t);
-  fd.append('file', f);
-  try {
-    const res = await fetch(API + '/api/sprites/upload', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${authToken}` },
-      body: fd
-    });
-    if (res.ok) {
-      toast('sprite uploaded ♡');
-      renderSpritesPanel();
-      document.getElementById('sp-file').value = '';
-    } else toast('upload failed ♡');
-  } catch (e) { toast('error uploading ♡'); }
-};
 
 /* ═══════════════════════════════════════════════════════════
    STATS
