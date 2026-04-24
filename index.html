@@ -1134,11 +1134,14 @@ textarea.inp { border-radius:18px; resize:vertical; }
 const API_URL = 'https://kaisworldb.onrender.com';
 
 // ═══════════════════════════════════════════════════════════════
-// SPRITE LOADING SYSTEM - FIXED & WORKING!
+// SPRITE LOADING SYSTEM - FIXED FOR ANIMATED GIFS!
 // ═══════════════════════════════════════════════════════════════
 let loadedSprites = {};
 let spriteImages = {};
 let spriteConfig = {};
+
+// Support for multiple animations per sprite (idle, walk, run)
+let spriteAnimations = {};
 
 async function loadSpritesFromServer() {
     try {
@@ -1183,12 +1186,14 @@ async function loadSpritesFromServer() {
                             console.log(`🎬 ${type}: vertical ${frameCount} frames`);
                         }
                         else if (isGif) {
+                            // GIF files - use whole image and let browser animate
                             spriteConfig[type] = {
                                 frameWidth: w,
                                 frameHeight: h,
                                 frameCount: 1,
                                 type: 'gif',
-                                isAnimated: true
+                                isAnimated: true,
+                                isGif: true
                             };
                             console.log(`🎬 ${type}: animated GIF ${w}x${h}px`);
                         }
@@ -1217,12 +1222,18 @@ async function loadSpritesFromServer() {
     }
 }
 
-// FIX 1: Better sprite animation with GIF support
+// Enhanced sprite drawing with GIF support and frame animation
 function drawSpriteImage(ctx, type, x, y, targetSize = 56, frame = 0) {
     const img = spriteImages[type];
     const config = spriteConfig[type];
     
     if (img && img.complete && img.naturalWidth > 0 && config) {
+        // For GIF files, just draw the whole thing - browser handles animation
+        if (config.isGif || (config.type === 'gif')) {
+            ctx.drawImage(img, x, y, targetSize, targetSize);
+            return true;
+        }
+        
         const frameCount = config.frameCount;
         
         if (frameCount > 1) {
@@ -1246,6 +1257,7 @@ function drawSpriteImage(ctx, type, x, y, targetSize = 56, frame = 0) {
     return false;
 }
 
+// FALLBACK pixel sprites
 const FALLBACK_SPRITES = {
     cat: { p: [[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]], cs: {1:'#FF69B4',2:'#00ff88',3:'#ff4444'}, s: 5 },
     bird: { p: [[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]], cs: {1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s: 5 },
@@ -1315,7 +1327,7 @@ function burst(x,y,n=80){
 function animP(){pCtx.clearRect(0,0,pC.width,pC.height);pCtx.globalAlpha=1;parts=parts.filter(p=>{p.update();p.draw(pCtx);return p.l>0;});requestAnimationFrame(animP);}
 animP();
 
-// FIX 4: Right-click delete with blood effect
+// Blood effect for pet deletion
 function addBloodEffect(x, y) {
     for (let i = 0; i < 20; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -1754,7 +1766,6 @@ let lastLiveState = null;
 async function loadStage(){
   const s=await api('/api/live');
   if(s) {
-    // Only update if the stream state actually changed
     const hasChanged = !lastLiveState || 
                        lastLiveState.is_live !== s.is_live || 
                        lastLiveState.stream_url !== s.stream_url ||
@@ -1764,13 +1775,12 @@ async function loadStage(){
       lastLiveState = s;
     }
   }
-  loadChat(); // Chat still refreshes but video doesn't reset
+  loadChat();
 }
 function renderLive(s){
   const badge=document.getElementById('live-badge'),area=document.getElementById('stage-video-area');
   if(s.is_live&&s.stream_url){
     badge.style.display='inline-flex';
-    // Only replace iframe if stream changed to avoid flicker
     const existingIframe = area.querySelector('iframe');
     const newEmbedUrl = ytEmbed(s.stream_url);
     if (!existingIframe || existingIframe.src !== newEmbedUrl) {
@@ -1778,14 +1788,12 @@ function renderLive(s){
     }
   } else {
     badge.style.display='none';
-    // Only update offline screen if it's a new state
     if (lastLiveState && lastLiveState.is_live !== s.is_live) {
       area.innerHTML=`<div class="offline-screen"${s.offline_image_url?` style="background-image:url(${s.offline_image_url});background-size:cover;background-position:center;"`:''}>${!s.offline_image_url?`<div style="font-size:40px;opacity:.35">■</div><div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--lav);">KAI IS OFFLINE</div><div style="font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,105,180,.4);margin-top:6px;">check back soon ♡</div>`:''}</div>`;
     }
   }
 }
 function startLivePoll(){
-  // Slower polling for live status (every 10s) but no video reset on each poll
   setInterval(async()=>{ 
     const s=await api('/api/live');
     if(s) {
@@ -2019,7 +2027,6 @@ class Pet {
     }
 }
 
-// FIX 6 & 7: NO random spawning, manual spawn with pet selection
 function initPetCanvas() {
     floatPets = [];
     
@@ -2033,13 +2040,11 @@ function initPetCanvas() {
     }
     animate();
     
-    // Setup right-click delete
     setupRightClickDelete();
     
     console.log('✅ Pets only spawn manually - right click to delete with blood!');
 }
 
-// FIX 5: Right-click delete listener
 function setupRightClickDelete() {
     document.addEventListener('contextmenu', (e) => {
         e.preventDefault();
@@ -2047,7 +2052,6 @@ function setupRightClickDelete() {
         const mouseX = e.clientX;
         const mouseY = e.clientY;
         
-        // Check floating pets
         for (let i = 0; i < floatPets.length; i++) {
             const pet = floatPets[i];
             const dx = mouseX - pet.x;
@@ -2060,7 +2064,6 @@ function setupRightClickDelete() {
             }
         }
         
-        // Check petscape pets
         const canvas = document.getElementById('petscape-canvas');
         if (canvas && petscapePets) {
             const rect = canvas.getBoundingClientRect();
@@ -2082,20 +2085,16 @@ function setupRightClickDelete() {
     });
 }
 
-// FIX 7 & 8: Manual spawn button with pet selection
 function addPetSpawnButton() {
-    // Create container
     const container = document.createElement('div');
     container.style.cssText = `position:fixed;bottom:80px;right:18px;z-index:9000;display:flex;flex-direction:column;gap:8px;`;
     
-    // Main spawn button
     const mainBtn = document.createElement('button');
     mainBtn.innerHTML = '🐾';
     mainBtn.style.cssText = `width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff6eb4,#8b00ff);backdrop-filter:blur(12px);border:2px solid rgba(255,215,0,.6);color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 20px rgba(255,105,180,.5);`;
     mainBtn.onmouseenter = () => mainBtn.style.transform = 'scale(1.1)';
     mainBtn.onmouseleave = () => mainBtn.style.transform = 'scale(1)';
     
-    // Pet selection buttons (hidden by default)
     const petButtons = document.createElement('div');
     petButtons.style.cssText = `display:none;flex-direction:column;gap:5px;margin-bottom:5px;`;
     
