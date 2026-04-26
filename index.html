@@ -11,24 +11,23 @@
    CSS VARIABLES & RESET — BUBBLEGUM/HOT PINK THEME
 ═══════════════════════════════════════ */
 :root {
-  /* Hot pink / bubblegum palette */
-  --pk: #ff2d87;       /* hot pink primary */
-  --rose: #ff0066;     /* vivid rose */
-  --blush: #ffb3d9;    /* soft bubblegum */
-  --bubblegum: #ff69c6; /* bubblegum mid */
-  --candy: #ff90d6;    /* candy floss */
-  --lav: #f9b4f0;      /* pink-lavender */
-  --lilac: #fde8ff;    /* very pale lilac */
-  --mauve: #e060a0;    /* mauve-pink */
-  --plum: #c4006e;     /* deep hot pink */
-  --purple: #d400b8;   /* pink-purple */
-  --deep: #5a0030;     /* deep crimson */
-  --gold: #ffd700;     /* keep gold accents */
-  --cream: #fff5f9;    /* pink-tinted cream */
+  --pk: #ff2d87;
+  --rose: #ff0066;
+  --blush: #ffb3d9;
+  --bubblegum: #ff69c6;
+  --candy: #ff90d6;
+  --lav: #f9b4f0;
+  --lilac: #fde8ff;
+  --mauve: #e060a0;
+  --plum: #c4006e;
+  --purple: #d400b8;
+  --deep: #5a0030;
+  --gold: #ffd700;
+  --cream: #fff5f9;
   --amber: #ffb347;
-  --blood: #7a0020;    /* keep for buttons */
+  --blood: #7a0020;
   --crimson: #4a000f;
-  --midnight: #1a0020; /* deep pink-black */
+  --midnight: #1a0020;
   --glass: rgba(255,45,135,.12);
   --glow-pk: 0 0 22px rgba(255,45,135,.9), 0 0 50px rgba(255,45,135,.4);
   --glow-gold: 0 0 22px rgba(255,215,0,.9), 0 0 50px rgba(255,215,0,.4);
@@ -90,7 +89,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   66%     { transform:translate(-20px,15px) scale(.95); }
 }
 
-/* ── BOOK WRAPPER ── */
 #book-scene {
   perspective: 2200px;
   width:320px; height:440px;
@@ -110,7 +108,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   transform: rotateX(6deg) rotateY(-10deg);
 }
 
-/* FRONT COVER */
 #cover-front {
   position:absolute; inset:0;
   transform-style:preserve-3d;
@@ -235,7 +232,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   transform:translateX(-50%); font-size:8px; color:rgba(255,255,255,.7);
 }
 
-/* ── INNER PAGE (revealed when book opens) ── */
 #cover-back {
   position:absolute; inset:0;
   border-radius:4px 18px 18px 4px;
@@ -244,7 +240,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   backface-visibility:hidden;
 }
 
-/* ── PAGES EDGE — visible stacked pages ── */
 #pages-edge {
   position:absolute; top:0; right:-18px; width:18px; height:420px;
   transform-origin:left center;
@@ -256,7 +251,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   background:linear-gradient(90deg, #f8e0ee, #f0d0e4);
 }
 
-/* SPINE */
 #book-spine {
   position:absolute; top:0; left:0; width:22px; height:420px;
   transform-origin: right center;
@@ -273,7 +267,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   text-shadow:0 0 6px rgba(255,215,0,.35);
 }
 
-/* INNER PAGE visible when opened */
 #inner-page {
   position:absolute; inset:0;
   border-radius:4px 18px 18px 4px;
@@ -285,7 +278,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   box-shadow:inset 30px 0 40px rgba(0,0,0,.12);
   overflow:hidden;
 }
-/* Faint ruled lines on inner page */
 #inner-page::before {
   content:''; position:absolute; inset:0;
   background: repeating-linear-gradient(
@@ -296,13 +288,11 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
     rgba(255,100,160,.12) 28px
   );
 }
-/* Red margin line */
 #inner-page::after {
   content:''; position:absolute; left:50px; top:0; bottom:0; width:1.5px;
   background:rgba(255,80,140,.25);
 }
 
-/* ── DRAGGABLE KEY ── */
 #key-wrap {
   position:fixed; z-index:9999; touch-action:none; user-select:none;
   cursor:grab !important;
@@ -349,7 +339,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
 }
 
 /* ═══════════════════════════════════════
-   MAIN SITE — BUBBLEGUM THEME
+   MAIN SITE
 ═══════════════════════════════════════ */
 #site {
   position:fixed; inset:0; opacity:0; pointer-events:none;
@@ -389,7 +379,7 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
 }
 
 /* ═══════════════════════════════════════
-   NAV BAR — HOT PINK
+   NAV BAR
 ═══════════════════════════════════════ */
 #nav {
   position:fixed; top:16px; left:50%; transform:translateX(-50%);
@@ -459,7 +449,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
   color:var(--candy); margin-bottom:22px; letter-spacing:1px;
 }
 
-/* ── GLASS CARDS ── */
 .card {
   background:rgba(255,45,135,.04);
   backdrop-filter:blur(18px) saturate(1.3);
@@ -480,7 +469,6 @@ html, body { width:100%; height:100%; overflow:hidden; background:#1a0020; font-
 .card-pur { border-color:rgba(255,45,135,.28); background:rgba(200,0,130,.07); }
 .card-rose{ border-color:rgba(255,0,100,.25); background:rgba(255,0,100,.07); }
 
-/* ── INPUTS ── */
 .inp {
   width:100%; padding:12px 20px; border-radius:28px;
   background:rgba(0,0,0,.4); border:1.5px solid rgba(255,45,135,.22);
@@ -502,7 +490,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .btn:hover { background:linear-gradient(135deg,var(--rose),var(--bubblegum)); transform:translateY(-2px); box-shadow:var(--glow-pk); }
 .btn-sm { padding:6px 15px; font-size:8.5px; }
 
-/* ── HOME ── */
 #home-hero { display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:1200px; margin:0 auto; }
 @media(max-width:700px){ #home-hero{ grid-template-columns:1fr; } }
 .avatar {
@@ -528,7 +515,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
   font-size:11px; color:var(--blush);
 }
 
-/* ── FEED ── */
 .feed-stories { display:flex; gap:12px; overflow-x:auto; padding:0 0 16px; scrollbar-width:none; max-width:900px; margin:0 auto 20px; }
 .feed-stories::-webkit-scrollbar { display:none; }
 .story-ring { display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; cursor:pointer; }
@@ -569,7 +555,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .feed-ph { width:100%; height:100%; background:linear-gradient(135deg,rgba(255,45,135,.18),rgba(255,0,100,.15)); display:flex; align-items:center; justify-content:center; font-size:28px; }
 .feed-vid-badge { position:absolute; top:8px; right:8px; background:rgba(0,0,0,.65); border-radius:5px; padding:2px 6px; font-size:9px; color:#fff; }
 
-/* Post modal */
 #post-modal {
   position:fixed; inset:0; z-index:5000;
   background:rgba(0,0,0,.85); backdrop-filter:blur(14px);
@@ -609,7 +594,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 }
 .modal-close:hover { background:rgba(255,0,80,.25); transform:scale(1.1); }
 
-/* ── THREADS ── */
 .thread-card {
   max-width:700px; margin:0 auto 18px; padding:22px;
   background:rgba(255,45,135,.03); backdrop-filter:blur(16px);
@@ -650,7 +634,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 }
 .vote-btn:hover { background:rgba(255,45,135,.15); color:var(--pk); }
 
-/* ── VLOGS ── */
 .vlog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; max-width:1100px; margin:0 auto; }
 .vlog-card {
   border-radius:22px; background:rgba(255,45,135,.03);
@@ -665,7 +648,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .vlog-desc { font-size:11.5px; color:var(--candy); line-height:1.6; }
 .vlog-date { font-family:'Dancing Script',cursive; font-size:12px; color:rgba(255,45,135,.55); margin-top:6px; }
 
-/* ── ABOUT ── */
 #about-lay { display:grid; grid-template-columns:270px 1fr; gap:20px; max-width:1100px; margin:0 auto; }
 @media(max-width:700px){ #about-lay{ grid-template-columns:1fr; } }
 .about-card {
@@ -685,7 +667,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .fact-n { font-family:'Cinzel Decorative',serif; font-size:26px; color:rgba(255,215,0,.18); position:absolute; top:6px; right:12px; }
 .fact-t { font-size:12px; color:#d8c0e0; line-height:1.65; }
 
-/* ── LINKS ── */
 .links-wrap { display:flex; flex-direction:column; gap:16px; max-width:480px; margin:0 auto; }
 .link-card {
   padding:20px 26px; border-radius:50px; display:flex; align-items:center; gap:16px;
@@ -701,7 +682,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .link-handle-text { font-family:'Dancing Script',cursive; font-size:13px; color:rgba(255,255,255,.65); }
 .link-arrow { font-size:18px; color:rgba(255,255,255,.5); margin-left:auto; }
 
-/* ── PETSCAPE ── */
 #petscape-canvas {
   width:100%; height:460px; border-radius:30px;
   border:1px solid rgba(255,45,135,.3);
@@ -709,7 +689,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 }
 #petscape-controls { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; justify-content:center; }
 
-/* ── LIVE ── */
 #stage-lay { display:grid; grid-template-columns:1fr 300px; gap:16px; max-width:1100px; margin:0 auto; }
 @media(max-width:900px){ #stage-lay{ grid-template-columns:1fr; } }
 .live-badge {
@@ -742,7 +721,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .chat-input:focus { border-color:rgba(255,45,135,.5); }
 .chat-send { padding:8px 14px; border-radius:16px; background:var(--plum); border:1px solid rgba(255,45,135,.4); color:var(--gold); font-family:'Cinzel Decorative',serif; font-size:8px; cursor:pointer; letter-spacing:1px; }
 
-/* ── I WAS HERE ── */
 .sigs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; max-width:1100px; margin:0 auto; }
 .sig-card {
   background:rgba(255,45,135,.03); border:1px solid rgba(255,45,135,.22);
@@ -752,7 +730,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .sig-msg { font-size:12px; color:#d8c0d8; line-height:1.6; }
 .sig-dt { font-family:'Dancing Script',cursive; font-size:12px; color:var(--candy); margin-top:6px; }
 
-/* ── STATS ── */
 .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; max-width:1100px; margin:0 auto 22px; }
 .stat-card { background:rgba(255,215,0,.07); border:1px solid rgba(255,215,0,.22); border-radius:22px; padding:20px; text-align:center; }
 .big-num { font-family:'Cinzel Decorative',serif; font-size:36px; color:var(--gold); text-shadow:var(--glow-gold); }
@@ -762,7 +739,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .bar-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,var(--plum),var(--pk),var(--gold)); transition:width 1.5s cubic-bezier(.4,0,.2,1); }
 .bar-val { width:40px; font-size:11px; color:var(--gold); }
 
-/* ── LOGIN ── */
 .login-box {
   background:rgba(15,0,22,.95); border:1px solid rgba(255,215,0,.3); border-radius:40px;
   padding:42px; max-width:380px; width:90%; backdrop-filter:blur(24px);
@@ -772,7 +748,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 .login-sub { font-family:'Dancing Script',cursive; font-size:14px; color:var(--candy); margin-bottom:26px; }
 .login-err { color:#ff6060; font-size:12px; margin-top:8px; display:none; }
 
-/* ── MISC ── */
 .loader { width:32px; height:32px; border-radius:50%; border:3px solid rgba(255,45,135,.15); border-top-color:var(--pk); animation:spin .8s linear infinite; margin:36px auto; }
 @keyframes spin { to{transform:rotate(360deg)} }
 .empty-state { text-align:center; padding:46px 20px; color:var(--candy); font-size:13px; letter-spacing:1px; }
@@ -796,9 +771,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 }
 #mute-btn:hover { border-color:var(--gold); box-shadow:var(--glow-gold); transform:scale(1.1); }
 
-/* ═══════════════════════════════════════
-   EDIT VIEW
-═══════════════════════════════════════ */
 #edit-view {
   position:fixed; inset:0; z-index:5000;
   background:rgba(0,0,0,.96); backdrop-filter:blur(24px);
@@ -827,7 +799,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
 </head>
 <body>
 
-<!-- CURSOR -->
 <div id="cursor">
   <svg viewBox="0 0 18 18" fill="none">
     <path d="M9 1C9 1 5 7 5 11a4 4 0 008 0C13 7 9 1 9 1z" fill="#ff2d87" opacity=".9"/>
@@ -851,7 +822,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
       <div id="pages-edge"></div>
       <div id="cover-back"></div>
       <div id="cover-front">
-        <!-- Inner page shows when book opens -->
         <div id="inner-page">
           <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:30px;">
             <div style="font-size:28px;opacity:.7;">✦</div>
@@ -982,7 +952,6 @@ textarea.inp { border-radius:18px; resize:vertical; }
       <div class="feed-grid" id="feed-grid"><div class="loader" style="grid-column:1/-1"></div></div>
     </div>
 
-    <!-- Post modal -->
     <div id="post-modal" onclick="if(event.target===this)closeModal()">
       <button class="modal-close" onclick="closeModal()">✕</button>
       <div class="modal-wrap">
@@ -1156,187 +1125,192 @@ textarea.inp { border-radius:18px; resize:vertical; }
 const API_URL = 'https://kaisworldb.onrender.com';
 
 // ═══════════════════════════════════════════════════════════════
-// SPRITE LOADING — ENHANCED GIF SUPPORT
-// Uses <img> tags for GIFs so browser handles animation natively
+// SPRITE LOADING — GIF SUPPORT
 // ═══════════════════════════════════════════════════════════════
 let loadedSprites = {};
 let spriteImages = {};
 let spriteConfig = {};
-
-// For GIF sprites we render via offscreen img element on canvas
-let gifElements = {}; // type -> HTMLImageElement (kept alive for GIF animation)
+let gifElements = {}; // type -> HTMLImageElement kept alive
 
 async function loadSpritesFromServer() {
-    try {
-        const res = await fetch(API_URL + '/api/sprites/list');
-        const data = await res.json();
-        if (data && data.sprites) {
-            loadedSprites = data.sprites;
-            console.log('✅ Sprites loaded:', loadedSprites);
-
-            for (const [type, rawUrl] of Object.entries(loadedSprites)) {
-                // Support both relative paths (served from backend) and full URLs (GitHub raw)
-                const url = rawUrl.startsWith('http') ? rawUrl : API_URL + rawUrl;
-                const isGif = url.toLowerCase().includes('.gif');
-
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
-
-                await new Promise((resolve) => {
-                    img.onload = () => {
-                        const w = img.naturalWidth;
-                        const h = img.naturalHeight;
-
-                        if (isGif) {
-                            // For GIFs: render whole frame, browser animates it
-                            spriteConfig[type] = {
-                                frameWidth: w, frameHeight: h,
-                                frameCount: 1, type: 'gif', isGif: true
-                            };
-                            gifElements[type] = img;
-                            console.log(`🎬 ${type}: animated GIF ${w}x${h}`);
-                        } else if (w > h && h > 0 && w % h === 0) {
-                            const fc = Math.floor(w / h);
-                            spriteConfig[type] = { frameWidth: h, frameHeight: h, frameCount: fc, type: 'horizontal-square' };
-                            console.log(`🎬 ${type}: ${fc} frames horizontal`);
-                        } else if (h > w && w > 0 && h % w === 0) {
-                            const fc = Math.floor(h / w);
-                            spriteConfig[type] = { frameWidth: w, frameHeight: w, frameCount: fc, type: 'vertical-square' };
-                            console.log(`🎬 ${type}: ${fc} frames vertical`);
-                        } else {
-                            spriteConfig[type] = { frameWidth: w, frameHeight: h, frameCount: 1, type: 'single' };
-                            console.log(`🖼️ ${type}: static ${w}x${h}`);
-                        }
-                        resolve();
-                    };
-                    img.onerror = () => {
-                        console.warn(`Failed to load sprite: ${type} from ${url}`);
-                        spriteConfig[type] = { frameCount: 1, type: 'fallback' };
-                        resolve();
-                    };
-                });
-                spriteImages[type] = img;
+  try {
+    const res = await fetch(API_URL + '/api/sprites/list');
+    const data = await res.json();
+    if (data && data.sprites) {
+      loadedSprites = data.sprites;
+      for (const [type, rawUrl] of Object.entries(loadedSprites)) {
+        const url = rawUrl.startsWith('http') ? rawUrl : API_URL + rawUrl;
+        const isGif = url.toLowerCase().includes('.gif');
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+        await new Promise((resolve) => {
+          img.onload = () => {
+            const w = img.naturalWidth, h = img.naturalHeight;
+            if (isGif) {
+              spriteConfig[type] = { frameWidth: w, frameHeight: h, frameCount: 1, type: 'gif', isGif: true };
+              gifElements[type] = img;
+            } else if (w > h && h > 0 && w % h === 0) {
+              const fc = Math.floor(w / h);
+              spriteConfig[type] = { frameWidth: h, frameHeight: h, frameCount: fc, type: 'horizontal-square' };
+            } else if (h > w && w > 0 && h % w === 0) {
+              const fc = Math.floor(h / w);
+              spriteConfig[type] = { frameWidth: w, frameHeight: w, frameCount: fc, type: 'vertical-square' };
+            } else {
+              spriteConfig[type] = { frameWidth: w, frameHeight: h, frameCount: 1, type: 'single' };
             }
-        }
-    } catch (e) {
-        console.error('Failed to load sprites:', e);
+            resolve();
+          };
+          img.onerror = () => {
+            spriteConfig[type] = { frameCount: 1, type: 'fallback' };
+            resolve();
+          };
+        });
+        spriteImages[type] = img;
+      }
     }
+  } catch (e) {
+    console.error('Failed to load sprites:', e);
+  }
 }
 
-// Draw sprite onto canvas — GIFs drawn via drawImage (browser animates them)
+// Draw non-GIF sprite onto canvas
 function drawSpriteImage(ctx, type, x, y, targetSize = 56, frame = 0) {
-    const img = spriteImages[type];
-    const config = spriteConfig[type];
-    if (!img || !config) return false;
-
-    // GIF: just drawImage the living img element — browser keeps animating it
-    if (config.isGif || config.type === 'gif') {
-        try {
-            ctx.drawImage(img, x, y, targetSize, targetSize);
-            return true;
-        } catch(e) { return false; }
-    }
-
-    if (!img.complete || img.naturalWidth === 0) return false;
-
-    const fc = config.frameCount || 1;
-    if (fc > 1) {
-        const fi = Math.floor(frame) % fc;
-        let sx = 0, sy = 0;
-        if (config.type === 'horizontal-square') sx = fi * config.frameWidth;
-        else if (config.type === 'vertical-square') sy = fi * config.frameHeight;
-        ctx.drawImage(img, sx, sy, config.frameWidth, config.frameHeight, x, y, targetSize, targetSize);
-    } else {
-        ctx.drawImage(img, 0, 0, config.frameWidth || img.naturalWidth, config.frameHeight || img.naturalHeight, x, y, targetSize, targetSize);
-    }
-    return true;
+  const img = spriteImages[type];
+  const config = spriteConfig[type];
+  if (!img || !config) return false;
+  // GIFs are handled via DOM overlay — never draw them on canvas
+  if (config.isGif || config.type === 'gif') return false;
+  if (!img.complete || img.naturalWidth === 0) return false;
+  const fc = config.frameCount || 1;
+  if (fc > 1) {
+    const fi = Math.floor(frame) % fc;
+    let sx = 0, sy = 0;
+    if (config.type === 'horizontal-square') sx = fi * config.frameWidth;
+    else if (config.type === 'vertical-square') sy = fi * config.frameHeight;
+    ctx.drawImage(img, sx, sy, config.frameWidth, config.frameHeight, x, y, targetSize, targetSize);
+  } else {
+    ctx.drawImage(img, 0, 0, config.frameWidth || img.naturalWidth, config.frameHeight || img.naturalHeight, x, y, targetSize, targetSize);
+  }
+  return true;
 }
 
 // Pixel fallback sprites
 const FALLBACK_SPRITES = {
-    cat: { p: [[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]], cs: {1:'#FF69C6',2:'#00ff88',3:'#ff4444'}, s: 5 },
-    bird: { p: [[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]], cs: {1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s: 5 },
-    bat: { p: [[1,0,0,0,0,1],[1,1,0,0,1,1],[1,1,1,1,1,1],[0,1,2,2,1,0],[0,0,1,1,0,0]], cs: {1:'#ff2d87',2:'#FF90D6'}, s: 5 },
-    dog: { p: [[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]], cs: {1:'#D2691E',2:'#8B4513'}, s: 6 }
+  cat:  { p:[[0,0,1,1,0,0],[1,0,1,1,0,1],[1,1,2,1,1,1],[0,1,3,3,1,0],[1,1,1,1,1,1],[0,1,0,0,1,0]], cs:{1:'#FF69C6',2:'#00ff88',3:'#ff4444'}, s:5 },
+  bird: { p:[[0,0,1,1,0,0],[0,1,2,1,1,0],[1,1,1,1,3,0],[0,1,1,1,0,0],[0,0,1,0,0,0]], cs:{1:'#FFD700',2:'#ff6600',3:'#ff4444'}, s:5 },
+  bat:  { p:[[1,0,0,0,0,1],[1,1,0,0,1,1],[1,1,1,1,1,1],[0,1,2,2,1,0],[0,0,1,1,0,0]], cs:{1:'#ff2d87',2:'#FF90D6'}, s:5 },
+  dog:  { p:[[0,1,1,0],[1,2,2,1],[1,2,2,1],[0,1,1,1],[1,0,0,1]], cs:{1:'#D2691E',2:'#8B4513'}, s:6 }
 };
 
 function drawPixelSprite(ctx, type, x, y, size = 48) {
-    const sp = FALLBACK_SPRITES[type];
-    if (!sp) return;
-    const scale = size / (sp.s * 6);
-    sp.p.forEach((row, ry) => {
-        row.forEach((v, cx2) => {
-            if (v && sp.cs[v]) {
-                ctx.fillStyle = sp.cs[v];
-                ctx.fillRect(x + cx2 * sp.s * scale, y + ry * sp.s * scale, sp.s * scale, sp.s * scale);
-            }
-        });
+  const sp = FALLBACK_SPRITES[type];
+  if (!sp) return;
+  const scale = size / (sp.s * 6);
+  sp.p.forEach((row, ry) => {
+    row.forEach((v, cx2) => {
+      if (v && sp.cs[v]) {
+        ctx.fillStyle = sp.cs[v];
+        ctx.fillRect(x + cx2 * sp.s * scale, y + ry * sp.s * scale, sp.s * scale, sp.s * scale);
+      }
     });
+  });
 }
 
-function drawPetSprite(ctx, type, ox, oy, size = 56, frame = 0) {
-    const drawn = drawSpriteImage(ctx, type, ox, oy, size, frame);
-    if (!drawn) drawPixelSprite(ctx, type, ox, oy, size);
+function drawPetSprite(ctx, type, x, y, targetSize = 56, frame = 0) {
+  const drawn = drawSpriteImage(ctx, type, x, y, targetSize, frame);
+  if (!drawn) drawPixelSprite(ctx, type, x, y, targetSize);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GIF OVERLAY SYSTEM
+// Keeps an <img> in the DOM for each GIF pet and positions it
+// with CSS each frame — browsers animate GIFs natively in <img>
+// but NOT when drawn via canvas drawImage()
+// ═══════════════════════════════════════════════════════════════
+const gifOverlays = new Map(); // petId -> HTMLImageElement
+let _petIdCounter = 0;
+
+function createGifOverlay(petId, imgSrc) {
+  let el = gifOverlays.get(petId);
+  if (!el) {
+    el = document.createElement('img');
+    el.src = imgSrc;
+    el.style.cssText = `
+      position:fixed; pointer-events:none; z-index:51;
+      width:56px; height:56px; image-rendering:pixelated;
+      transform-origin:center center;
+    `;
+    document.body.appendChild(el);
+    gifOverlays.set(petId, el);
+  }
+  return el;
+}
+
+function updateGifOverlay(petId, imgSrc, screenX, screenY, flipX) {
+  const el = createGifOverlay(petId, imgSrc);
+  el.style.left = (screenX - 28) + 'px';
+  el.style.top  = (screenY - 28) + 'px';
+  el.style.transform = flipX ? 'scaleX(-1)' : 'scaleX(1)';
+  el.style.display = 'block';
+}
+
+function removeGifOverlay(petId) {
+  const el = gifOverlays.get(petId);
+  if (el) { el.remove(); gifOverlays.delete(petId); }
 }
 
 // ═══════════════════════════════════════════════════════════════
 // CURSOR & PARTICLES
 // ═══════════════════════════════════════════════════════════════
 const curEl = document.getElementById('cursor');
-let cx=0,cy=0, tcx=0,tcy=0;
-document.addEventListener('mousemove',e=>{ tcx=e.clientX; tcy=e.clientY; });
+let cx=0, cy=0, tcx=0, tcy=0;
+document.addEventListener('mousemove', e => { tcx=e.clientX; tcy=e.clientY; });
 (function animCursor(){
   cx+=(tcx-cx)*.22; cy+=(tcy-cy)*.22;
   curEl.style.left=cx+'px'; curEl.style.top=cy+'px';
   requestAnimationFrame(animCursor);
 })();
-document.addEventListener('mousedown',()=>curEl.classList.add('clicking'));
-document.addEventListener('mouseup',()=>curEl.classList.remove('clicking'));
+document.addEventListener('mousedown', ()=>curEl.classList.add('clicking'));
+document.addEventListener('mouseup', ()=>curEl.classList.remove('clicking'));
 
 let trailThrottle=0;
-document.addEventListener('mousemove',e=>{
+document.addEventListener('mousemove', e => {
   const now=Date.now(); if(now-trailThrottle<150)return; trailThrottle=now;
   const t=document.createElement('div'); t.className='cursor-trail';
   t.textContent=['♡','✦','✿','♥','✸'][Math.floor(Math.random()*5)];
   t.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;color:${['#ff2d87','#ffd700','#ff90d6'][Math.floor(Math.random()*3)]};font-size:${9+Math.random()*7}px;`;
-  document.body.appendChild(t); setTimeout(()=>t.remove(),700);
+  document.body.appendChild(t); setTimeout(()=>t.remove(), 700);
 });
 
 const pC=document.getElementById('pcanvas'), pCtx=pC.getContext('2d');
 let parts=[];
 function resP(){ pC.width=window.innerWidth; pC.height=window.innerHeight; }
-resP(); window.addEventListener('resize',resP);
-class P{
-  constructor(x,y,c,vx,vy,s,l){Object.assign(this,{x,y,c,vx,vy,s,l,ml:l,g:.09});}
-  update(){this.x+=this.vx;this.y+=this.vy;this.vy+=this.g;this.vx*=.98;this.l--;}
-  draw(ctx){const a=this.l/this.ml;ctx.globalAlpha=a;ctx.fillStyle=this.c;ctx.beginPath();ctx.arc(this.x,this.y,this.s*a,0,Math.PI*2);ctx.fill();}
+resP(); window.addEventListener('resize', resP);
+class P {
+  constructor(x,y,c,vx,vy,s,l){ Object.assign(this,{x,y,c,vx,vy,s,l,ml:l,g:.09}); }
+  update(){ this.x+=this.vx; this.y+=this.vy; this.vy+=this.g; this.vx*=.98; this.l--; }
+  draw(ctx){ const a=this.l/this.ml; ctx.globalAlpha=a; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,this.s*a,0,Math.PI*2); ctx.fill(); }
 }
 function burst(x,y,n=80){
   const cs=['#FFD700','#ff2d87','#FF0066','#FFB3D9','#ff90d6','#FFB6C1','#fff','#ff69c6'];
-  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=1.5+Math.random()*5;parts.push(new P(x,y,cs[~~(Math.random()*cs.length)],Math.cos(a)*s,Math.sin(a)*s-1.5,1+Math.random()*4,35+Math.random()*40));}
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=1.5+Math.random()*5; parts.push(new P(x,y,cs[~~(Math.random()*cs.length)],Math.cos(a)*s,Math.sin(a)*s-1.5,1+Math.random()*4,35+Math.random()*40));}
 }
-function animP(){pCtx.clearRect(0,0,pC.width,pC.height);pCtx.globalAlpha=1;parts=parts.filter(p=>{p.update();p.draw(pCtx);return p.l>0;});requestAnimationFrame(animP);}
+function animP(){ pCtx.clearRect(0,0,pC.width,pC.height); pCtx.globalAlpha=1; parts=parts.filter(p=>{p.update();p.draw(pCtx);return p.l>0;}); requestAnimationFrame(animP); }
 animP();
 
 function addBloodEffect(x, y) {
-    for (let i = 0; i < 20; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 1 + Math.random() * 5;
-        const vx = Math.cos(angle) * speed;
-        const vy = Math.sin(angle) * speed - 1.5;
-        const color = ['#ff0000','#cc0000','#990000','#ff3333'][Math.floor(Math.random() * 4)];
-        parts.push(new P(x, y, color, vx, vy, 2+Math.random()*4, 30+Math.random()*25));
-    }
-    const bloodText = document.createElement('div');
-    bloodText.textContent = '💀';
-    bloodText.style.cssText = `position:fixed;left:${x}px;top:${y}px;font-size:24px;pointer-events:none;z-index:99999;animation:fadeOut 0.5s ease-out forwards;`;
-    document.body.appendChild(bloodText);
-    setTimeout(() => bloodText.remove(), 500);
+  for(let i=0;i<20;i++){
+    const angle=Math.random()*Math.PI*2, speed=1+Math.random()*5;
+    parts.push(new P(x,y,['#ff0000','#cc0000','#990000','#ff3333'][Math.floor(Math.random()*4)],Math.cos(angle)*speed,Math.sin(angle)*speed-1.5,2+Math.random()*4,30+Math.random()*25));
+  }
+  const bt=document.createElement('div');
+  bt.textContent='💀';
+  bt.style.cssText=`position:fixed;left:${x}px;top:${y}px;font-size:24px;pointer-events:none;z-index:99999;animation:fadeOut 0.5s ease-out forwards;`;
+  document.body.appendChild(bt); setTimeout(()=>bt.remove(), 500);
 }
-
-const bloodStyle = document.createElement('style');
-bloodStyle.textContent = `@keyframes fadeOut { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.5)} }`;
+const bloodStyle=document.createElement('style');
+bloodStyle.textContent=`@keyframes fadeOut{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.5)}}`;
 document.head.appendChild(bloodStyle);
 
 // Book page edges
@@ -1344,9 +1318,7 @@ document.head.appendChild(bloodStyle);
   const pf=document.getElementById('pages-edge');
   for(let i=0;i<50;i++){
     const s=document.createElement('div'); s.className='page-slice';
-    const h=420/50;
-    const lightness=88+Math.random()*6;
-    const pinkness=i%4===0?'rgba(255,180,220,0.3)':'transparent';
+    const h=420/50, lightness=88+Math.random()*6;
     s.style.cssText=`top:${i*h}px;height:${h+.5}px;background:linear-gradient(90deg,hsl(330,60%,${lightness}%),hsl(320,50%,${lightness+3}%));border-bottom:${i%6===0?'1px solid rgba(255,150,200,0.2)':'none'};`;
     pf.appendChild(s);
   }
@@ -1376,74 +1348,72 @@ document.head.appendChild(bloodStyle);
   const book3d=document.getElementById('book-3d');
 
   function setPos(){
-    const vw=window.innerWidth,vh=window.innerHeight;
+    const vw=window.innerWidth, vh=window.innerHeight;
     kEl.style.left=Math.round(vw*.62)+'px';
     kEl.style.top=Math.round(vh*.68)+'px';
     if(hintEl){ hintEl.style.left=Math.round(vw*.62-30)+'px'; hintEl.style.top=Math.round(vh*.68+62)+'px'; }
   }
-  setPos(); window.addEventListener('resize',setPos); setTimeout(setPos,200);
+  setPos(); window.addEventListener('resize', setPos); setTimeout(setPos, 200);
 
-  let drag=false,ox=0,oy=0;
+  let drag=false, ox=0, oy=0;
   function getXY(e){ return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY}; }
 
-  kEl.addEventListener('mousedown',start,{passive:false});
-  kEl.addEventListener('touchstart',start,{passive:false});
+  kEl.addEventListener('mousedown', start, {passive:false});
+  kEl.addEventListener('touchstart', start, {passive:false});
   function start(e){
     e.preventDefault(); drag=true;
     const {x,y}=getXY(e); const r=kEl.getBoundingClientRect();
     ox=x-r.left; oy=y-r.top;
     kEl.classList.add('dragging');
-    if(hintEl)hintEl.style.opacity='0';
+    if(hintEl) hintEl.style.opacity='0';
     playSound('key');
-    document.addEventListener('mousemove',move,{passive:false});
-    document.addEventListener('touchmove',move,{passive:false});
-    document.addEventListener('mouseup',end);
-    document.addEventListener('touchend',end);
+    document.addEventListener('mousemove', move, {passive:false});
+    document.addEventListener('touchmove', move, {passive:false});
+    document.addEventListener('mouseup', end);
+    document.addEventListener('touchend', end);
   }
   function move(e){
-    if(!drag)return; e.preventDefault();
+    if(!drag) return; e.preventDefault();
     const {x,y}=getXY(e);
     kEl.style.left=(x-ox)+'px'; kEl.style.top=(y-oy)+'px';
     const sr=sealEl.getBoundingClientRect(), kr=kEl.getBoundingClientRect();
     const d=Math.hypot((kr.left+kr.width/2)-(sr.left+sr.width/2),(kr.top+kr.height/2)-(sr.top+sr.height/2));
-    sealEl.classList.toggle('highlighted',d<110);
+    sealEl.classList.toggle('highlighted', d<110);
   }
   function end(){
-    if(!drag)return; drag=false;
+    if(!drag) return; drag=false;
     kEl.classList.remove('dragging');
-    document.removeEventListener('mousemove',move); document.removeEventListener('touchmove',move);
-    document.removeEventListener('mouseup',end); document.removeEventListener('touchend',end);
+    document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move);
+    document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end);
     const sr=sealEl.getBoundingClientRect(), kr=kEl.getBoundingClientRect();
     const d=Math.hypot((kr.left+kr.width/2)-(sr.left+sr.width/2),(kr.top+kr.height/2)-(sr.top+sr.height/2));
     if(d<110){ doUnlock(); return; }
     kEl.style.transition='left .55s cubic-bezier(.34,1.56,.64,1),top .55s cubic-bezier(.34,1.56,.64,1)';
-    setPos(); setTimeout(()=>{ kEl.style.transition=''; if(hintEl)hintEl.style.opacity=''; },600);
+    setPos(); setTimeout(()=>{ kEl.style.transition=''; if(hintEl) hintEl.style.opacity=''; }, 600);
   }
 
   function doUnlock(){
     playSound('unlock');
     const sr=sealEl.getBoundingClientRect();
-    burst(sr.left+sr.width/2,sr.top+sr.height/2,120);
+    burst(sr.left+sr.width/2, sr.top+sr.height/2, 120);
     sealEl.style.transition='transform .35s,opacity .35s';
     sealEl.style.transform='scale(2.5)'; sealEl.style.opacity='0';
     kEl.style.transition='transform .3s,opacity .3s'; kEl.style.transform='scale(0)'; kEl.style.opacity='0';
-    if(hintEl){hintEl.style.transition='opacity .3s'; hintEl.style.opacity='0';}
-
+    if(hintEl){ hintEl.style.transition='opacity .3s'; hintEl.style.opacity='0'; }
     setTimeout(()=>{
       playSound('book');
       book3d.style.transition='transform 1.8s cubic-bezier(.25,.46,.45,.94)';
       book3d.style.transform='rotateX(8deg) rotateY(-35deg)';
       coverFront.classList.add('opening');
       const br=book3d.getBoundingClientRect();
-      setTimeout(()=>burst(br.left+br.width*.3,br.top+br.height*.5,60),600);
-    },400);
-
-    setTimeout(()=>{ gateEl.classList.add('departing'); },1800);
+      setTimeout(()=>burst(br.left+br.width*.3, br.top+br.height*.5, 60), 600);
+    }, 400);
+    setTimeout(()=>{ gateEl.classList.add('departing'); }, 1800);
     setTimeout(()=>{
       siteEl.classList.add('visible');
       gateEl.style.display='none';
       initSite();
-    },2800);
+    }, 2800);
   }
 })();
 
@@ -1451,30 +1421,30 @@ document.head.appendChild(bloodStyle);
 // AUDIO
 // ═══════════════════════════════════════════════════════════════
 let audioCtx=null, muted=false;
-function getAC(){ if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+function getAC(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
 function toggleMute(){ muted=!muted; document.getElementById('mute-btn').textContent=muted?'🔇':'🔊'; }
 function playSound(t){
-  if(muted)return;
+  if(muted) return;
   try{
     const ctx=getAC();
     if(t==='unlock'){
       [440,554,659,880].forEach((f,i)=>{
-        const o=ctx.createOscillator(),g=ctx.createGain();
+        const o=ctx.createOscillator(), g=ctx.createGain();
         o.type='sine'; o.frequency.value=f;
         g.gain.setValueAtTime(.12,ctx.currentTime+i*.08);
         g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.08+.25);
         o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime+i*.08); o.stop(ctx.currentTime+i*.08+.25);
       });
     } else if(t==='book'){
-      const o=ctx.createOscillator(),g=ctx.createGain();
+      const o=ctx.createOscillator(), g=ctx.createGain();
       o.type='sine'; o.frequency.setValueAtTime(80,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(35,ctx.currentTime+1);
       o.connect(g); g.gain.setValueAtTime(.2,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+1); o.start(); o.stop(ctx.currentTime+1);
     } else if(t==='key'){
-      const o=ctx.createOscillator(),g=ctx.createGain();
+      const o=ctx.createOscillator(), g=ctx.createGain();
       o.type='triangle'; o.frequency.value=680;
       o.connect(g); g.gain.setValueAtTime(.025,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.06); o.start(); o.stop(ctx.currentTime+.06);
     }
-  }catch(e){}
+  } catch(e){}
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1494,15 +1464,15 @@ function spawnSakura(){
 // ═══════════════════════════════════════════════════════════════
 // API
 // ═══════════════════════════════════════════════════════════════
-async function api(path,method='GET',body=null){
+async function api(path, method='GET', body=null){
   const h={'Content-Type':'application/json'};
   const tk=sessionStorage.getItem('kai_token');
-  if(tk)h['Authorization']=`Bearer ${tk}`;
+  if(tk) h['Authorization']=`Bearer ${tk}`;
   try{
     const r=await fetch(API_URL+path,{method,headers:h,body:body?JSON.stringify(body):undefined});
-    if(!r.ok)return null;
+    if(!r.ok) return null;
     return await r.json();
-  }catch(e){return null;}
+  } catch(e){ return null; }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1511,14 +1481,14 @@ async function api(path,method='GET',body=null){
 function switchPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const pg=document.getElementById('page-'+id); if(pg)pg.classList.add('active');
-  const nb=document.querySelector(`.nav-btn[data-page="${id}"]`); if(nb)nb.classList.add('active');
+  const pg=document.getElementById('page-'+id); if(pg) pg.classList.add('active');
+  const nb=document.querySelector(`.nav-btn[data-page="${id}"]`); if(nb) nb.classList.add('active');
   loadPage(id);
   trackVisit(id);
 }
 document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{
-  const p=b.dataset.page; if(!p)return;
-  if(p==='edit'){openEditView();return;}
+  const p=b.dataset.page; if(!p) return;
+  if(p==='edit'){ openEditView(); return; }
   switchPage(p);
 }));
 
@@ -1537,11 +1507,11 @@ async function updateKaiOnlineStatus(){
     const data=await res.json();
     const statusEl=document.getElementById('kai-status');
     const homeBadge=document.getElementById('home-online-badge');
-    if(data.online===true){ statusEl?.classList.add('visible'); if(homeBadge)homeBadge.style.display='inline-flex'; }
-    else{ statusEl?.classList.remove('visible'); if(homeBadge)homeBadge.style.display='none'; }
-  }catch(e){ document.getElementById('kai-status')?.classList.remove('visible'); }
+    if(data.online===true){ statusEl?.classList.add('visible'); if(homeBadge) homeBadge.style.display='inline-flex'; }
+    else{ statusEl?.classList.remove('visible'); if(homeBadge) homeBadge.style.display='none'; }
+  } catch(e){ document.getElementById('kai-status')?.classList.remove('visible'); }
 }
-function startKaiStatusCheck(){ if(kaiOnlineInterval)clearInterval(kaiOnlineInterval); updateKaiOnlineStatus(); kaiOnlineInterval=setInterval(updateKaiOnlineStatus,30000); }
+function startKaiStatusCheck(){ if(kaiOnlineInterval) clearInterval(kaiOnlineInterval); updateKaiOnlineStatus(); kaiOnlineInterval=setInterval(updateKaiOnlineStatus,30000); }
 
 // ═══════════════════════════════════════════════════════════════
 // INIT
@@ -1556,44 +1526,44 @@ async function initSite(){
   trackVisit('home');
   startKaiStatusCheck();
   const tk=sessionStorage.getItem('kai_token');
-  if(tk){isKai=true;document.getElementById('admin-nav-btn').style.display='block';}
-  if(window.__KAI_ADMIN__){isKai=false;document.getElementById('admin-nav-btn').style.display='none';switchPage('kai');}
+  if(tk){ isKai=true; document.getElementById('admin-nav-btn').style.display='block'; }
+  if(window.__KAI_ADMIN__){ isKai=false; document.getElementById('admin-nav-btn').style.display='none'; switchPage('kai'); }
 }
 
 async function loadProfile(){
-  const d=await api('/api/profile'); if(!d)return;
+  const d=await api('/api/profile'); if(!d) return;
   kaiSettings=d; applyProfile(d);
 }
 function applyProfile(s){
-  if(!s)return;
+  if(!s) return;
   if(s.profile_pic_url){
     const img=`<img src="${s.profile_pic_url}">`;
-    ['home-avatar','about-avatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=img;});
+    ['home-avatar','about-avatar'].forEach(id=>{const el=document.getElementById(id);if(el) el.innerHTML=img;});
     const fsa=document.getElementById('feed-story-avatar');
-    if(fsa)fsa.innerHTML=`<img src="${s.profile_pic_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    if(fsa) fsa.innerHTML=`<img src="${s.profile_pic_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
   }
   const n=s.name||'KAIANA';
-  const nn=document.getElementById('home-name'); if(nn)nn.textContent=n;
-  const an=document.getElementById('about-name'); if(an)an.textContent=n;
-  if(s.mood_emoji)['home-mood-emoji','about-mood-emoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=s.mood_emoji;});
-  if(s.location)['home-location','about-location'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='📍 '+s.location;});
-  if(s.zodiac){const z=document.getElementById('about-zodiac');if(z)z.textContent='⭐ '+s.zodiac;}
-  if(s.bio)['home-bio','about-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=s.bio;});
+  const nn=document.getElementById('home-name'); if(nn) nn.textContent=n;
+  const an=document.getElementById('about-name'); if(an) an.textContent=n;
+  if(s.mood_emoji)['home-mood-emoji','about-mood-emoji'].forEach(id=>{const el=document.getElementById(id);if(el) el.textContent=s.mood_emoji;});
+  if(s.location)['home-location','about-location'].forEach(id=>{const el=document.getElementById(id);if(el) el.textContent='📍 '+s.location;});
+  if(s.zodiac){const z=document.getElementById('about-zodiac');if(z) z.textContent='⭐ '+s.zodiac;}
+  if(s.bio)['home-bio','about-bio'].forEach(id=>{const el=document.getElementById(id);if(el) el.textContent=s.bio;});
   if(s.social_instagram&&s.social_instagram!=='#'){document.getElementById('link-instagram').href=s.social_instagram;document.getElementById('ig-handle').textContent='@'+s.social_instagram.split('/').pop();}
   if(s.social_tiktok&&s.social_tiktok!=='#'){document.getElementById('link-tiktok').href=s.social_tiktok;document.getElementById('tt-handle').textContent='@'+s.social_tiktok.split('/').pop().replace('@','');}
-  if(s.social_spotify&&s.social_spotify!=='#')document.getElementById('link-spotify').href=s.social_spotify;
+  if(s.social_spotify&&s.social_spotify!=='#') document.getElementById('link-spotify').href=s.social_spotify;
 }
 
 function loadPage(id){
   switch(id){
-    case'home':    loadHome();break;
-    case'feed':    loadFeed();break;
-    case'threads': loadThreads();break;
-    case'vlog':    loadVlogs();break;
-    case'about':   loadAbout();break;
-    case'stage':   loadStage();break;
-    case'iwashere':loadSigs();break;
-    case'petscape':setTimeout(initPetscape,100);break;
+    case 'home':     loadHome(); break;
+    case 'feed':     loadFeed(); break;
+    case 'threads':  loadThreads(); break;
+    case 'vlog':     loadVlogs(); break;
+    case 'about':    loadAbout(); break;
+    case 'stage':    loadStage(); break;
+    case 'iwashere': loadSigs(); break;
+    case 'petscape': setTimeout(initPetscape, 100); break;
   }
 }
 
@@ -1604,30 +1574,20 @@ async function loadHome(){
   const r=await api('/api/threads');
   const threads=(r&&r.data)||[];
   const st=document.getElementById('stat-threads');
-  if(st)st.textContent=threads.length;
-
+  if(st) st.textContent=threads.length;
   const rEl=document.getElementById('home-recent-threads');
   if(threads.length){
     rEl.innerHTML=threads.slice(0,3).map(t=>`<div style="padding:10px 0;border-bottom:1px solid rgba(255,45,135,.1);cursor:pointer" onclick="switchPage('threads')"><div style="font-family:'Dancing Script',cursive;font-size:11px;color:var(--candy);margin-bottom:2px;">${fmtDate(t.created_at)}</div><div style="font-size:12.5px;color:#e8c0d8;line-height:1.55;">${esc((t.content||'').substr(0,100))}…</div></div>`).join('');
   } else {
     rEl.innerHTML=`<div style="text-align:center;padding:18px;font-family:'Dancing Script',cursive;font-size:15px;color:var(--candy);">no threads yet ♡</div>`;
   }
-
   const ps=await api('/api/posts');
-  if(ps&&ps.data){ const sp=document.getElementById('stat-posts'); if(sp)sp.textContent=ps.data.length; }
-
-  try {
-    const response = await fetch(API_URL + '/api/stats');
-    if (response.ok) {
-      const st2 = await response.json();
-      const sv = document.getElementById('stat-visitors');
-      if (sv) sv.textContent = st2.total || 0;
-    } else {
-      const sv = document.getElementById('stat-visitors'); if (sv) sv.textContent = '0';
-    }
-  } catch (e) {
-    const sv = document.getElementById('stat-visitors'); if (sv) sv.textContent = '0';
-  }
+  if(ps&&ps.data){ const sp=document.getElementById('stat-posts'); if(sp) sp.textContent=ps.data.length; }
+  try{
+    const response=await fetch(API_URL+'/api/stats');
+    if(response.ok){ const st2=await response.json(); const sv=document.getElementById('stat-visitors'); if(sv) sv.textContent=st2.total||0; }
+    else{ const sv=document.getElementById('stat-visitors'); if(sv) sv.textContent='0'; }
+  } catch(e){ const sv=document.getElementById('stat-visitors'); if(sv) sv.textContent='0'; }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1640,8 +1600,8 @@ async function loadFeed(){
   el.innerHTML=posts.map(p=>{
     const hasImg=!!p.image_url, hasVid=!!p.video_url;
     let media='';
-    if(hasImg)media=`<img src="${esc(p.image_url)}" alt="" loading="lazy">`;
-    else if(hasVid)media=`<video src="${esc(p.video_url)}" muted preload="metadata"></video>`;
+    if(hasImg) media=`<img src="${esc(p.image_url)}" alt="" loading="lazy">`;
+    else if(hasVid) media=`<video src="${esc(p.video_url)}" muted preload="metadata"></video>`;
     else media=`<div class="feed-ph">${(p.caption||'').substr(0,2)||'✦'}</div>`;
     return`<div class="feed-item" onclick="openPost('${p.id}')">
       ${media}
@@ -1654,27 +1614,27 @@ async function loadFeed(){
 let allPosts=[];
 async function openPost(id){
   const r=await api('/api/posts'); allPosts=(r&&r.data)||[];
-  const p=allPosts.find(x=>x.id===id); if(!p)return;
+  const p=allPosts.find(x=>x.id===id); if(!p) return;
   currentPostId=id;
   const mm=document.getElementById('modal-media');
-  if(p.image_url)mm.innerHTML=`<img src="${esc(p.image_url)}" style="width:100%;height:100%;object-fit:cover;">`;
-  else if(p.video_url)mm.innerHTML=`<video src="${esc(p.video_url)}" controls style="width:100%;height:100%;"></video>`;
+  if(p.image_url) mm.innerHTML=`<img src="${esc(p.image_url)}" style="width:100%;height:100%;object-fit:cover;">`;
+  else if(p.video_url) mm.innerHTML=`<video src="${esc(p.video_url)}" controls style="width:100%;height:100%;"></video>`;
   else mm.innerHTML=`<div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(255,45,135,.18),rgba(255,0,100,.12));display:flex;align-items:center;justify-content:center;font-size:48px;">✿</div>`;
   document.getElementById('modal-date').textContent=fmtDate(p.created_at);
   document.getElementById('modal-caption').textContent=p.caption||p.content||'';
   document.getElementById('modal-likes').textContent=p.like_count||0;
   document.getElementById('modal-heart-btn').classList.remove('liked');
   const av=document.getElementById('modal-av');
-  if(kaiSettings.profile_pic_url)av.innerHTML=`<img src="${kaiSettings.profile_pic_url}">`;
+  if(kaiSettings.profile_pic_url) av.innerHTML=`<img src="${kaiSettings.profile_pic_url}">`;
   else av.textContent='K';
   document.getElementById('modal-name').textContent=kaiSettings.name||'KAIANA';
   document.getElementById('post-modal').classList.add('open');
 }
-function closeModal(){document.getElementById('post-modal').classList.remove('open');currentPostId=null;}
+function closeModal(){ document.getElementById('post-modal').classList.remove('open'); currentPostId=null; }
 async function likePost(){
-  if(!currentPostId)return;
+  if(!currentPostId) return;
   const r=await api(`/api/posts/${currentPostId}/like`,'POST');
-  if(r){document.getElementById('modal-likes').textContent=r.like_count;document.getElementById('modal-heart-btn').classList.add('liked');loadFeed();}
+  if(r){ document.getElementById('modal-likes').textContent=r.like_count; document.getElementById('modal-heart-btn').classList.add('liked'); loadFeed(); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1705,12 +1665,12 @@ async function loadThreads(){
       </div>
     </div>`).join('');
 }
-async function toggleComments(id){const s=document.getElementById(`cmts-${id}`);const open=s.style.display!=='none';s.style.display=open?'none':'block';if(!open)loadCmts(id);}
+async function toggleComments(id){ const s=document.getElementById(`cmts-${id}`); const open=s.style.display!=='none'; s.style.display=open?'none':'block'; if(!open) loadCmts(id); }
 async function loadCmts(tid){
   const el=document.getElementById(`cmt-content-${tid}`);
   const r=await api(`/api/comments?thread_id=${tid}`); const cs=(r&&r.data)||[];
   if(!cs.length){el.innerHTML=`<div style="font-family:'Dancing Script',cursive;font-size:13px;color:var(--candy);padding:7px 0;">be the first to comment ♡</div>`;return;}
-  const kids={};const roots=cs.filter(c=>!c.parent_id);
+  const kids={}; const roots=cs.filter(c=>!c.parent_id);
   cs.filter(c=>c.parent_id).forEach(c=>(kids[c.parent_id]=kids[c.parent_id]||[]).push(c));
   el.innerHTML=roots.map(c=>renderCmt(c,kids)).join('');
 }
@@ -1733,21 +1693,21 @@ function renderCmt(c,kids,nested=false){
     ${ch}
   </div>`;
 }
-function showReply(id){const b=document.getElementById(`reply-${id}`);b.style.display=b.style.display==='none'?'block':'none';}
+function showReply(id){ const b=document.getElementById(`reply-${id}`); b.style.display=b.style.display==='none'?'block':'none'; }
 async function addCmt(tid,pid){
   const nameEl=document.getElementById(pid?`rn-${pid}`:`cmt-name-${tid}`);
   const textEl=document.getElementById(pid?`rt-${pid}`:`cmt-text-${tid}`);
-  const name=nameEl.value.trim()||'anonymous',content=textEl.value.trim();
-  if(!content){toast('write something first ♡');return;}
+  const name=nameEl.value.trim()||'anonymous', content=textEl.value.trim();
+  if(!content){ toast('write something first ♡'); return; }
   const cs=['#FF2D87','#D400B8','#FFD700','#FF90D6','#FF6347','#00CED1'];
   await api('/api/comments','POST',{thread_id:tid,parent_id:pid||null,author_name:name,author_color:cs[~~(Math.random()*cs.length)],content});
-  nameEl.value='';textEl.value='';
-  if(pid)document.getElementById(`reply-${pid}`).style.display='none';
-  loadCmts(tid);toast('comment posted ♡');
+  nameEl.value=''; textEl.value='';
+  if(pid) document.getElementById(`reply-${pid}`).style.display='none';
+  loadCmts(tid); toast('comment posted ♡');
 }
-async function vote(id,dir){await api(`/api/comments/${id}/vote`,'POST',{direction:dir});}
-async function delThread(id){if(!confirm('delete this thread?'))return;await api(`/api/threads/${id}`,'DELETE');loadThreads();toast('deleted ✦');}
-async function delCmt(id,tid){await api(`/api/comments/${id}`,'DELETE');loadCmts(tid);}
+async function vote(id,dir){ await api(`/api/comments/${id}/vote`,'POST',{direction:dir}); }
+async function delThread(id){ if(!confirm('delete this thread?')) return; await api(`/api/threads/${id}`,'DELETE'); loadThreads(); toast('deleted ✦'); }
+async function delCmt(id,tid){ await api(`/api/comments/${id}`,'DELETE'); loadCmts(tid); }
 
 // ═══════════════════════════════════════════════════════════════
 // VLOGS
@@ -1758,7 +1718,7 @@ async function loadVlogs(){
   if(!vs.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">▶</div>no vlogs yet ♡</div>`;return;}
   el.innerHTML=vs.map(v=>`<div class="vlog-card"><div class="vlog-thumb"><iframe src="${ytEmbed(v.video_url)}" allowfullscreen></iframe></div><div class="vlog-info"><div class="vlog-title">${esc(v.title||'Untitled')}</div><div class="vlog-desc">${esc(v.description||'')}</div><div class="vlog-date">${fmtDate(v.created_at)}</div>${isKai?`<button class="thread-btn" style="margin-top:7px;border-color:rgba(255,0,0,.3);color:#ff8080;" onclick="delVlog('${v.id}')">DELETE</button>`:''}</div></div>`).join('');
 }
-async function delVlog(id){if(!confirm('delete?'))return;await api(`/api/vlogs/${id}`,'DELETE');loadVlogs();}
+async function delVlog(id){ if(!confirm('delete?')) return; await api(`/api/vlogs/${id}`,'DELETE'); loadVlogs(); }
 
 // ═══════════════════════════════════════════════════════════════
 // ABOUT
@@ -1773,56 +1733,55 @@ async function loadAbout(){
 // ═══════════════════════════════════════════════════════════════
 // LIVE
 // ═══════════════════════════════════════════════════════════════
-let lastLiveState = null;
+let lastLiveState=null;
 async function loadStage(){
   const s=await api('/api/live');
-  if(s) {
-    const hasChanged = !lastLiveState ||
-                       lastLiveState.is_live !== s.is_live ||
-                       lastLiveState.stream_url !== s.stream_url ||
-                       lastLiveState.offline_image_url !== s.offline_image_url;
-    if (hasChanged) { renderLive(s); lastLiveState = s; }
+  if(s){
+    const hasChanged=!lastLiveState||lastLiveState.is_live!==s.is_live||lastLiveState.stream_url!==s.stream_url||lastLiveState.offline_image_url!==s.offline_image_url;
+    if(hasChanged){ renderLive(s); lastLiveState=s; }
   }
   loadChat();
 }
 function renderLive(s){
-  const badge=document.getElementById('live-badge'),area=document.getElementById('stage-video-area');
+  const badge=document.getElementById('live-badge'), area=document.getElementById('stage-video-area');
   if(s.is_live&&s.stream_url){
     badge.style.display='inline-flex';
-    const existingIframe = area.querySelector('iframe');
-    const newEmbedUrl = ytEmbed(s.stream_url);
-    if (!existingIframe || existingIframe.src !== newEmbedUrl) {
+    const existingIframe=area.querySelector('iframe');
+    const newEmbedUrl=ytEmbed(s.stream_url);
+    if(!existingIframe||existingIframe.src!==newEmbedUrl){
       area.innerHTML=`<div class="stage-vid-wrap"><iframe src="${newEmbedUrl}" allowfullscreen></iframe></div>`;
     }
   } else {
     badge.style.display='none';
-    if (lastLiveState && lastLiveState.is_live !== s.is_live) {
-      area.innerHTML=`<div class="offline-screen"${s.offline_image_url?` style="background-image:url(${s.offline_image_url});background-size:cover;background-position:center;"`:''}>${!s.offline_image_url?`<div style="font-size:40px;opacity:.35">■</div><div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--candy);">KAIANA IS OFFLINE</div><div style="font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,45,135,.45);margin-top:6px;">check back soon ♡</div>`:''}</div>`;
+    if(lastLiveState&&lastLiveState.is_live!==s.is_live){
+      area.innerHTML=`<div class="offline-screen"${s.offline_image_url?` style="background-image:url(${s.offline_image_url});background-size:cover;background-position:center;"`:''}>
+        ${!s.offline_image_url?`<div style="font-size:40px;opacity:.35">■</div><div style="font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--candy);">KAIANA IS OFFLINE</div><div style="font-family:'Dancing Script',cursive;font-size:14px;color:rgba(255,45,135,.45);margin-top:6px;">check back soon ♡</div>`:''}
+      </div>`;
     }
   }
 }
 function startLivePoll(){
   setInterval(async()=>{
     const s=await api('/api/live');
-    if(s) {
-      const hasChanged = !lastLiveState || lastLiveState.is_live !== s.is_live || lastLiveState.stream_url !== s.stream_url;
-      if (hasChanged) { renderLive(s); lastLiveState = s; }
+    if(s){
+      const hasChanged=!lastLiveState||lastLiveState.is_live!==s.is_live||lastLiveState.stream_url!==s.stream_url;
+      if(hasChanged){ renderLive(s); lastLiveState=s; }
     }
     loadChat();
   }, 10000);
 }
 async function loadChat(){
   const r=await api('/api/chat'); const ms=(r&&r.data)||[];
-  const el=document.getElementById('chat-messages'); if(!el)return;
-  if(ms.length){const atB=el.scrollHeight-el.scrollTop===el.clientHeight;el.innerHTML=ms.map(m=>`<div class="chat-msg"><div class="chat-author">${esc(m.author_name||'anon')}</div><div class="chat-text">${esc(m.message||'')}</div></div>`).join('');if(atB)el.scrollTop=el.scrollHeight;}
+  const el=document.getElementById('chat-messages'); if(!el) return;
+  if(ms.length){ const atB=el.scrollHeight-el.scrollTop===el.clientHeight; el.innerHTML=ms.map(m=>`<div class="chat-msg"><div class="chat-author">${esc(m.author_name||'anon')}</div><div class="chat-text">${esc(m.message||'')}</div></div>`).join(''); if(atB) el.scrollTop=el.scrollHeight; }
 }
 async function sendChatMsg(){
   const n=document.getElementById('chat-name-input').value.trim()||'Anonymous';
-  const m=document.getElementById('chat-msg-input').value.trim(); if(!m)return;
+  const m=document.getElementById('chat-msg-input').value.trim(); if(!m) return;
   document.getElementById('chat-msg-input').value='';
   await api('/api/chat','POST',{author_name:n,message:m,session_id:getVid()}); loadChat();
 }
-document.getElementById('chat-msg-input')?.addEventListener('keydown',e=>{if(e.key==='Enter')sendChatMsg();});
+document.getElementById('chat-msg-input')?.addEventListener('keydown',e=>{if(e.key==='Enter') sendChatMsg();});
 
 // ═══════════════════════════════════════════════════════════════
 // SIGNATURES
@@ -1834,254 +1793,276 @@ async function loadSigs(){
   el.innerHTML=ss.map(s=>`<div class="sig-card"><div class="sig-name">${esc(s.name||'Anonymous')}</div><div class="sig-msg">${esc(s.message||'')}</div><div class="sig-dt">${fmtDate(s.created_at)}</div>${isKai?`<button class="vote-btn" style="color:#ff6060;margin-top:6px;" onclick="delSig('${s.id}')">delete</button>`:''}</div>`).join('');
 }
 async function addSignature(){
-  const n=document.getElementById('sig-name').value.trim(),m=document.getElementById('sig-message').value.trim();
-  if(!n||!m){toast('fill in your name and message ♡');return;}
+  const n=document.getElementById('sig-name').value.trim(), m=document.getElementById('sig-message').value.trim();
+  if(!n||!m){ toast('fill in your name and message ♡'); return; }
   await api('/api/signatures','POST',{name:n,message:m,visitor_id:getVid()});
   document.getElementById('sig-name').value=''; document.getElementById('sig-message').value='';
   loadSigs(); toast('you were here ♡');
 }
-async function delSig(id){await api(`/api/signatures/${id}`,'DELETE');loadSigs();}
+async function delSig(id){ await api(`/api/signatures/${id}`,'DELETE'); loadSigs(); }
 
 // ═══════════════════════════════════════════════════════════════
 // LOGIN
 // ═══════════════════════════════════════════════════════════════
 async function kaiLogin(){
-  const email=document.getElementById('login-email').value,pass=document.getElementById('login-password').value;
+  const email=document.getElementById('login-email').value, pass=document.getElementById('login-password').value;
   document.getElementById('login-error').style.display='none';
   const r=await api('/api/auth/login','POST',{email,password:pass});
-  if(r&&r.access_token){sessionStorage.setItem('kai_token',r.access_token);isKai=true;document.getElementById('admin-nav-btn').style.display='block';switchPage('home');toast('welcome back kaiana ♡');}
+  if(r&&r.access_token){ sessionStorage.setItem('kai_token',r.access_token); isKai=true; document.getElementById('admin-nav-btn').style.display='block'; switchPage('home'); toast('welcome back kaiana ♡'); }
   else document.getElementById('login-error').style.display='block';
 }
-document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')kaiLogin();});
+document.getElementById('login-password')?.addEventListener('keydown',e=>{if(e.key==='Enter') kaiLogin();});
 
 // ═══════════════════════════════════════════════════════════════
-// PETSCAPE — with GIF support
+// PETSCAPE — canvas-based scene with GIF overlay support
 // ═══════════════════════════════════════════════════════════════
-let petscapePets = [], petscapeMouseX = 0, petscapeMouseY = 0;
-document.addEventListener('mousemove', e => { petscapeMouseX = e.clientX; petscapeMouseY = e.clientY; });
+let petscapePets=[], petscapeMouseX=0, petscapeMouseY=0;
+document.addEventListener('mousemove', e=>{ petscapeMouseX=e.clientX; petscapeMouseY=e.clientY; });
 
 class PSPet {
-    constructor(type, x, y, pers) {
-        this.type = type; this.x = x; this.y = y; this.pers = pers;
-        this.vx = (Math.random() - 0.5) * 2.5;
-        this.vy = (Math.random() - 0.5) * 1.5;
-        this.dir = 1;
-        this.animFrame = Math.random() * 10;
-        this.animSpeed = 0.12;
-        this.size = 56;
+  constructor(type, x, y, pers){
+    this.type=type; this.x=x; this.y=y; this.pers=pers;
+    this.vx=(Math.random()-.5)*2.5; this.vy=(Math.random()-.5)*1.5;
+    this.dir=1; this.animFrame=Math.random()*10; this.animSpeed=0.12; this.size=56;
+    this.id=++_petIdCounter;
+  }
+  update(){
+    if(this.pers==='sleepy'){
+      this.vx*=0.98; this.vy*=0.98;
+      if(Math.random()<.02){this.vx=(Math.random()-.5)*1.8;this.vy=(Math.random()-.5)*1.2;}
+    } else if(this.pers==='playful'){
+      const dx=petscapeMouseX-this.x, dy=petscapeMouseY-this.y, d=Math.hypot(dx,dy);
+      if(d>60&&d<450){this.vx+=dx/d*.35;this.vy+=dy/d*.35;}
+      this.vx*=0.92; this.vy*=0.92;
+    } else {
+      this.vx+=(Math.random()-.5)*.6; this.vy+=(Math.random()-.5)*.5;
+      this.vx*=0.96; this.vy*=0.96;
     }
-    update() {
-        if (this.pers === 'sleepy') {
-            this.vx *= 0.98; this.vy *= 0.98;
-            if (Math.random() < 0.02) { this.vx = (Math.random() - 0.5) * 1.8; this.vy = (Math.random() - 0.5) * 1.2; }
-        } else if (this.pers === 'playful') {
-            const dx = petscapeMouseX - this.x, dy = petscapeMouseY - this.y, d = Math.hypot(dx, dy);
-            if (d > 60 && d < 450) { this.vx += dx / d * 0.35; this.vy += dy / d * 0.35; }
-            this.vx *= 0.92; this.vy *= 0.92;
-        } else {
-            this.vx += (Math.random() - 0.5) * 0.6; this.vy += (Math.random() - 0.5) * 0.5;
-            this.vx *= 0.96; this.vy *= 0.96;
-        }
-        if (this.type === 'bat') this.vy += Math.sin(Date.now() * 0.002 + this.x) * 0.08;
-        this.x += this.vx; this.y += this.vy;
-        if (this.vx < -0.1) this.dir = -1; else if (this.vx > 0.1) this.dir = 1;
-        const canvas = document.getElementById('petscape-canvas');
-        const W = canvas ? canvas.width : 800, H = canvas ? canvas.height : 460;
-        const pad = 40;
-        if (this.x < pad) { this.x = pad; this.vx = Math.abs(this.vx) * 0.8; }
-        if (this.x > W - pad) { this.x = W - pad; this.vx = -Math.abs(this.vx) * 0.8; }
-        if (this.y < pad + 20) { this.y = pad + 20; this.vy = Math.abs(this.vy) * 0.8; }
-        if (this.y > H - pad) { this.y = H - pad; this.vy = -Math.abs(this.vy) * 0.8; }
-        const maxFrames = (spriteConfig[this.type] && spriteConfig[this.type].frameCount) || 4;
-        this.animFrame = (this.animFrame + this.animSpeed) % maxFrames;
+    if(this.type==='bat') this.vy+=Math.sin(Date.now()*.002+this.x)*.08;
+    this.x+=this.vx; this.y+=this.vy;
+    if(this.vx<-.1) this.dir=-1; else if(this.vx>.1) this.dir=1;
+    const canvas=document.getElementById('petscape-canvas');
+    const W=canvas?canvas.width:800, H=canvas?canvas.height:460, pad=40;
+    if(this.x<pad){this.x=pad;this.vx=Math.abs(this.vx)*.8;}
+    if(this.x>W-pad){this.x=W-pad;this.vx=-Math.abs(this.vx)*.8;}
+    if(this.y<pad+20){this.y=pad+20;this.vy=Math.abs(this.vy)*.8;}
+    if(this.y>H-pad){this.y=H-pad;this.vy=-Math.abs(this.vy)*.8;}
+    const maxFrames=(spriteConfig[this.type]&&spriteConfig[this.type].frameCount)||4;
+    this.animFrame=(this.animFrame+this.animSpeed)%maxFrames;
+  }
+  draw(ctx){
+    const config=spriteConfig[this.type];
+    if(config&&config.isGif&&gifElements[this.type]){
+      // GIF: position a DOM <img> overlay over the canvas position
+      const canvas=document.getElementById('petscape-canvas');
+      const rect=canvas?canvas.getBoundingClientRect():{left:0,top:0};
+      updateGifOverlay(this.id, gifElements[this.type].src, rect.left+this.x, rect.top+this.y, this.dir<0);
+      return;
     }
-    draw(ctx) {
-        ctx.save(); ctx.translate(this.x, this.y);
-        if (this.dir < 0) ctx.scale(-1, 1);
-        drawPetSprite(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
-        ctx.restore();
-    }
+    // Hide overlay if type changed from GIF to non-GIF
+    removeGifOverlay(this.id);
+    ctx.save(); ctx.translate(this.x,this.y);
+    if(this.dir<0) ctx.scale(-1,1);
+    drawPetSprite(ctx,this.type,-28,-28,56,Math.floor(this.animFrame));
+    ctx.restore();
+  }
+  destroy(){ removeGifOverlay(this.id); }
 }
 
-function initPetscape() {
-    const canvas = document.getElementById('petscape-canvas');
-    if (!canvas) return;
-    canvas.width = canvas.offsetWidth;
-    canvas.height = 460;
-    const ctx = canvas.getContext('2d');
-    if (!petscapePets.length) {
-        ['cat', 'bird', 'bat', 'dog'].forEach((t, i) => {
-            petscapePets.push(new PSPet(t, 100 + i * 150, 150 + Math.random() * 200, ['sleepy','playful','chaotic'][i%3]));
-        });
+function initPetscape(){
+  const canvas=document.getElementById('petscape-canvas');
+  if(!canvas) return;
+  canvas.width=canvas.offsetWidth;
+  canvas.height=460;
+  const ctx=canvas.getContext('2d');
+  if(!petscapePets.length){
+    ['cat','bird','bat','dog'].forEach((t,i)=>{
+      petscapePets.push(new PSPet(t,100+i*150,150+Math.random()*200,['sleepy','playful','chaotic'][i%3]));
+    });
+  }
+  const ctrl=document.getElementById('petscape-controls');
+  ctrl.innerHTML=['cat','bird','bat','dog'].map(t=>`<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('')+
+    `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>`+
+    `<button class="btn btn-sm" onclick="spawnRandomPetscapePet()">🎲 RANDOM</button>`;
+  function animate(){
+    if(!ctx) return;
+    ctx.fillStyle='#0e0018';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(let i=0;i<50;i++){
+      ctx.fillStyle=`rgba(255,${100+Math.floor(Math.random()*100)},200,${.1+Math.random()*.35})`;
+      ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1);
     }
-    const ctrl = document.getElementById('petscape-controls');
-    ctrl.innerHTML = ['cat','bird','bat','dog'].map(t=>`<button class="btn btn-sm" onclick="addPetscapePet('${t}')">+ ${t.toUpperCase()}</button>`).join('') +
-        `<button class="btn btn-sm" style="border-color:rgba(255,50,50,.4);color:#ff9090;" onclick="clearAllPets()">CLEAR ALL</button>` +
-        `<button class="btn btn-sm" onclick="spawnRandomPetscapePet()">🎲 RANDOM</button>`;
-    function animate() {
-        if (!ctx) return;
-        ctx.fillStyle = '#0e0018';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Stars
-        for (let i = 0; i < 50; i++) {
-            ctx.fillStyle = `rgba(255,${100+Math.floor(Math.random()*100)},200,${0.1+Math.random()*0.35})`;
-            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
-        }
-        petscapePets.forEach(p => { p.update(); p.draw(ctx); });
-        requestAnimationFrame(animate);
-    }
-    animate();
+    petscapePets.forEach(p=>{p.update();p.draw(ctx);});
+    requestAnimationFrame(animate);
+  }
+  animate();
 }
 
-function addPetscapePet(type) {
-    const canvas = document.getElementById('petscape-canvas');
-    const x = 50 + Math.random() * ((canvas ? canvas.width : 800) - 100);
-    const y = 80 + Math.random() * 300;
-    petscapePets.push(new PSPet(type, x, y, ['sleepy','playful','chaotic'][Math.floor(Math.random()*3)]));
-    if (typeof toast === 'function') toast(type + ' added ♡');
+function addPetscapePet(type){
+  const canvas=document.getElementById('petscape-canvas');
+  const x=50+Math.random()*((canvas?canvas.width:800)-100);
+  const y=80+Math.random()*300;
+  petscapePets.push(new PSPet(type,x,y,['sleepy','playful','chaotic'][Math.floor(Math.random()*3)]));
+  if(typeof toast==='function') toast(type+' added ♡');
 }
-function spawnRandomPetscapePet() {
-    const types = ['cat','bird','bat','dog'];
-    addPetscapePet(types[Math.floor(Math.random()*4)]);
+function spawnRandomPetscapePet(){
+  const types=['cat','bird','bat','dog'];
+  addPetscapePet(types[Math.floor(Math.random()*4)]);
 }
-function clearAllPets() { petscapePets = []; if (typeof toast === 'function') toast('all pets cleared ♡'); }
+function clearAllPets(){
+  petscapePets.forEach(p=>p.destroy&&p.destroy());
+  petscapePets=[];
+  if(typeof toast==='function') toast('all pets cleared ♡');
+}
 
 // ═══════════════════════════════════════════════════════════════
-// FLOATING PETS
+// FLOATING PETS (background layer) — GIF overlay support
 // ═══════════════════════════════════════════════════════════════
-const petCanvas = document.getElementById('pet-canvas');
-const petCtx = petCanvas.getContext('2d');
-let floatPets = [], mouseX = 0, mouseY = 0, globalFrame = 0;
+const petCanvas=document.getElementById('pet-canvas');
+const petCtx=petCanvas.getContext('2d');
+let floatPets=[], mouseX=0, mouseY=0, globalFrame=0;
 
-function resizePet() { petCanvas.width = window.innerWidth; petCanvas.height = window.innerHeight; }
-resizePet(); window.addEventListener('resize', resizePet);
-document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+function resizePet(){ petCanvas.width=window.innerWidth; petCanvas.height=window.innerHeight; }
+resizePet(); window.addEventListener('resize',resizePet);
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
 
 class Pet {
-    constructor(type, x, y, pers) {
-        this.type = type; this.x = x; this.y = y; this.pers = pers || 'sleepy';
-        this.vx = (Math.random() - 0.5) * 3; this.vy = (Math.random() - 0.5) * 2;
-        this.dir = 1; this.animFrame = Math.random() * 10; this.animSpeed = 0.15; this.size = 56;
+  constructor(type,x,y,pers){
+    this.type=type; this.x=x; this.y=y; this.pers=pers||'sleepy';
+    this.vx=(Math.random()-.5)*3; this.vy=(Math.random()-.5)*2;
+    this.dir=1; this.animFrame=Math.random()*10; this.animSpeed=0.15; this.size=56;
+    this.id=++_petIdCounter;
+  }
+  update(){
+    if(this.pers==='sleepy'){
+      this.vx*=0.98; this.vy*=0.98;
+      if(Math.random()<.02){this.vx+=(Math.random()-.5)*1.5;this.vy+=(Math.random()-.5)*1;}
+    } else if(this.pers==='playful'){
+      const dx=mouseX-this.x,dy=mouseY-this.y,d=Math.hypot(dx,dy);
+      if(d>60&&d<450){this.vx+=dx/d*.4;this.vy+=dy/d*.4;}
+      this.vx*=0.93; this.vy*=0.93;
+    } else {
+      this.vx+=(Math.random()-.5)*.7; this.vy+=(Math.random()-.5)*.6;
+      this.vx*=0.96; this.vy*=0.96;
     }
-    update() {
-        if (this.pers === 'sleepy') {
-            this.vx *= 0.98; this.vy *= 0.98;
-            if (Math.random() < 0.02) { this.vx += (Math.random()-0.5)*1.5; this.vy += (Math.random()-0.5)*1; }
-        } else if (this.pers === 'playful') {
-            const dx = mouseX - this.x, dy = mouseY - this.y, d = Math.hypot(dx, dy);
-            if (d > 60 && d < 450) { this.vx += dx/d*0.4; this.vy += dy/d*0.4; }
-            this.vx *= 0.93; this.vy *= 0.93;
-        } else {
-            this.vx += (Math.random()-0.5)*0.7; this.vy += (Math.random()-0.5)*0.6;
-            this.vx *= 0.96; this.vy *= 0.96;
+    if(this.type==='bat') this.vy+=Math.sin(Date.now()*.002+this.x)*.1;
+    this.x+=this.vx; this.y+=this.vy;
+    if(this.vx<-.1) this.dir=-1; else if(this.vx>.1) this.dir=1;
+    const W=window.innerWidth,H=window.innerHeight,pad=50;
+    if(this.x<pad){this.x=pad;this.vx=Math.abs(this.vx)*.8;}
+    if(this.x>W-pad){this.x=W-pad;this.vx=-Math.abs(this.vx)*.8;}
+    if(this.y<pad){this.y=pad;this.vy=Math.abs(this.vy)*.8;}
+    if(this.y>H-pad){this.y=H-pad;this.vy=-Math.abs(this.vy)*.8;}
+    const maxFrames=(spriteConfig[this.type]&&spriteConfig[this.type].frameCount)||4;
+    this.animFrame=(this.animFrame+this.animSpeed)%maxFrames;
+  }
+  draw(ctx){
+    const config=spriteConfig[this.type];
+    if(config&&config.isGif&&gifElements[this.type]){
+      // GIF: update the DOM overlay position — browser animates it natively
+      updateGifOverlay(this.id, gifElements[this.type].src, this.x, this.y, this.dir<0);
+      return;
+    }
+    // Not a GIF — remove any stale overlay and draw on canvas
+    removeGifOverlay(this.id);
+    ctx.save(); ctx.translate(this.x,this.y);
+    if(this.dir<0) ctx.scale(-1,1);
+    drawPetSprite(ctx,this.type,-28,-28,56,Math.floor(this.animFrame));
+    ctx.restore();
+  }
+  destroy(){ removeGifOverlay(this.id); }
+}
+
+function initPetCanvas(){
+  floatPets=[];
+  function animate(){
+    if(petCtx){petCtx.clearRect(0,0,petCanvas.width,petCanvas.height);globalFrame++;floatPets.forEach(p=>{p.update();p.draw(petCtx);});}
+    requestAnimationFrame(animate);
+  }
+  animate();
+  setupRightClickDelete();
+}
+
+function setupRightClickDelete(){
+  document.addEventListener('contextmenu',(e)=>{
+    e.preventDefault();
+    const mx=e.clientX,my=e.clientY;
+    for(let i=0;i<floatPets.length;i++){
+      if(Math.hypot(mx-floatPets[i].x,my-floatPets[i].y)<50){
+        addBloodEffect(floatPets[i].x,floatPets[i].y);
+        const removed=floatPets.splice(i,1);
+        removed[0].destroy(); // clean up GIF overlay
+        if(typeof toast==='function') toast('💀 pet deleted 💀');
+        return;
+      }
+    }
+    const canvas=document.getElementById('petscape-canvas');
+    if(canvas&&petscapePets){
+      const rect=canvas.getBoundingClientRect();
+      const cx2=mx-rect.left,cy2=my-rect.top;
+      for(let i=0;i<petscapePets.length;i++){
+        if(Math.hypot(cx2-petscapePets[i].x,cy2-petscapePets[i].y)<50){
+          addBloodEffect(petscapePets[i].x+rect.left,petscapePets[i].y+rect.top);
+          const removed=petscapePets.splice(i,1);
+          removed[0].destroy(); // clean up GIF overlay
+          if(typeof toast==='function') toast('💀 pet deleted 💀');
+          return;
         }
-        if (this.type === 'bat') this.vy += Math.sin(Date.now()*0.002+this.x)*0.1;
-        this.x += this.vx; this.y += this.vy;
-        if (this.vx < -0.1) this.dir = -1; else if (this.vx > 0.1) this.dir = 1;
-        const W = window.innerWidth, H = window.innerHeight, pad = 50;
-        if (this.x < pad) { this.x = pad; this.vx = Math.abs(this.vx)*0.8; }
-        if (this.x > W-pad) { this.x = W-pad; this.vx = -Math.abs(this.vx)*0.8; }
-        if (this.y < pad) { this.y = pad; this.vy = Math.abs(this.vy)*0.8; }
-        if (this.y > H-pad) { this.y = H-pad; this.vy = -Math.abs(this.vy)*0.8; }
-        const maxFrames = (spriteConfig[this.type] && spriteConfig[this.type].frameCount) || 4;
-        this.animFrame = (this.animFrame + this.animSpeed) % maxFrames;
+      }
     }
-    draw(ctx) {
-        ctx.save(); ctx.translate(this.x, this.y);
-        if (this.dir < 0) ctx.scale(-1, 1);
-        drawPetSprite(ctx, this.type, -28, -28, 56, Math.floor(this.animFrame));
-        ctx.restore();
-    }
+  });
 }
 
-function initPetCanvas() {
-    floatPets = [];
-    function animate() {
-        if (petCtx) { petCtx.clearRect(0, 0, petCanvas.width, petCanvas.height); globalFrame++; floatPets.forEach(p=>{p.update();p.draw(petCtx);}); }
-        requestAnimationFrame(animate);
-    }
-    animate();
-    setupRightClickDelete();
+function addPetSpawnButton(){
+  const container=document.createElement('div');
+  container.style.cssText=`position:fixed;bottom:80px;right:18px;z-index:9000;display:flex;flex-direction:column;gap:8px;`;
+  const mainBtn=document.createElement('button');
+  mainBtn.innerHTML='🐾';
+  mainBtn.style.cssText=`width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff2d87,#c4006e);backdrop-filter:blur(12px);border:2px solid rgba(255,215,0,.6);color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 20px rgba(255,45,135,.5);`;
+  mainBtn.onmouseenter=()=>mainBtn.style.transform='scale(1.1)';
+  mainBtn.onmouseleave=()=>mainBtn.style.transform='scale(1)';
+  const petButtons=document.createElement('div');
+  petButtons.style.cssText=`display:none;flex-direction:column;gap:5px;margin-bottom:5px;`;
+  [{emoji:'🐱',type:'cat',color:'#ff2d87'},{emoji:'🐶',type:'dog',color:'#d2691e'},{emoji:'🐦',type:'bird',color:'#ffd700'},{emoji:'🦇',type:'bat',color:'#9b30ff'}].forEach(p=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=p.emoji;
+    btn.style.cssText=`width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,${p.color},#4a0030);border:1px solid rgba(255,215,0,.5);color:white;font-size:18px;cursor:pointer;transition:all 0.2s;`;
+    btn.onclick=()=>{spawnSpecificPet(p.type);petButtons.style.display='none';};
+    petButtons.appendChild(btn);
+  });
+  mainBtn.onclick=()=>{petButtons.style.display=petButtons.style.display==='none'?'flex':'none';};
+  container.appendChild(mainBtn);
+  container.appendChild(petButtons);
+  document.body.appendChild(container);
 }
 
-function setupRightClickDelete() {
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        const mx = e.clientX, my = e.clientY;
-        for (let i = 0; i < floatPets.length; i++) {
-            if (Math.hypot(mx-floatPets[i].x, my-floatPets[i].y) < 50) {
-                addBloodEffect(floatPets[i].x, floatPets[i].y);
-                floatPets.splice(i, 1);
-                if (typeof toast === 'function') toast('💀 pet deleted 💀');
-                return;
-            }
-        }
-        const canvas = document.getElementById('petscape-canvas');
-        if (canvas && petscapePets) {
-            const rect = canvas.getBoundingClientRect();
-            const cx2 = mx - rect.left, cy2 = my - rect.top;
-            for (let i = 0; i < petscapePets.length; i++) {
-                if (Math.hypot(cx2-petscapePets[i].x, cy2-petscapePets[i].y) < 50) {
-                    addBloodEffect(petscapePets[i].x+rect.left, petscapePets[i].y+rect.top);
-                    petscapePets.splice(i, 1);
-                    if (typeof toast === 'function') toast('💀 pet deleted 💀');
-                    return;
-                }
-            }
-        }
-    });
+function spawnSpecificPet(type){
+  const x=Math.random()*window.innerWidth;
+  const y=Math.random()*window.innerHeight;
+  const pers=['sleepy','playful','chaotic'][Math.floor(Math.random()*3)];
+  floatPets.push(new Pet(type,x,y,pers));
+  if(floatPets.length>12) floatPets.shift(); // no destroy needed — oldest may be non-GIF
+  if(typeof toast==='function') toast(`✨ ${type} appeared! Right-click to delete ✨`);
 }
 
-function addPetSpawnButton() {
-    const container = document.createElement('div');
-    container.style.cssText = `position:fixed;bottom:80px;right:18px;z-index:9000;display:flex;flex-direction:column;gap:8px;`;
-    const mainBtn = document.createElement('button');
-    mainBtn.innerHTML = '🐾';
-    mainBtn.style.cssText = `width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff2d87,#c4006e);backdrop-filter:blur(12px);border:2px solid rgba(255,215,0,.6);color:white;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 20px rgba(255,45,135,.5);`;
-    mainBtn.onmouseenter = () => mainBtn.style.transform = 'scale(1.1)';
-    mainBtn.onmouseleave = () => mainBtn.style.transform = 'scale(1)';
-    const petButtons = document.createElement('div');
-    petButtons.style.cssText = `display:none;flex-direction:column;gap:5px;margin-bottom:5px;`;
-    [{ emoji:'🐱', type:'cat', color:'#ff2d87' }, { emoji:'🐶', type:'dog', color:'#d2691e' }, { emoji:'🐦', type:'bird', color:'#ffd700' }, { emoji:'🦇', type:'bat', color:'#9b30ff' }].forEach(p => {
-        const btn = document.createElement('button');
-        btn.innerHTML = p.emoji;
-        btn.style.cssText = `width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,${p.color},#4a0030);border:1px solid rgba(255,215,0,.5);color:white;font-size:18px;cursor:pointer;transition:all 0.2s;`;
-        btn.onclick = () => { spawnSpecificPet(p.type); petButtons.style.display = 'none'; };
-        petButtons.appendChild(btn);
-    });
-    mainBtn.onclick = () => { petButtons.style.display = petButtons.style.display === 'none' ? 'flex' : 'none'; };
-    container.appendChild(mainBtn);
-    container.appendChild(petButtons);
-    document.body.appendChild(container);
-}
-
-function spawnSpecificPet(type) {
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight;
-    const pers = ['sleepy','playful','chaotic'][Math.floor(Math.random()*3)];
-    floatPets.push(new Pet(type, x, y, pers));
-    if (floatPets.length > 12) floatPets.shift();
-    if (typeof toast === 'function') toast(`✨ ${type} appeared! Right-click to delete ✨`);
-}
-
-setTimeout(() => { if (!document.getElementById('pet-spawn-btn')) addPetSpawnButton(); }, 2000);
+setTimeout(()=>{if(!document.getElementById('pet-spawn-btn')) addPetSpawnButton();},2000);
 
 // ═══════════════════════════════════════════════════════════════
 // EDIT VIEW
 // ═══════════════════════════════════════════════════════════════
-function openEditView(){if(!isKai){switchPage('kai');return;}document.getElementById('edit-view').style.display='block';showETab('threads');}
-function closeEditView(){document.getElementById('edit-view').style.display='none';}
+function openEditView(){ if(!isKai){switchPage('kai');return;} document.getElementById('edit-view').style.display='block'; showETab('threads'); }
+function closeEditView(){ document.getElementById('edit-view').style.display='none'; }
 async function showETab(tab){
   const el=document.getElementById('edit-content');
   document.querySelectorAll('#edit-tabs .nav-btn').forEach(b=>b.classList.remove('active'));
   const activeBtn=[...document.querySelectorAll('#edit-tabs .nav-btn')].find(b=>b.textContent.toLowerCase().includes(tab));
-  if(activeBtn)activeBtn.classList.add('active');
-  if(tab==='facts')await renderEFacts(el);
-  else if(tab==='sprites')await renderESprites(el);
+  if(activeBtn) activeBtn.classList.add('active');
+  if(tab==='facts') await renderEFacts(el);
+  else if(tab==='sprites') await renderESprites(el);
   else el.innerHTML='<div class="loader"></div>';
 }
 async function renderEFacts(el){
-  const r=await api('/api/facts');const facts=r?.data||[];
+  const r=await api('/api/facts'); const facts=r?.data||[];
   let html='<div style="font-family:\'Cinzel Decorative\',serif;font-size:14px;color:var(--pk);margin-bottom:16px;letter-spacing:2px;">8 FUN FACTS</div>';
   for(let i=1;i<=8;i++){const f=facts.find(x=>x.slot_number===i);html+=`<div class="form-group"><label class="form-label">Fact ${i}</label><input class="inp" id="ef-${i}" placeholder="Fun fact..." value="${esc(f?.fact_text||'')}"></div>`;}
   html+=`<button class="btn" onclick="saveFactsToServer()">SAVE FACTS ♡</button>`;
@@ -2089,14 +2070,11 @@ async function renderEFacts(el){
 }
 async function saveFactsToServer(){
   const facts=[];
-  for(let i=1;i<=8;i++){const inp=document.getElementById(`ef-${i}`);if(inp&&inp.value.trim())facts.push({slot_number:i,fact_text:inp.value.trim()});}
+  for(let i=1;i<=8;i++){const inp=document.getElementById(`ef-${i}`);if(inp&&inp.value.trim()) facts.push({slot_number:i,fact_text:inp.value.trim()});}
   const r=await api('/api/facts','POST',facts);
   if(r){toast('fun facts saved ✦');loadAbout();}else toast('error saving facts');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SPRITE UPLOAD — supports GitHub raw URLs + local uploads
-// ═══════════════════════════════════════════════════════════════
 async function renderESprites(el){
   await loadSpritesFromServer();
   const types=['cat','bird','bat','dog','custom'];
@@ -2112,10 +2090,10 @@ async function renderESprites(el){
     </div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;">
       ${types.map(t=>{
-        const url = loadedSprites[t] ? (loadedSprites[t].startsWith('http') ? loadedSprites[t] : API_URL + loadedSprites[t]) : null;
-        return `<div style="text-align:center;">
+        const url=loadedSprites[t]?(loadedSprites[t].startsWith('http')?loadedSprites[t]:API_URL+loadedSprites[t]):null;
+        return`<div style="text-align:center;">
           <div style="width:72px;height:72px;border:1px solid rgba(255,45,135,.3);border-radius:12px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:4px;">
-            ${url ? `<img src="${url}?t=${Date.now()}" style="width:60px;height:60px;image-rendering:pixelated;object-fit:contain;">` : '<span style="font-size:24px;opacity:.3">?</span>'}
+            ${url?`<img src="${url}?t=${Date.now()}" style="width:60px;height:60px;image-rendering:pixelated;object-fit:contain;">`:'<span style="font-size:24px;opacity:.3">?</span>'}
           </div>
           <div style="font-size:9px;color:var(--candy);">${t.toUpperCase()}</div>
         </div>`;
@@ -2141,7 +2119,7 @@ async function uploadSpriteFile(){
   const t=document.getElementById('sp-type').value;
   const f=document.getElementById('sp-file').files[0];
   if(!f){toast('select a file first ♡');return;}
-  const fd=new FormData();fd.append('sprite_type',t);fd.append('file',f);
+  const fd=new FormData(); fd.append('sprite_type',t); fd.append('file',f);
   const tk=sessionStorage.getItem('kai_token');
   try{
     const res=await fetch(API_URL+'/api/sprites/upload',{method:'POST',headers:{Authorization:`Bearer ${tk}`},body:fd});
@@ -2154,40 +2132,29 @@ async function saveGithubSpriteUrl(){
   const t=document.getElementById('sp-type-url').value;
   const url=document.getElementById('sp-url-input').value.trim();
   if(!url||!url.startsWith('http')){toast('enter a valid URL ♡');return;}
-  // Save GitHub URL via backend sprite URL endpoint
   const tk=sessionStorage.getItem('kai_token');
   try{
-    const res=await fetch(API_URL+'/api/sprites/url',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${tk}`},
-      body:JSON.stringify({sprite_type:t,url})
-    });
+    const res=await fetch(API_URL+'/api/sprites/url',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${tk}`},body:JSON.stringify({sprite_type:t,url})});
     if(res.ok){toast('GitHub sprite URL saved ♡');await loadSpritesFromServer();showETab('sprites');}
-    else {
-      // Fallback: store in loadedSprites directly and reload
-      loadedSprites[t] = url;
-      toast('URL saved locally (backend may need /api/sprites/url endpoint) ♡');
-      await loadSpritesFromServer();
-      showETab('sprites');
-    }
+    else{loadedSprites[t]=url;toast('URL saved ♡');await loadSpritesFromServer();showETab('sprites');}
   }catch(e){toast('error saving URL');}
 }
 
 // ═══════════════════════════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════════════════════════
-function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function fmtDate(iso){if(!iso)return'';try{return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return iso;}}
-function ytEmbed(url){if(!url)return'';const m=url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);const id=m?m[1]:(url.length===11?url:url);return`https://www.youtube.com/embed/${id}`;}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(iso){ if(!iso)return''; try{return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return iso;} }
+function ytEmbed(url){ if(!url)return''; const m=url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/); const id=m?m[1]:(url.length===11?url:url); return`https://www.youtube.com/embed/${id}`; }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
 async function loadStats(){
   const el=id=>document.getElementById(id);
   try{
-    const tk = sessionStorage.getItem('kai_token');
-    const headers = {};
-    if (tk) headers['Authorization'] = `Bearer ${tk}`;
-    const res=await fetch(API_URL + '/api/stats', { headers });
+    const tk=sessionStorage.getItem('kai_token');
+    const headers={};
+    if(tk) headers['Authorization']=`Bearer ${tk}`;
+    const res=await fetch(API_URL+'/api/stats',{headers});
     if(!res.ok) throw new Error();
     const d=await res.json();
     if(el('s-total'))el('s-total').textContent=d.total??'0';
@@ -2198,17 +2165,17 @@ async function loadStats(){
     if(el('s-vlogs'))el('s-vlogs').textContent=d.vlogs??'0';
     if(el('s-posts'))el('s-posts').textContent=d.posts??'0';
     if(el('s-sigs'))el('s-sigs').textContent=d.signatures??'0';
-  } catch(e){ console.error('Stats error:', e); }
+  }catch(e){console.error('Stats error:',e);}
 }
 
 // KAIANA ADMIN BYPASS
 (()=>{
-  if(window.__KAI_ADMIN__!==true)return;
-  const gate=document.getElementById('gate'),site=document.getElementById('site');
-  if(gate)gate.style.display='none';
+  if(window.__KAI_ADMIN__!==true) return;
+  const gate=document.getElementById('gate'), site=document.getElementById('site');
+  if(gate) gate.style.display='none';
   if(site){site.style.transition='none';site.style.opacity='1';site.style.pointerEvents='all';site.classList.add('visible');}
   const run=()=>initSite().then(()=>{isKai=false;switchPage('kai');});
-  if(document.readyState!=='loading')run();
+  if(document.readyState!=='loading') run();
   else window.addEventListener('DOMContentLoaded',run);
 })();
 
