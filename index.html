@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en" class="gate-on">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ KAIANA CORE ✦</title>
+<meta name="description" content="kaiana's little corner of the internet">
+<meta name="theme-color" content="#ffe3ee">
+<script>try{if(sessionStorage.getItem('kw_opened')==='1')document.documentElement.classList.remove('gate-on')}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   CSS VARIABLES — BABY PINK THEME
+═══════════════════════════════════════ */
+:root {
+  --bg: #fff3f8;
+  --bg-2: #ffe3ee;
+  --bg-3: #ffd2e4;
+  --pk: #f78fb3;
+  --rose: #ec6f9d;
+  --deep: #d4578a;
+  --blush: #ffd6e7;
+  --bubblegum: #ffb5d2;
+  --candy: #c9668f;
+  --ink: #7d3a5d;
+  --ink-soft: #a8708f;
+  --gold: #e9b45c;
+  --title: #e0679b;
+  --white: #ffffff;
+  --glass: rgba(255,255,255,.58);
+  --glass-line: rgba(247,143,179,.35);
+  --glow-pk: 0 0 22px rgba(247,143,179,.55), 0 0 50px rgba(247,143,179,.25);
+  --title-glow: 0 0 18px rgba(255,182,213,.95), 0 2px 0 #fff;
+  --shadow: 0 10px 30px -12px rgba(212,87,138,.35), 0 2px 6px rgba(212,87,138,.08);
+  --cur: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 18 18'%3E%3Cpath d='M9 1C9 1 5 7 5 11a4 4 0 008 0C13 7 9 1 9 1z' fill='%23f78fb3' stroke='%23fff' stroke-width='1.2'/%3E%3Ccircle cx='9' cy='12' r='1.2' fill='%23fff'/%3E%3C/svg%3E") 11 2, auto;
+  --cur-hand: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cpath d='M13 22s-8-5.2-8-11a4.4 4.4 0 0 1 8-2.6A4.4 4.4 0 0 1 21 11c0 5.8-8 11-8 11z' fill='%23ec6f9d' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E") 13 12, pointer;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh; font-family: 'Raleway', sans-serif; color: var(--ink); cursor: var(--cur);
+  background:
+    radial-gradient(ellipse 50% 40% at 80% 10%, rgba(255,182,213,.55) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 8% 85%, rgba(255,200,225,.6) 0%, transparent 60%),
+    linear-gradient(160deg, #fff6fa 0%, #ffe6f0 50%, #ffdbe9 100%);
+  background-attachment: fixed;
+}
+.gate-on body { overflow: hidden; }
+a, button, [role="button"], label, select, summary { cursor: var(--cur-hand); }
+input, textarea { cursor: text; }
+button { font: inherit; color: inherit; }
+img { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+
+/* ═══════════════════════════════════════
+   GATE / LANDING (the diary)
+═══════════════════════════════════════ */
+.gate {
+  position: fixed; inset: 0; z-index: 9000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(26px, 6vh, 56px); padding: 20px; overflow: hidden;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, #fff7fb 0%, #ffe6f0 45%, #ffd2e4 100%);
+  transition: opacity .8s ease;
+}
+html:not(.gate-on) .gate { display: none; }
+.gate.entering { opacity: 0; pointer-events: none; }
+.orb { position: absolute; border-radius: 50%; pointer-events: none; animation: orb-drift ease-in-out infinite; }
+@keyframes orb-drift { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.05); } 66% { transform: translate(-20px,15px) scale(.95); } }
+.gate-note { font: italic 400 15px 'IM Fell English', serif; letter-spacing: 4px; color: var(--candy); transition: opacity .4s; }
+.gate.opening .gate-note, .gate.opening .key-dock { opacity: 0; pointer-events: none; }
+.gate-petal { position: absolute; top: -30px; pointer-events: none; animation: petal-drift linear infinite; }
+@keyframes petal-drift { 0% { transform: translateY(-30px) rotate(0deg); opacity: 0; } 8% { opacity: .85; } 92% { opacity: .5; } 100% { transform: translateY(110vh) translateX(80px) rotate(540deg); opacity: 0; } }
+
+.book-stage {
+  --bw: clamp(150px, 42vw, 260px); --bh: calc(var(--bw) * 1.42); --bt: calc(var(--bw) * .13);
+  --strap: calc(var(--bh) * .12); --strap-y: calc(var(--bh) * .62);
+  position: relative; width: var(--bw); height: var(--bh); perspective: 1600px;
+  transition: transform 1s cubic-bezier(.5,0,.2,1); animation: book-float 5s ease-in-out infinite;
+}
+@keyframes book-float { 50% { translate: 0 -8px; } }
+.gate.opening .book-stage { animation: none; }
+.gate.entering .book-stage { transform: scale(1.18); }
+.book-shadow { position: absolute; left: 0; right: -14%; bottom: -9%; height: 14%; background: radial-gradient(closest-side, rgba(190,70,120,.4), transparent); transform: skewX(-24deg); transition: all 1.4s cubic-bezier(.6,.05,.2,1); }
+.gate.opening .book-shadow { left: -50%; right: -50%; transform: none; }
+.book { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(14deg) rotateY(-28deg) rotateZ(-2deg); transition: transform 1.5s cubic-bezier(.6,.05,.2,1); }
+.gate.opening .book { transform: translateX(calc(var(--bw) / 2)) rotateX(8deg); }
+.book > * { position: absolute; }
+.b-back { inset: 0; transform: translateZ(calc(var(--bt) / -2)); border-radius: 3px 12px 12px 3px; background: linear-gradient(160deg, #f490b9, #d96a98); }
+.b-spine { top: 0; left: calc(var(--bt) / -2); width: var(--bt); height: var(--bh); transform: rotateY(-90deg); background: linear-gradient(90deg, #d96a98, #f6a3c5 50%, #d96a98); display: flex; align-items: center; justify-content: center; }
+.b-spine span { writing-mode: vertical-rl; transform: rotate(180deg); font: 700 calc(var(--bt) * .3) 'Cinzel Decorative', serif; color: #fff4d6; letter-spacing: .2em; }
+.b-edge { background-color: #fffafc; box-shadow: inset 0 0 8px rgba(214,90,140,.25); }
+.b-edge-r { top: 4px; height: calc(var(--bh) - 8px); width: calc(var(--bt) - 2px); left: calc(var(--bw) - 6px - (var(--bt) - 2px) / 2); transform: rotateY(90deg); background-image: repeating-linear-gradient(90deg, #fffdfe 0 1px, #f6dbe7 1px 2px); }
+.b-edge-t, .b-edge-b { left: 3px; width: calc(var(--bw) - 9px); height: calc(var(--bt) - 2px); background-image: repeating-linear-gradient(0deg, #fffdfe 0 1px, #f6dbe7 1px 2px); }
+.b-edge-t { top: calc(4px - (var(--bt) - 2px) / 2); transform: rotateX(90deg); }
+.b-edge-b { top: calc(var(--bh) - 4px - (var(--bt) - 2px) / 2); transform: rotateX(-90deg); }
+.b-strap-side { top: calc(var(--strap-y) - var(--strap) / 2); height: var(--strap); left: calc(var(--bw) - var(--bt) / 2); width: var(--bt); transform: rotateY(90deg); background: linear-gradient(#e2709f, #c7568a); transition: opacity .4s; }
+.b-page {
+  top: 4px; bottom: 4px; left: 3px; right: 6px; transform: translateZ(calc(var(--bt) / 2 - 1px));
+  border-radius: 2px 8px 8px 2px;
+  background: linear-gradient(90deg, rgba(214,87,138,.14), transparent 12%), repeating-linear-gradient(transparent 0 calc(var(--bh) * .07 - 1px), #f7d3e2 calc(var(--bh) * .07 - 1px) calc(var(--bh) * .07)), #fff8fb;
+  background-position: 0 0, 0 calc(var(--bh) * .12), 0 0;
+  padding: calc(var(--bh) * .13) 7% 0 12%;
+  color: var(--ink); font-family: 'Dancing Script', cursive; font-size: calc(var(--bw) * .074); line-height: calc(var(--bh) * .07);
+}
+.b-page p { white-space: nowrap; }
+.b-page .b-sig { text-align: right; padding-right: 6%; color: var(--deep); font-weight: 700; }
+.b-cover { inset: 0; transform-origin: left center; transform: translateZ(calc(var(--bt) / 2)); transform-style: preserve-3d; transition: transform 1.5s cubic-bezier(.55,.05,.2,1) .15s; }
+.gate.opening .b-cover { transform: translateZ(calc(var(--bt) / 2)) rotateY(-178deg); }
+.b-cover-out, .b-cover-in { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.b-cover-out {
+  border-radius: 3px 12px 12px 3px; overflow: hidden;
+  background: radial-gradient(120% 70% at 18% 8%, rgba(255,255,255,.4), transparent 55%), repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 2px, transparent 2px 5px), linear-gradient(162deg, #ffc2da, #f69bc0 50%, #e17aa6);
+  box-shadow: inset 7px 0 10px -5px rgba(150,40,90,.35), inset -2px 0 0 rgba(255,255,255,.3);
+}
+.b-frame { position: absolute; inset: 8%; border-radius: 6px; border: 1.5px solid rgba(233,180,92,.95); box-shadow: 0 0 0 5px rgba(233,180,92,.35); }
+.b-frame::before { content: '♥'; position: absolute; top: -.62em; left: 50%; transform: translateX(-50%); font-size: calc(var(--bw) * .06); color: var(--gold); background: #f8a6c7; padding: 0 .3em; line-height: 1.1; }
+.b-title { position: absolute; left: 0; right: 0; top: 20%; text-align: center; }
+.b-eyebrow { display: block; font: italic 400 calc(var(--bw) * .05) 'IM Fell English', serif; letter-spacing: 3px; color: #fff7e6; }
+.b-name { display: block; margin-top: 6px; font: 900 calc(var(--bw) * .13)/1 'Cinzel Decorative', serif; letter-spacing: 2px; background: linear-gradient(180deg, #fff6d8, #f2c76d 55%, #c98c2b); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1.5px 0 rgba(160,50,100,.55)); }
+.b-sub { position: absolute; left: 0; right: 0; bottom: 13%; text-align: center; font: 600 calc(var(--bw) * .06) 'Dancing Script', cursive; color: #fff7e6; }
+.b-strap { position: absolute; right: 0; width: 34%; top: calc(var(--strap-y) - var(--strap) / 2); height: var(--strap); background: linear-gradient(#e2709f, #c7568a); box-shadow: 0 2px 4px rgba(150,40,90,.3); transition: transform .45s ease, opacity .45s ease; }
+.b-strap::after { content: ''; position: absolute; inset: 3px 0; border-top: 1px dashed rgba(255,240,200,.75); border-bottom: 1px dashed rgba(255,240,200,.75); }
+.b-lock { all: unset; position: absolute; left: 0; top: 50%; width: calc(var(--bw) * .2); aspect-ratio: 60 / 64; transform: translate(-50%, -54%); z-index: 2; transition: filter .25s, transform .25s; cursor: var(--cur-hand); }
+.b-lock svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.b-lock .shackle { transition: transform .3s ease; }
+.b-lock.ready { filter: drop-shadow(0 0 7px #fff3c4) drop-shadow(0 0 16px rgba(236,111,157,.9)); transform: translate(-50%, -54%) scale(1.08); }
+.gate.unlocked .b-lock .shackle { transform: translateY(-8px); }
+.gate.unlocked .b-strap { transform: translateX(30%); opacity: 0; transition-delay: .25s; }
+.gate.unlocked .b-strap-side { opacity: 0; transition-delay: .25s; }
+.b-cover-in { transform: rotateY(180deg); border-radius: 12px 3px 3px 12px; background: radial-gradient(circle, rgba(236,111,157,.25) 1.4px, transparent 1.9px) 0 0 / 14px 14px, #ffeaf3; box-shadow: inset -12px 0 14px -10px rgba(150,40,90,.3); display: grid; place-items: center; }
+.bookplate { width: 72%; padding: 10% 6%; text-align: center; color: var(--ink); background: #fffaf3; border: 2px solid var(--gold); outline: 1px solid var(--gold); outline-offset: 3px; font: 600 calc(var(--bw) * .06)/1.3 'Dancing Script', cursive; }
+.bookplate b { display: block; margin: 4px 0; font: 900 calc(var(--bw) * .085)/1.1 'Cinzel Decorative', serif; color: var(--deep); }
+
+.key-dock { display: flex; flex-direction: column; align-items: center; gap: 10px; transition: opacity .4s; }
+.key { width: 96px; height: 56px; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; filter: drop-shadow(0 0 12px rgba(247,143,179,.8)) drop-shadow(0 6px 8px rgba(190,70,120,.3)); animation: key-bob 2.8s ease-in-out infinite; transform-origin: 88% 50%; position: relative; z-index: 5; }
+.key.dragging { animation: none; cursor: grabbing; }
+.key svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+@keyframes key-bob { 50% { translate: 0 -8px; rotate: -4deg; } }
+.key-hint { font: 600 16px 'Dancing Script', cursive; color: var(--deep); background: rgba(255,255,255,.7); backdrop-filter: blur(12px); padding: 6px 18px; border-radius: 30px; border: 1px solid var(--glass-line); box-shadow: var(--glow-pk); animation: hint-breathe 2s ease-in-out infinite; }
+@keyframes hint-breathe { 50% { opacity: .65; } }
+.linkish { all: unset; font: 600 12px 'Raleway', sans-serif; letter-spacing: 1px; color: var(--candy); text-decoration: underline; text-underline-offset: 3px; padding: 4px; cursor: var(--cur-hand); }
+.spark { position: fixed; z-index: 99999; pointer-events: none; font: 16px/1 system-ui; animation: spark .8s ease-out forwards; }
+@keyframes spark { from { opacity: 1; transform: translate(-50%,-50%) scale(.5); } to { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2); } }
+
+/* ═══════════════════════════════════════
+   NAV BAR
+═══════════════════════════════════════ */
+#nav {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 1000;
+  display: flex; gap: 4px; align-items: center; justify-content: center; flex-wrap: wrap;
+  padding: 8px 14px; width: max-content; max-width: 96vw;
+  background: rgba(255,255,255,.72); backdrop-filter: blur(28px) saturate(1.4); -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border-radius: 60px; border: 1px solid var(--glass-line);
+  box-shadow: 0 8px 30px rgba(212,87,138,.18), inset 0 1px 0 rgba(255,255,255,.9);
+}
+#nav::before {
+  content: ''; position: absolute; inset: -1.5px; border-radius: 62px; padding: 2px; pointer-events: none;
+  background: conic-gradient(from var(--angle, 0deg), rgba(247,143,179,.9), rgba(233,180,92,.7), rgba(255,182,213,.8), rgba(247,143,179,.9));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: border-spin 6s linear infinite;
+}
+.gate-on #paw, .gate-on .paw-pop, .gate-on #nav { display: none; }
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes border-spin { to { --angle: 360deg; } }
+.nav-btn { padding: 7px 14px; border-radius: 40px; border: none; background: transparent; color: var(--candy); font: 700 9.5px 'Raleway', sans-serif; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: all .25s; }
+.nav-btn:hover { background: rgba(247,143,179,.15); color: var(--deep); }
+.nav-btn[aria-current="page"] { background: linear-gradient(135deg, #ffa6c9, #f27aa9); color: #fff; box-shadow: var(--glow-pk); }
+.nav-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 40px; font: 700 9px 'Raleway', sans-serif; letter-spacing: 2px; }
+.nav-pill[hidden] { display: none; }
+.nav-pill.online { background: rgba(70,200,130,.12); border: 1px solid rgba(70,200,130,.45); color: #2f9e6a; }
+.nav-pill.live { background: rgba(240,60,100,.12); border: 1px solid rgba(240,60,100,.5); color: #e0365f; text-decoration: none; animation: live-pulse 1.6s ease-in-out infinite; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: blink 1.5s infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+
+/* ═══════════════════════════════════════
+   PAGES
+═══════════════════════════════════════ */
+#pages { padding: 96px 20px 110px; max-width: 1200px; margin: 0 auto; }
+.page { animation: page-in .5s ease; }
+.page[hidden] { display: none; }
+@keyframes page-in { from { opacity: 0; transform: translateY(20px); } }
+.pg-title { font: 700 clamp(20px, 4vw, 32px) 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); letter-spacing: 3px; text-align: center; margin-bottom: 4px; }
+.pg-sub { font: 600 17px 'Dancing Script', cursive; color: var(--candy); text-align: center; margin-bottom: 26px; letter-spacing: 1px; }
+.sakura { position: fixed; top: 0; pointer-events: none; z-index: 60; animation: sakura-fall linear infinite; }
+@keyframes sakura-fall { 0% { transform: translateY(-30px) rotate(0deg); opacity: 0; } 5% { opacity: .8; } 95% { opacity: .35; } 100% { transform: translateY(110vh) rotate(420deg); opacity: 0; } }
+
+.card {
+  position: relative; overflow: hidden; margin-bottom: 16px; padding: 24px;
+  background: var(--glass); backdrop-filter: blur(18px) saturate(1.3); -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border-radius: 28px; border: 1px solid var(--glass-line);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
+  transition: transform .3s, box-shadow .3s;
+}
+.card::before { content: ''; position: absolute; top: -60%; left: -20%; width: 60%; height: 60%; background: radial-gradient(ellipse, rgba(255,255,255,.5), transparent); border-radius: 50%; pointer-events: none; }
+.card:hover { transform: translateY(-3px); }
+.card-title { font: italic 400 15px 'Playfair Display', serif; color: var(--deep); margin-bottom: 14px; }
+.inp {
+  width: 100%; padding: 12px 20px; margin-bottom: 10px; border-radius: 28px; outline: none;
+  background: rgba(255,255,255,.75); border: 1.5px solid rgba(247,143,179,.4);
+  color: var(--ink); font: 15px 'Raleway', sans-serif; transition: all .3s;
+}
+.inp:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(247,143,179,.2); }
+.inp::placeholder { color: #c99bb2; }
+textarea.inp { border-radius: 18px; resize: vertical; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 11px 26px; border-radius: 40px; border: 1.5px solid rgba(255,255,255,.7);
+  background: linear-gradient(135deg, #ffa6c9, #f27aa9); color: #fff;
+  font: 700 10px 'Cinzel Decorative', serif; letter-spacing: 2px; transition: all .3s;
+  box-shadow: 0 4px 18px rgba(236,111,157,.35);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--glow-pk); }
+.btn:disabled { opacity: .55; pointer-events: none; }
+.btn-sm { padding: 7px 16px; font-size: 8.5px; }
+.btn-ghost { background: rgba(255,255,255,.6); color: var(--deep); border-color: var(--glass-line); box-shadow: none; }
+.loader { width: 32px; height: 32px; margin: 36px auto; border-radius: 50%; border: 3px solid rgba(247,143,179,.2); border-top-color: var(--pk); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { grid-column: 1 / -1; text-align: center; padding: 46px 20px; color: var(--candy); font: 600 18px 'Dancing Script', cursive; letter-spacing: 1px; }
+.empty-icon { font-size: 36px; margin-bottom: 10px; opacity: .6; }
+.yt { all: unset; position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #fbe4ee; cursor: var(--cur-hand); }
+.yt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.yt-play { position: absolute; inset: 0; margin: auto; width: 62px; height: 62px; border-radius: 50%; background: rgba(255,255,255,.9); color: var(--rose); display: grid; place-items: center; font-size: 20px; box-shadow: var(--glow-pk); transition: transform .2s; }
+.yt:hover .yt-play { transform: scale(1.1); }
+.yt-frame { position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #000; }
+.yt-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.vid { display: block; width: 100%; border-radius: 16px; background: #000; max-height: 70vh; }
+
+/* HOME */
+#home-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.avatar { width: 116px; height: 116px; margin: 0 auto 14px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: var(--glow-pk), 0 0 0 7px rgba(247,143,179,.18); background: linear-gradient(135deg, var(--bubblegum), var(--rose)); display: flex; align-items: center; justify-content: center; font: 700 38px 'Cinzel Decorative', serif; color: #fff; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.hero-name { font: 700 22px 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); margin-bottom: 4px; }
+.mood-pill { display: inline-flex; align-items: center; gap: 7px; margin: 10px auto; padding: 6px 16px; border-radius: 30px; background: rgba(255,255,255,.7); border: 1px solid var(--glass-line); font-size: 12px; color: var(--candy); }
+.detail { font: 600 15px 'Dancing Script', cursive; color: var(--candy); margin: 3px 0; }
+.detail:empty { display: none; }
+.bio { font-size: 13.5px; line-height: 1.8; margin-top: 12px; white-space: pre-wrap; }
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat-box { padding: 14px; text-align: center; border-radius: 18px; background: rgba(255,255,255,.65); border: 1px solid var(--glass-line); }
+.stat-n { font: 700 24px 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); }
+.stat-l { margin-top: 3px; font-size: 8.5px; letter-spacing: 2px; color: var(--candy); text-transform: uppercase; }
+.recent a { display: block; padding: 10px 0; border-bottom: 1px solid rgba(247,143,179,.2); color: var(--ink); text-decoration: none; }
+.recent a:last-child { border-bottom: 0; }
+.recent a:hover { color: var(--deep); }
+.recent .when { display: block; font: 600 12px 'Dancing Script', cursive; color: var(--candy); }
+.recent .txt { font-size: 13px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* FEED */
+.feed-stories { display: flex; gap: 12px; max-width: 900px; margin: 0 auto 20px; }
+.story-ring { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.story-avatar { width: 66px; height: 66px; border-radius: 50%; padding: 3px; background: conic-gradient(#f78fb3, #e9b45c, #ffb5d2, #ec6f9d, #f78fb3); }
+.story-avatar .avatar { width: 100%; height: 100%; margin: 0; border-width: 2.5px; font-size: 20px; box-shadow: none; }
+.story-name { font: 600 13px 'Dancing Script', cursive; color: var(--candy); }
+.feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-width: 900px; margin: 0 auto; border-radius: 22px; overflow: hidden; }
+.feed-item { all: unset; position: relative; aspect-ratio: 1; overflow: hidden; background: #fbe4ee; cursor: var(--cur-hand); display: flex; align-items: center; justify-content: center; font: 700 30px 'Cinzel Decorative', serif; color: var(--pk); }
+.feed-item:focus-visible { outline: 3px solid var(--rose); outline-offset: -3px; }
+.feed-item img, .feed-item video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+.feed-item:hover img, .feed-item:hover video { transform: scale(1.06); }
+.feed-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(236,111,157,0); transition: background .3s; }
+.feed-item:hover .feed-overlay { background: rgba(236,111,157,.35); }
+.feed-stat { font: 700 13px 'Cinzel Decorative', serif; color: #fff; opacity: 0; transform: translateY(6px); transition: all .3s; text-shadow: 0 1px 4px rgba(150,40,90,.5); }
+.feed-item:hover .feed-stat { opacity: 1; transform: none; }
+.feed-vid-badge { position: absolute; top: 8px; right: 8px; padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,.85); color: var(--rose); font: 700 10px 'Raleway', sans-serif; }
+dialog.post { width: min(820px, 94vw); max-width: none; padding: 0; border: 0; background: transparent; overflow: visible; }
+dialog.post::backdrop { background: rgba(255,214,231,.7); backdrop-filter: blur(14px); }
+.modal-wrap { display: grid; grid-template-columns: 1fr 1fr; max-height: 88vh; overflow: hidden; border-radius: 28px; background: rgba(255,255,255,.95); border: 1px solid var(--glass-line); box-shadow: 0 20px 70px rgba(212,87,138,.35); }
+.modal-media { display: grid; place-items: center; min-height: 280px; background: #fbe4ee; }
+.modal-media img, .modal-media video { max-width: 100%; max-height: 84vh; display: block; }
+.modal-media .yt-frame { width: 100%; border-radius: 0; }
+.modal-info { display: flex; flex-direction: column; padding: 22px; overflow-y: auto; }
+.modal-author { display: flex; align-items: center; gap: 10px; padding-bottom: 13px; margin-bottom: 13px; border-bottom: 1px solid rgba(247,143,179,.25); }
+.modal-author .avatar { width: 38px; height: 38px; margin: 0; border-width: 2px; font-size: 14px; box-shadow: none; }
+.modal-name { font: 700 12px 'Cinzel Decorative', serif; color: var(--title); }
+.modal-date { font-size: 10px; letter-spacing: 1px; color: var(--candy); }
+.modal-caption { flex: 1; font-size: 13.5px; line-height: 1.8; white-space: pre-wrap; }
+.modal-acts { display: flex; align-items: center; gap: 14px; margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(247,143,179,.25); }
+.heart-btn { all: unset; display: flex; align-items: center; gap: 6px; font-size: 22px; color: var(--pk); cursor: var(--cur-hand); transition: transform .2s; }
+.heart-btn:hover { transform: scale(1.2); }
+.heart-btn.liked { color: var(--rose); animation: heart-pop .3s ease; }
+@keyframes heart-pop { 50% { transform: scale(1.6); } }
+.heart-btn span:last-child { font: 700 12px 'Cinzel Decorative', serif; color: var(--candy); }
+.modal-close { all: unset; position: absolute; top: -14px; right: -12px; z-index: 2; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: var(--rose); font-size: 15px; box-shadow: var(--shadow); cursor: var(--cur-hand); }
+
+/* THREADS */
+.thread-card { position: relative; max-width: 700px; margin: 0 auto 18px; padding: 22px; background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-line); border-radius: 24px 24px 24px 8px; box-shadow: var(--shadow); transition: box-shadow .3s; }
+.thread-card:hover { box-shadow: var(--shadow), var(--glow-pk); }
+.thread-author { font: 600 13px 'Dancing Script', cursive; color: var(--candy); margin-bottom: 8px; }
+.thread-content { font-size: 14px; line-height: 1.8; margin-bottom: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.thread-img { display: block; width: 100%; margin-bottom: 13px; border-radius: 16px; border: 1px solid var(--glass-line); }
+.thread-card .yt, .thread-card .yt-frame, .thread-card .vid { margin-bottom: 13px; }
+.thread-acts { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.thread-btn { padding: 6px 15px; border-radius: 24px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.65); color: var(--candy); font: 700 10px 'Raleway', sans-serif; letter-spacing: 1.5px; transition: all .25s; }
+.thread-btn:hover { background: rgba(247,143,179,.2); color: var(--deep); }
+.cmts { margin-top: 14px; }
+.cmts[hidden] { display: none; }
+.cmt-bubble { margin-bottom: 8px; padding: 12px 15px; background: rgba(255,255,255,.7); border: 1px solid rgba(247,143,179,.25); border-radius: 20px 20px 20px 5px; }
+.cmt-replies { margin-left: 22px; margin-top: 8px; }
+.cmt-author { font: 700 13px 'Dancing Script', cursive; }
+.cmt-when { font-size: 10px; color: var(--ink-soft); margin-left: 6px; font-family: 'Raleway', sans-serif; }
+.cmt-text { margin: 2px 0 6px; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vote-btn { padding: 4px 10px; border-radius: 15px; border: 1px solid rgba(247,143,179,.3); background: rgba(255,255,255,.7); color: var(--candy); font: 600 10px 'Raleway', sans-serif; transition: all .2s; }
+.vote-btn:hover { background: rgba(247,143,179,.2); color: var(--deep); }
+.cmt-form { margin-top: 10px; }
+
+/* VLOG */
+.vlog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.vlog-card { overflow: hidden; border-radius: 22px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--glass-line); box-shadow: var(--shadow); transition: transform .3s, box-shadow .3s; }
+.vlog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow), var(--glow-pk); }
+.vlog-card .yt, .vlog-card .yt-frame, .vlog-card .vid { border-radius: 0; }
+.vlog-info { padding: 14px 16px 16px; }
+.vlog-title { font: 700 15px 'Playfair Display', serif; color: var(--deep); margin-bottom: 5px; }
+.vlog-desc { font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; }
+.vlog-date { margin-top: 6px; font: 600 13px 'Dancing Script', cursive; color: var(--candy); }
+
+/* ABOUT */
+#about-lay { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+.about-card { text-align: center; align-self: start; }
+.facts-head { font: italic 400 18px 'Playfair Display', serif; color: var(--deep); margin-bottom: 16px; }
+.facts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fact-card { position: relative; overflow: hidden; padding: 16px 16px 16px; border-radius: 20px 20px 20px 6px; background: rgba(255,255,255,.65); border: 1px solid var(--glass-line); }
+.fact-n { position: absolute; top: 4px; right: 12px; font: 700 28px 'Cinzel Decorative', serif; color: rgba(236,111,157,.18); }
+.fact-t { position: relative; font-size: 13px; line-height: 1.65; padding-right: 22px; }
+
+/* LINKS */
+.links-wrap { display: flex; flex-direction: column; gap: 16px; max-width: 480px; margin: 0 auto; }
+.link-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 16px; padding: 20px 26px; border-radius: 50px; text-decoration: none; transition: all .3s; box-shadow: var(--shadow); }
+.link-card::before { content: ''; position: absolute; top: -50%; left: -10%; width: 50%; height: 60%; background: linear-gradient(rgba(255,255,255,.25), transparent); border-radius: 50%; transform: rotate(-10deg); }
+.link-card:hover { transform: scale(1.03) translateY(-3px); }
+.lc-instagram { background: linear-gradient(135deg, #c77dff, #ff7eb3, #ffc078); }
+.lc-tiktok { background: linear-gradient(135deg, #5a5a70, #ff6f9c); }
+.lc-spotify { background: linear-gradient(135deg, #4fd18b, #2e8f62); }
+.link-icon { width: 34px; height: 34px; flex-shrink: 0; fill: #fff; }
+.link-name { font: 700 16px 'Cinzel Decorative', serif; color: #fff; }
+.link-handle { font: 600 14px 'Dancing Script', cursive; color: rgba(255,255,255,.85); }
+.link-arrow { margin-left: auto; font-size: 18px; color: rgba(255,255,255,.75); }
+
+/* PETS */
+.petscape {
+  position: relative; height: clamp(320px, 54vh, 470px); overflow: hidden; border-radius: 30px;
+  border: 1px solid var(--glass-line); box-shadow: var(--shadow), inset 0 1px 0 #fff;
+  background: radial-gradient(circle, rgba(236,111,157,.18) 1.2px, transparent 1.7px) 0 0 / 26px 26px, linear-gradient(170deg, #fff9fc, #ffe8f1 70%);
+}
+.petscape::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 48px; background: linear-gradient(#ffcfe2, #ffbcd6); border-top: 2px solid #f6a9c8; }
+.petscape-tip { position: absolute; top: 14px; left: 0; right: 0; text-align: center; font: 600 15px 'Dancing Script', cursive; color: var(--candy); pointer-events: none; }
+#petscape-controls { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; justify-content: center; align-items: center; }
+.pick { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 12px; border-radius: 22px; border: 1px solid var(--glass-line); background: rgba(255,255,255,.7); color: var(--candy); font: 700 9px 'Raleway', sans-serif; letter-spacing: 2px; text-transform: uppercase; transition: all .2s; }
+.pick:hover { transform: translateY(-2px); box-shadow: var(--glow-pk); }
+
+/* LIVE */
+#stage-lay { display: grid; grid-template-columns: 1fr 310px; gap: 16px; }
+.live-badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 5px 16px; border-radius: 24px; background: rgba(240,60,100,.12); border: 1.5px solid rgba(240,60,100,.5); color: #e0365f; font: 700 10px 'Raleway', sans-serif; letter-spacing: 3px; animation: live-pulse 1.5s ease-in-out infinite; }
+.live-badge[hidden] { display: none; }
+@keyframes live-pulse { 50% { box-shadow: 0 0 18px rgba(240,60,100,.45); } }
+.screen { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 22px; background: linear-gradient(135deg, #fff5f9, #ffe2ee) center / cover no-repeat; border: 1px solid var(--glass-line); box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.screen iframe, .screen video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+.screen video { object-fit: contain; }
+.offline-title { font: 700 17px 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); }
+.offline-sub { margin-top: 6px; font: 600 15px 'Dancing Script', cursive; color: var(--candy); }
+.unmute { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 2; padding: 9px 18px; border-radius: 30px; border: 0; background: rgba(255,255,255,.92); color: var(--deep); font: 700 12px 'Raleway', sans-serif; box-shadow: var(--shadow); }
+.unmute[hidden] { display: none; }
+.cam-wait { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font: 600 17px 'Dancing Script', cursive; z-index: 1; pointer-events: none; }
+.chat-box { display: flex; flex-direction: column; height: 460px; overflow: hidden; border-radius: 22px; background: var(--glass); backdrop-filter: blur(16px); border: 1px solid var(--glass-line); box-shadow: var(--shadow); }
+.chat-head { padding: 12px 16px; border-bottom: 1px solid rgba(247,143,179,.25); font: italic 400 13px 'Playfair Display', serif; color: var(--deep); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.chat-msg { padding: 8px 12px; border-radius: 12px 12px 12px 3px; background: rgba(255,255,255,.75); border: 1px solid rgba(247,143,179,.2); }
+.chat-author { font: 700 12px 'Dancing Script', cursive; color: var(--rose); }
+.chat-text { font-size: 12.5px; overflow-wrap: anywhere; }
+.chat-form { display: flex; gap: 6px; padding: 9px; border-top: 1px solid rgba(247,143,179,.25); }
+.chat-input { flex: 1; min-width: 0; padding: 9px 13px; border-radius: 16px; border: 1px solid rgba(247,143,179,.35); background: rgba(255,255,255,.85); color: var(--ink); font: 14px 'Raleway', sans-serif; outline: none; }
+.chat-input:focus { border-color: var(--rose); }
+.chat-input.name { flex: none; width: 82px; }
+
+/* I WAS HERE */
+.sig-form { max-width: 460px; margin: 0 auto 26px; }
+.sigs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.sig-card { padding: 16px; border-radius: 22px 22px 22px 6px; background: var(--glass); backdrop-filter: blur(8px); border: 1px solid var(--glass-line); box-shadow: var(--shadow); }
+.sig-name { font: 700 15px 'Playfair Display', serif; color: var(--deep); margin-bottom: 4px; }
+.sig-msg { font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sig-dt { margin-top: 6px; font: 600 13px 'Dancing Script', cursive; color: var(--candy); }
+
+/* FLOATING */
+#mute-btn, #paw { position: fixed; right: 18px; z-index: 9000; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all .3s; }
+#mute-btn { bottom: 18px; width: 44px; height: 44px; background: rgba(255,255,255,.85); backdrop-filter: blur(12px); border: 1px solid var(--glass-line); color: var(--rose); font-size: 16px; }
+#paw { bottom: 74px; width: 48px; height: 48px; background: linear-gradient(135deg, #ffa6c9, #f27aa9); border: 2px solid #fff; color: #fff; font-size: 22px; box-shadow: var(--glow-pk); }
+#mute-btn:hover, #paw:hover { transform: scale(1.1); }
+.paw-pop { position: fixed; right: 18px; bottom: 132px; z-index: 9000; width: min(300px, calc(100vw - 36px)); padding: 16px; border-radius: 22px; background: rgba(255,255,255,.95); backdrop-filter: blur(16px); border: 1px solid var(--glass-line); box-shadow: 0 18px 40px rgba(212,87,138,.3); }
+.paw-pop[hidden] { display: none; }
+.paw-pop h3 { font: 700 12px 'Cinzel Decorative', serif; color: var(--title); letter-spacing: 1px; }
+.paw-pop p { margin: 4px 0 12px; font: 600 14px/1.3 'Dancing Script', cursive; color: var(--candy); }
+.paw-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; max-height: 240px; overflow-y: auto; }
+.paw-grid button { all: unset; display: grid; justify-items: center; gap: 2px; padding: 6px 2px; border-radius: 12px; font: 700 8px 'Raleway', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--candy); text-align: center; cursor: var(--cur-hand); }
+.paw-grid button:hover { background: var(--blush); }
+#toast { position: fixed; left: 50%; bottom: 70px; z-index: 99999; max-width: calc(100vw - 40px); padding: 12px 26px; border-radius: 24px; background: rgba(255,255,255,.95); border: 1px solid var(--glass-line); color: var(--deep); font: 600 16px 'Dancing Script', cursive; box-shadow: var(--glow-pk); transform: translate(-50%, 16px); opacity: 0; pointer-events: none; transition: all .4s; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+.wake { position: fixed; top: 74px; left: 50%; z-index: 9999; transform: translateX(-50%); padding: 7px 18px; border-radius: 30px; background: #fff; color: var(--deep); font: 600 15px 'Dancing Script', cursive; box-shadow: var(--shadow); }
+.wake[hidden] { display: none; }
+.cursor-trail { position: fixed; z-index: 999998; pointer-events: none; font-size: 11px; transform: translate(-50%,-50%); animation: trail-fade .7s ease forwards; }
+@keyframes trail-fade { to { opacity: 0; transform: translate(-50%,-80%) scale(.4); } }
+footer { text-align: center; padding: 0 20px 40px; font: 600 15px 'Dancing Script', cursive; color: var(--candy); }
+
+@media (max-width: 900px) { #stage-lay { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  #home-hero, #about-lay { grid-template-columns: 1fr; }
+  .modal-wrap { grid-template-columns: 1fr; overflow-y: auto; }
+  .modal-media img, .modal-media video { max-height: 50vh; }
+  #nav { gap: 2px; padding: 7px 9px; top: 10px; }
+  .nav-btn { padding: 5px 8px; font-size: 8.5px; letter-spacing: 1px; }
+  #pages { padding: 120px 12px 110px; }
+}
+@media (max-width: 520px) {
+  .facts-grid { grid-template-columns: 1fr; }
+  .feed-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  .gate-petal, .sakura, .cursor-trail { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div class="orb" style="width:420px;height:420px;left:4%;top:8%;background:radial-gradient(rgba(255,170,205,.45),transparent 70%);animation-duration:12s"></div>
+  <div class="orb" style="width:320px;height:320px;right:6%;bottom:12%;background:radial-gradient(rgba(255,200,225,.55),transparent 70%);animation-duration:9s;animation-delay:-4s"></div>
+
+  <div class="book-stage">
+    <div class="book-shadow"></div>
+    <div class="book">
+      <div class="b-back"></div>
+      <div class="b-spine"><span>KAIANA'S WORLD ✦</span></div>
+      <div class="b-edge b-edge-r"></div>
+      <div class="b-edge b-edge-t"></div>
+      <div class="b-edge b-edge-b"></div>
+      <div class="b-strap-side"></div>
+      <div class="b-page">
+        <p>welcome, dear visitor</p>
+        <p>to my little corner</p>
+        <p>of the internet ♡</p>
+        <p>stay as long as you like</p>
+        <p class="b-sig">— kaiana</p>
+      </div>
+      <div class="b-cover">
+        <div class="b-cover-out">
+          <div class="b-frame"></div>
+          <div class="b-title"><span class="b-eyebrow">a personal archive</span><span class="b-name">KAIANA</span></div>
+          <div class="b-strap">
+            <button class="b-lock" id="b-lock" type="button" aria-label="Unlock the diary">
+              <svg viewBox="0 0 60 64" aria-hidden="true">
+                <defs><linearGradient id="lockg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d8"/><stop offset=".5" stop-color="#f2c76d"/><stop offset="1" stop-color="#b98029"/></linearGradient></defs>
+                <path class="shackle" d="M19 27V18a11 11 0 0 1 22 0v9" fill="none" stroke="#d4a145" stroke-width="6" stroke-linecap="round"/>
+                <path d="M30 61C14 50 4 41 4 30A13 13 0 0 1 30 23A13 13 0 0 1 56 30C56 41 46 50 30 61Z" fill="url(#lockg)" stroke="#a87424" stroke-width="2"/>
+                <circle cx="30" cy="36" r="4.6" fill="#a0466f"/><path d="M27.6 38.5h4.8l1.4 9h-7.6z" fill="#a0466f"/>
+              </svg>
+            </button>
+          </div>
+          <div class="b-sub">✿ welcome ✿</div>
+        </div>
+        <div class="b-cover-in"><div class="bookplate">this book belongs to<b>KAIANA</b>if found, please return ♡</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key-dock">
+    <div class="key" id="key" role="button" tabindex="0" aria-label="Key: drag it to the heart lock, or press Enter to open">
+      <svg viewBox="0 0 100 58" aria-hidden="true">
+        <defs>
+          <linearGradient id="keyg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF0B8"/><stop offset="45%" stop-color="#F2C76D"/><stop offset="100%" stop-color="#B98029"/></linearGradient>
+          <radialGradient id="keygem" cx="33%" cy="28%" r="58%"><stop offset="0%" stop-color="#FFE3F0"/><stop offset="55%" stop-color="#F78FB3"/><stop offset="100%" stop-color="#D4578A"/></radialGradient>
+        </defs>
+        <circle cx="22" cy="29" r="15.5" fill="url(#keyg)" stroke="#a87424" stroke-width="1.5"/>
+        <circle cx="22" cy="29" r="9.5" fill="none" stroke="#a87424" stroke-width="7.5"/>
+        <circle cx="22" cy="29" r="9.5" fill="none" stroke="url(#keyg)" stroke-width="6"/>
+        <rect x="36" y="26" width="54" height="7.5" rx="3.75" fill="url(#keyg)" stroke="#a87424"/>
+        <rect x="54" y="32" width="6" height="9" rx="2.5" fill="url(#keyg)" stroke="#a87424" stroke-width=".8"/>
+        <rect x="65" y="32" width="6" height="11" rx="2.5" fill="url(#keyg)" stroke="#a87424" stroke-width=".8"/>
+        <rect x="76" y="32" width="6" height="7" rx="2" fill="url(#keyg)" stroke="#a87424" stroke-width=".8"/>
+        <rect x="38" y="26.5" width="50" height="2.4" rx="1.2" fill="rgba(255,255,230,.6)"/>
+        <path d="M22 35.5C16.5 31.8 15 29.6 15 27.4a3.6 3.6 0 0 1 7-1.2a3.6 3.6 0 0 1 7 1.2c0 2.2-1.5 4.4-7 8.1z" fill="url(#keygem)"/>
+      </svg>
+    </div>
+    <p class="key-hint" id="key-hint">✦ drag the key to the heart lock ✦</p>
+    <button class="linkish" id="open-easy" type="button">can't drag? tap here to open</button>
+  </div>
+</div>
+
+<!-- SITE -->
+<nav id="nav" aria-label="Sections">
+  <span class="nav-pill online" id="here" hidden><span class="dot"></span>KAIANA ♡</span>
+  <a class="nav-pill live" id="live-pill" href="#live" hidden><span class="dot"></span>LIVE</a>
+  <a class="nav-btn" href="#home" data-page="home">HOME</a>
+  <a class="nav-btn" href="#feed" data-page="feed">FEED</a>
+  <a class="nav-btn" href="#threads" data-page="threads">THREADS</a>
+  <a class="nav-btn" href="#vlog" data-page="vlog">VLOG</a>
+  <a class="nav-btn" href="#about" data-page="about">ABOUT</a>
+  <a class="nav-btn" href="#links" data-page="links">LINKS</a>
+  <a class="nav-btn" href="#pets" data-page="pets">PETS</a>
+  <a class="nav-btn" href="#live" data-page="live">LIVE</a>
+  <a class="nav-btn" href="#guestbook" data-page="guestbook">I WAS HERE</a>
+</nav>
+
+<main id="pages">
+  <!-- HOME -->
+  <section class="page" id="page-home" aria-label="Home">
+    <div id="home-hero">
+      <div class="card" style="text-align:center">
+        <div class="avatar" data-avatar>K</div>
+        <div class="hero-name" data-name>KAIANA</div>
+        <div class="mood-pill"><span data-mood>✨</span> current mood</div>
+        <div class="detail" data-location></div>
+        <div class="detail" data-zodiac></div>
+        <div class="bio" data-bio>welcome to my little archive of dreams &amp; moments ♡</div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="pg-title" style="font-size:17px;margin-bottom:14px">✦ WELCOME BACK ✦</div>
+          <div class="stat-grid">
+            <div class="stat-box"><div class="stat-n" id="stat-threads">–</div><div class="stat-l">threads</div></div>
+            <div class="stat-box"><div class="stat-n" id="stat-visitors">–</div><div class="stat-l">visitors</div></div>
+            <div class="stat-box"><div class="stat-n" id="stat-posts">–</div><div class="stat-l">posts</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">recent threads ♡</div>
+          <div class="recent" id="home-threads"><div class="loader"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEED -->
+  <section class="page" id="page-feed" aria-label="Feed" hidden>
+    <div class="pg-title">FEED</div>
+    <div class="pg-sub">✿ kaiana's moments ✿</div>
+    <div class="feed-stories"><div class="story-ring"><div class="story-avatar"><div class="avatar" data-avatar>K</div></div><div class="story-name" data-name>kaiana</div></div></div>
+    <div class="feed-grid" id="feed"></div>
+  </section>
+
+  <!-- THREADS -->
+  <section class="page" id="page-threads" aria-label="Threads" hidden>
+    <div class="pg-title">THREADS</div>
+    <div class="pg-sub">♡ kaiana's thoughts &amp; moments ♡</div>
+    <div id="threads"></div>
+  </section>
+
+  <!-- VLOG -->
+  <section class="page" id="page-vlog" aria-label="Vlog" hidden>
+    <div class="pg-title">VLOG</div>
+    <div class="pg-sub">▶ video diary ▶</div>
+    <div class="vlog-grid" id="vlogs"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page" id="page-about" aria-label="About" hidden>
+    <div class="pg-title">ABOUT KAIANA</div>
+    <div class="pg-sub">✿ the lore ✿</div>
+    <div id="about-lay">
+      <div class="card about-card">
+        <div class="avatar" data-avatar>K</div>
+        <div class="hero-name" data-name>KAIANA</div>
+        <div class="mood-pill"><span data-mood>✨</span> current mood</div>
+        <div class="detail" data-location></div>
+        <div class="detail" data-zodiac></div>
+        <div class="bio" data-bio></div>
+      </div>
+      <div>
+        <div class="facts-head">8 fun facts about me ♡</div>
+        <div class="facts-grid" id="facts"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINKS -->
+  <section class="page" id="page-links" aria-label="Links" hidden>
+    <div class="pg-title">CORE LINKS</div>
+    <div class="pg-sub">♡ find kaiana ♡</div>
+    <div class="links-wrap" id="links"></div>
+  </section>
+
+  <!-- PETS -->
+  <section class="page" id="page-pets" aria-label="Pets" hidden>
+    <div class="pg-title">PETSCAPE</div>
+    <div class="pg-sub">✿ kaiana's pixel companions ✿</div>
+    <div class="petscape" id="petroom"><p class="petscape-tip">click a pet to give it love · right-click (or hold) to send it home</p></div>
+    <div id="petscape-controls"></div>
+  </section>
+
+  <!-- LIVE -->
+  <section class="page" id="page-live" aria-label="Live" hidden>
+    <div class="pg-title">LIVE STAGE</div>
+    <div class="pg-sub">♡ tune in ♡</div>
+    <div id="stage-lay">
+      <div>
+        <div class="live-badge" id="live-badge" hidden><span class="dot"></span>LIVE NOW</div>
+        <div class="screen" id="screen"><div class="offline-title">KAIANA IS OFFLINE</div><div class="offline-sub">check back soon ♡</div></div>
+      </div>
+      <section class="chat-box" aria-label="Live chat">
+        <div class="chat-head">live chat ♡</div>
+        <div class="chat-messages" id="chat-log" aria-live="polite"></div>
+        <form class="chat-form" id="chat-form" autocomplete="off">
+          <input class="chat-input name" name="name" placeholder="name..." maxlength="40" aria-label="Your name">
+          <input class="chat-input" name="message" placeholder="say something..." maxlength="300" aria-label="Message" required>
+          <button class="btn btn-sm" type="submit" aria-label="Send">→</button>
+        </form>
+      </section>
+    </div>
+  </section>
+
+  <!-- I WAS HERE -->
+  <section class="page" id="page-guestbook" aria-label="Guestbook" hidden>
+    <div class="pg-title">I WAS HERE</div>
+    <div class="pg-sub">✍ leave your mark ✍</div>
+    <form class="card sig-form" id="sig-form">
+      <div class="card-title">sign the guestbook ♡</div>
+      <input class="inp" name="name" placeholder="your name..." maxlength="60" required aria-label="Your name">
+      <textarea class="inp" name="message" rows="3" placeholder="leave a message for kaiana ♡" maxlength="500" required aria-label="Message"></textarea>
+      <button class="btn" type="submit">SIGN ♡</button>
+    </form>
+    <div class="sigs-grid" id="sigs"></div>
+  </section>
+</main>
+<footer>made with love ♡ <span id="foot-count"></span></footer>
+
+<dialog class="post" id="post-dialog" aria-label="Post">
+  <button class="modal-close" type="button" data-act="close-post" aria-label="Close">✕</button>
+  <div class="modal-wrap">
+    <div class="modal-media" id="post-media"></div>
+    <div class="modal-info">
+      <div class="modal-author"><div class="avatar" data-avatar>K</div><div><div class="modal-name" data-name>KAIANA</div><div class="modal-date" id="post-date"></div></div></div>
+      <div class="modal-caption" id="post-cap"></div>
+      <div class="modal-acts"><button class="heart-btn" id="post-heart" type="button"><span>♡</span><span id="post-likes">0</span></button></div>
+    </div>
+  </div>
+</dialog>
+
+<button id="paw" type="button" aria-label="Pets that follow you around" aria-expanded="false">🐾</button>
+<div class="paw-pop" id="paw-pop" hidden>
+  <h3>TAKE A PET WITH YOU</h3>
+  <p>they'll hang around on every page ♡ click one to pet it, hold or right-click to say bye</p>
+  <div class="paw-grid" id="paw-grid"></div>
+  <button class="btn btn-sm btn-ghost" id="paw-clear" type="button">SEND THEM HOME</button>
+</div>
+<button id="mute-btn" type="button" aria-label="Sound on">🔊</button>
+<div id="toast" role="status" aria-live="polite"></div>
+<div class="wake" id="wake" hidden>waking the site up… one sec ♡</div>
+
+<script src="/assets/pets.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION & HELPERS
+// ═══════════════════════════════════════════════════════════════
+const API = location.protocol === 'file:' ? 'https://kaisworldb.onrender.com' : '';
+const $ = (s, el) => (el || document).querySelector(s);
+const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const store = {
+  get(k, fallback) { try { const v = localStorage.getItem(k); return v === null ? fallback : JSON.parse(v); } catch (e) { return fallback; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function safeUrl(u) { return /^https?:\/\/[^\s"'<>]+$/i.test(u || '') ? u : ''; }
+function safeColor(c) { return /^#[0-9a-f]{6}$/i.test(c || '') ? c : '#ec6f9d'; }
+function ytId(u) {
+  if (!u) return null;
+  u = String(u).trim();
+  if (/^[\w-]{11}$/.test(u)) return u;
+  const m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function ago(iso) {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (!isFinite(s)) return '';
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+  if (s < 604800) return Math.floor(s / 86400) + 'd ago';
+  return fmtDate(iso);
+}
+function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
+function ytBlock(id) {
+  return `<button class="yt" type="button" data-yt="${id}" aria-label="Play video"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy"><span class="yt-play">▶</span></button>`;
+}
+function ytFrame(id, autoplay) {
+  return `<div class="yt-frame"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0${autoplay ? '&autoplay=1' : ''}" title="YouTube video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+}
+// A YouTube link or an uploaded video file.
+function videoBlock(url) {
+  const yt = ytId(url);
+  if (yt) return ytBlock(yt);
+  const u = safeUrl(url);
+  return u ? `<video class="vid" src="${esc(u)}" controls preload="metadata" playsinline></video>` : '';
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// Render's free servers fall asleep; the first request can take ~30s.
+let pending = 0, wakeTimer = null;
+async function api(path, method, body) {
+  pending++;
+  if (!wakeTimer) wakeTimer = setTimeout(() => { if (pending) $('#wake').hidden = false; }, 2500);
+  try {
+    const r = await fetch(API + path, {
+      method: method || 'GET',
+      headers: body ? { 'Content-Type': 'application/json' } : {},
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    let data = null;
+    try { data = await r.json(); } catch (e) {}
+    if (!r.ok) return { ok: false, status: r.status, error: errText(data, r.status) };
+    return { ok: true, data: data || {} };
+  } catch (e) {
+    return { ok: false, status: 0, error: "can't reach the site right now, try again in a sec" };
+  } finally {
+    if (--pending === 0) { clearTimeout(wakeTimer); wakeTimer = null; $('#wake').hidden = true; }
+  }
+}
+function errText(d, status) {
+  if (d && typeof d.detail === 'string') return d.detail;
+  if (d && Array.isArray(d.detail) && d.detail[0]) {
+    const m = d.detail[0], field = m.loc ? m.loc[m.loc.length - 1] : '';
+    return (field ? String(field).replace(/_/g, ' ') + ': ' : '') + m.msg;
+  }
+  if (status === 429) return 'slow down a little ♡';
+  return 'something went wrong (' + status + ')';
+}
+const list = r => (r.ok && r.data && Array.isArray(r.data.data)) ? r.data.data : [];
+
+// ═══════════════════════════════════════════════════════════════
+// AUDIO
+// ═══════════════════════════════════════════════════════════════
+let actx = null, muted = store.get('kw_muted', false);
+function updateSoundBtn() {
+  const b = $('#mute-btn');
+  b.textContent = muted ? '🔇' : '🔊';
+  b.setAttribute('aria-label', muted ? 'Sound off' : 'Sound on');
+}
+$('#mute-btn').addEventListener('click', () => { muted = !muted; store.set('kw_muted', muted); updateSoundBtn(); });
+updateSoundBtn();
+function chime(kind) {
+  if (muted) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime;
+    const note = (f, at, len, type, vol) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(vol || .1, t + at);
+      g.gain.exponentialRampToValueAtTime(.001, t + at + len);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t + at); o.stop(t + at + len);
+    };
+    if (kind === 'key') note(680, 0, .06, 'triangle', .03);
+    if (kind === 'unlock') [440, 554, 659, 880].forEach((f, i) => note(f, i * .08, .3, 'sine', .1));
+    if (kind === 'book') { note(110, 0, .8, 'sine', .12); note(220, .05, .5, 'triangle', .03); }
+  } catch (e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GATE (the diary)
+// ═══════════════════════════════════════════════════════════════
+(function gate() {
+  const gateEl = $('#gate');
+  if (!document.documentElement.classList.contains('gate-on')) { gateEl.remove(); return; }
+  if (!reduceMotion) {
+    const ps = ['🌸', '✿', '🌺', '💮', '·'];
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 'gate-petal';
+      p.textContent = ps[i % ps.length];
+      p.style.cssText = `left:${Math.random() * 100}%;font-size:${10 + Math.random() * 10}px;color:#f78fb3;animation-duration:${5 + Math.random() * 7}s;animation-delay:${-Math.random() * 7}s;`;
+      gateEl.appendChild(p);
+    }
+  }
+
+  const key = $('#key'), lock = $('#b-lock');
+  let dragging = false, start = null, offset = { x: 0, y: 0 }, opened = false;
+  const tipPos = () => { const r = key.getBoundingClientRect(); return { x: r.left + r.width * .86, y: r.top + r.height * .55 }; };
+  const lockPos = () => { const r = lock.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height * .6 }; };
+  const nearLock = () => { const a = tipPos(), b = lockPos(); return Math.hypot(a.x - b.x, a.y - b.y) < Math.max(46, lock.getBoundingClientRect().width * .9); };
+
+  key.addEventListener('pointerdown', e => {
+    if (opened) return;
+    e.preventDefault();
+    key.setPointerCapture(e.pointerId);
+    dragging = true;
+    start = { x: e.clientX - offset.x, y: e.clientY - offset.y };
+    key.style.transition = 'none';
+    key.classList.add('dragging');
+    chime('key');
+  });
+  key.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    offset = { x: e.clientX - start.x, y: e.clientY - start.y };
+    key.style.transform = `translate(${offset.x}px, ${offset.y}px) rotate(-12deg)`;
+    lock.classList.toggle('ready', nearLock());
+  });
+  const drop = () => {
+    if (!dragging) return;
+    dragging = false;
+    key.classList.remove('dragging');
+    if (nearLock()) { unlock(); return; }
+    lock.classList.remove('ready');
+    key.style.transition = 'transform .55s cubic-bezier(.34,1.56,.64,1)';
+    key.style.transform = '';
+    offset = { x: 0, y: 0 };
+    $('#key-hint').textContent = '✦ almost! the tip goes in the heart ✦';
+  };
+  key.addEventListener('pointerup', drop);
+  key.addEventListener('pointercancel', drop);
+  key.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); unlock(); } });
+  lock.addEventListener('click', unlock);
+  $('#open-easy').addEventListener('click', unlock);
+
+  function sparkle(x, y, n) {
+    const chars = ['✦', '♡', '✿', '♥', '✸'];
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('span');
+      const a = Math.random() * Math.PI * 2, d = 30 + Math.random() * 80;
+      s.className = 'spark';
+      s.textContent = chars[i % chars.length];
+      s.style.cssText = `left:${x}px;top:${y}px;color:${['#f78fb3', '#e9b45c', '#ffb5d2'][i % 3]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px;font-size:${10 + Math.random() * 12}px`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+
+  async function unlock() {
+    if (opened) return;
+    opened = true;
+    lock.classList.add('ready');
+    const a = tipPos(), b = lockPos();
+    offset = { x: offset.x + b.x - a.x, y: offset.y + b.y - a.y };
+    key.style.animation = 'none';
+    key.style.transition = 'transform .5s cubic-bezier(.3,.7,.3,1)';
+    key.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+    await wait(reduceMotion ? 50 : 520);
+    key.style.transition = 'transform .35s ease, opacity .35s ease .25s';
+    key.style.transform = `translate(${offset.x}px, ${offset.y}px) rotateX(75deg)`;
+    gateEl.classList.add('unlocked');
+    chime('unlock');
+    sparkle(b.x, b.y, 22);
+    await wait(380);
+    key.style.opacity = '0';
+    await wait(320);
+    gateEl.classList.add('opening');
+    chime('book');
+    await wait(reduceMotion ? 300 : 1850);
+    try { sessionStorage.setItem('kw_opened', '1'); } catch (e) {}
+    gateEl.classList.add('entering');
+    await wait(800);
+    document.documentElement.classList.remove('gate-on');
+    gateEl.remove();
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// SAKURA & CURSOR TRAIL
+// ═══════════════════════════════════════════════════════════════
+if (!reduceMotion) {
+  const petals = ['🌸', '🌺', '✿', '💮'];
+  for (let i = 0; i < 12; i++) {
+    const el = document.createElement('div');
+    el.className = 'sakura';
+    el.textContent = petals[i % petals.length];
+    el.style.cssText = `left:${Math.random() * 100}%;font-size:${9 + Math.random() * 8}px;animation-duration:${7 + Math.random() * 9}s;animation-delay:${-Math.random() * 9}s;`;
+    document.body.appendChild(el);
+  }
+  if (matchMedia('(pointer: fine)').matches) {
+    let lastTrail = 0;
+    document.addEventListener('pointermove', e => {
+      const now = performance.now();
+      if (e.pointerType !== 'mouse' || now - lastTrail < 150) return;
+      lastTrail = now;
+      const t = document.createElement('div');
+      t.className = 'cursor-trail';
+      t.textContent = ['♡', '✦', '✿', '♥', '✸'][Math.floor(Math.random() * 5)];
+      t.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;color:${['#f78fb3', '#e9b45c', '#ffb5d2'][Math.floor(Math.random() * 3)]};font-size:${9 + Math.random() * 7}px`;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 700);
+    }, { passive: true });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════════
+const PAGES = ['home', 'feed', 'threads', 'vlog', 'about', 'links', 'pets', 'live', 'guestbook'];
+const loaders = {};
+let currentPage = null;
+
+function route() {
+  let id = location.hash.slice(1);
+  if (!PAGES.includes(id)) id = 'home';
+  if (id === currentPage) return;
+  currentPage = id;
+  $$('.page').forEach(p => { p.hidden = p.id !== 'page-' + id; });
+  $$('#nav .nav-btn').forEach(a => { if (a.dataset.page === id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  window.scrollTo({ top: 0 });
+  if (loaders[id]) loaders[id]();
+  if (id === 'live') startLive(); else stopLive();
+  track(id);
+}
+window.addEventListener('hashchange', route);
+
+function visitorId() {
+  let id = store.get('kc_vid', null);
+  if (!id) { id = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); store.set('kc_vid', id); }
+  return id;
+}
+function track(page) { api('/api/track', 'POST', { visitor_id: visitorId(), page, referrer: document.referrer || null, ua: navigator.userAgent }); }
+
+// ═══════════════════════════════════════════════════════════════
+// PROFILE & STATUS
+// ═══════════════════════════════════════════════════════════════
+let profile = {};
+async function loadProfile() {
+  const r = await api('/api/profile');
+  if (!r.ok) return;
+  profile = r.data || {};
+  const name = profile.name || 'KAIANA';
+  $$('[data-name]').forEach(el => { el.textContent = name; });
+  const pic = safeUrl(profile.profile_pic_url);
+  $$('[data-avatar]').forEach(el => { if (pic) el.innerHTML = `<img src="${esc(pic)}" alt="${esc(name)}">`; else el.textContent = name.charAt(0).toUpperCase(); });
+  if (profile.mood_emoji) $$('[data-mood]').forEach(el => { el.textContent = profile.mood_emoji; });
+  $$('[data-location]').forEach(el => { el.textContent = profile.location ? '📍 ' + profile.location : ''; });
+  $$('[data-zodiac]').forEach(el => { el.textContent = profile.zodiac ? '⭐ ' + profile.zodiac : ''; });
+  if (profile.bio) $$('[data-bio]').forEach(el => { el.textContent = profile.bio; });
+  renderLinks();
+}
+async function checkOnline() {
+  if (document.hidden) return;
+  const [st, cam] = await Promise.all([api('/api/kai/status'), api('/api/live/camera')]);
+  $('#here').hidden = !(st.ok && st.data.online);
+  $('#live-pill').hidden = !(cam.ok && cam.data.live);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════════════════════════
+loaders.home = async function () {
+  const [th, st] = await Promise.all([api('/api/threads'), api('/api/stats')]);
+  const threads = list(th);
+  $('#home-threads').innerHTML = threads.length
+    ? threads.slice(0, 3).map(t => `<a href="#threads" data-scroll="t-${esc(t.id)}"><span class="when">${esc(fmtDate(t.created_at))}</span><span class="txt">${esc(t.content || '')}</span></a>`).join('')
+    : `<div class="empty-state" style="padding:18px">no threads yet ♡</div>`;
+  if (st.ok) {
+    $('#stat-threads').textContent = st.data.threads || 0;
+    $('#stat-visitors').textContent = st.data.total || 0;
+    $('#stat-posts').textContent = st.data.posts || 0;
+    $('#foot-count').textContent = '· visitor #' + (st.data.total || 0);
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// FEED
+// ═══════════════════════════════════════════════════════════════
+let posts = [], openPost = null;
+const liked = new Set(store.get('kw_liked', []));
+function postThumb(p) {
+  const img = safeUrl(p.image_url), vid = safeUrl(p.video_url), yt = ytId(p.video_url);
+  if (img) return `<img src="${esc(img)}" alt="" loading="lazy">`;
+  if (yt) return `<img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="" loading="lazy">`;
+  if (vid) return `<video src="${esc(vid)}#t=0.5" muted preload="metadata" playsinline></video>`;
+  return esc((p.caption || '✦').trim().slice(0, 2) || '✦');
+}
+loaders.feed = async function () {
+  const el = $('#feed');
+  if (!posts.length) el.innerHTML = '<div class="loader" style="grid-column:1/-1"></div>';
+  const r = await api('/api/posts');
+  posts = list(r);
+  if (!r.ok) { el.innerHTML = `<div class="empty-state">${esc(r.error)}</div>`; return; }
+  if (!posts.length) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">📸</div>no posts yet ♡</div>'; return; }
+  el.innerHTML = posts.map((p, i) => `
+    <button class="feed-item" type="button" data-act="open-post" data-i="${i}" aria-label="Open post">
+      ${postThumb(p)}${p.video_url && !p.image_url ? '<span class="feed-vid-badge">▶</span>' : ''}
+      <span class="feed-overlay"><span class="feed-stat">♥ ${p.like_count || 0}</span></span>
+    </button>`).join('');
+};
+function showPost(i) {
+  const p = posts[i];
+  if (!p) return;
+  openPost = p;
+  const img = safeUrl(p.image_url), vid = safeUrl(p.video_url), yt = ytId(p.video_url);
+  $('#post-media').innerHTML = img ? `<img src="${esc(img)}" alt="">`
+    : yt ? ytFrame(yt, false)
+    : vid ? `<video src="${esc(vid)}" controls playsinline autoplay></video>`
+    : `<div class="avatar" style="width:140px;height:140px;font-size:50px">✿</div>`;
+  $('#post-date').textContent = fmtDate(p.created_at);
+  $('#post-cap').textContent = p.caption || '';
+  $('#post-likes').textContent = p.like_count || 0;
+  $('#post-heart').classList.toggle('liked', liked.has(p.id));
+  $('#post-heart span').textContent = liked.has(p.id) ? '♥' : '♡';
+  $('#post-dialog').showModal();
+}
+$('#post-dialog').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+$('#post-dialog').addEventListener('close', () => { $('#post-media').innerHTML = ''; openPost = null; });
+$('#post-heart').addEventListener('click', async () => {
+  const p = openPost;
+  if (!p) return;
+  if (liked.has(p.id)) { toast('you already loved this one ♡'); return; }
+  const r = await api(`/api/posts/${encodeURIComponent(p.id)}/like`, 'POST');
+  if (!r.ok) { toast(r.error); return; }
+  liked.add(p.id); store.set('kw_liked', Array.from(liked).slice(-300));
+  p.like_count = r.data.like_count;
+  $('#post-likes').textContent = p.like_count;
+  $('#post-heart').classList.add('liked');
+  $('#post-heart span').textContent = '♥';
+  const stat = $(`.feed-item[data-i="${posts.indexOf(p)}"] .feed-stat`);
+  if (stat) stat.textContent = '♥ ' + p.like_count;
+});
+
+// ═══════════════════════════════════════════════════════════════
+// THREADS & COMMENTS
+// ═══════════════════════════════════════════════════════════════
+const COMMENT_COLORS = ['#ec6f9d', '#d4578a', '#c98c2b', '#a35ad1', '#e0507a', '#2f9e8f'];
+let scrollTarget = null;
+loaders.threads = async function () {
+  const el = $('#threads');
+  if (!el.children.length) el.innerHTML = '<div class="loader"></div>';
+  const r = await api('/api/threads');
+  const threads = list(r);
+  if (!r.ok) { el.innerHTML = `<div class="empty-state">${esc(r.error)}</div>`; return; }
+  if (!threads.length) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">💭</div>no threads yet ♡</div>'; return; }
+  el.innerHTML = threads.map(t => {
+    const img = safeUrl(t.image_url), id = esc(t.id), n = t.comment_count || 0;
+    return `<article class="thread-card" id="t-${id}">
+      <div class="thread-author">kaiana ✦ ${esc(fmtDate(t.created_at))}</div>
+      <div class="thread-content">${esc(t.content || '')}</div>
+      ${img ? `<img class="thread-img" src="${esc(img)}" alt="" loading="lazy">` : ''}
+      ${videoBlock(t.video_url)}
+      <div class="thread-acts"><button class="thread-btn" type="button" data-act="toggle-cmts" data-id="${id}" aria-expanded="false">💬 ${plural(n, 'comment')}</button></div>
+      <div class="cmts" id="cmts-${id}" hidden></div>
+    </article>`;
+  }).join('');
+  if (scrollTarget) {
+    const target = document.getElementById(scrollTarget);
+    scrollTarget = null;
+    if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+  }
+};
+function cmtForm(threadId, parentId) {
+  return `<form class="cmt-form" data-thread="${esc(threadId)}"${parentId ? ` data-parent="${esc(parentId)}"` : ''}>
+    <input class="inp" name="name" placeholder="your name..." maxlength="40" value="${esc(store.get('kw_name', ''))}" aria-label="Your name">
+    <textarea class="inp" name="content" rows="2" maxlength="1000" placeholder="${parentId ? 'reply ♡' : 'add a comment ♡'}" aria-label="Comment" required></textarea>
+    <button class="btn btn-sm" type="submit">${parentId ? 'REPLY ♡' : 'POST ♡'}</button>
+  </form>`;
+}
+function renderComment(c, kids) {
+  const replies = (kids[c.id] || []).map(k => renderComment(k, kids)).join('');
+  const id = esc(c.id);
+  return `<div class="cmt-bubble">
+    <div><span class="cmt-author" style="color:${safeColor(c.author_color)}">${esc(c.author_name || 'anonymous')}</span><span class="cmt-when">${esc(ago(c.created_at))}</span></div>
+    <div class="cmt-text">${esc(c.content || '')}</div>
+    <div style="display:flex;gap:6px">
+      <button class="vote-btn" type="button" data-act="vote" data-id="${id}" data-dir="up" aria-label="Upvote">▲ <span>${c.upvotes || 0}</span></button>
+      <button class="vote-btn" type="button" data-act="vote" data-id="${id}" data-dir="down" aria-label="Downvote">▼ <span>${c.downvotes || 0}</span></button>
+      <button class="vote-btn" type="button" data-act="reply" data-id="${id}" data-thread="${esc(c.thread_id)}">reply</button>
+    </div>
+    <div id="reply-${id}"></div>
+    ${replies ? `<div class="cmt-replies">${replies}</div>` : ''}
+  </div>`;
+}
+async function loadComments(threadId) {
+  const panel = document.getElementById('cmts-' + threadId);
+  if (!panel) return;
+  if (!panel.querySelector('.cmt-list')) panel.innerHTML = `<div class="cmt-list"><div class="loader"></div></div>${cmtForm(threadId)}`;
+  const r = await api('/api/comments?thread_id=' + encodeURIComponent(threadId));
+  const cs = list(r), kids = {};
+  cs.filter(c => c.parent_id).forEach(c => { (kids[c.parent_id] = kids[c.parent_id] || []).push(c); });
+  const roots = cs.filter(c => !c.parent_id);
+  panel.querySelector('.cmt-list').innerHTML = roots.length ? roots.map(c => renderComment(c, kids)).join('')
+    : `<div class="detail" style="padding:6px 0">be the first to comment ♡</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VLOG
+// ═══════════════════════════════════════════════════════════════
+loaders.vlog = async function () {
+  const el = $('#vlogs');
+  if (!el.children.length) el.innerHTML = '<div class="loader" style="grid-column:1/-1"></div>';
+  const r = await api('/api/vlogs');
+  const vs = list(r);
+  if (!r.ok) { el.innerHTML = `<div class="empty-state">${esc(r.error)}</div>`; return; }
+  if (!vs.length) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">▶</div>no vlogs yet ♡</div>'; return; }
+  el.innerHTML = vs.map(v => `<article class="vlog-card">
+    ${videoBlock(v.video_url)}
+    <div class="vlog-info">
+      <div class="vlog-title">${esc(v.title || 'untitled')}</div>
+      ${v.description ? `<div class="vlog-desc">${esc(v.description)}</div>` : ''}
+      <div class="vlog-date">${esc(fmtDate(v.created_at))}</div>
+    </div>
+  </article>`).join('');
+};
+
+// ═══════════════════════════════════════════════════════════════
+// ABOUT & LINKS
+// ═══════════════════════════════════════════════════════════════
+loaders.about = async function () {
+  const r = await api('/api/facts');
+  const facts = list(r).filter(f => f.fact_text).slice(0, 8);
+  $('#facts').innerHTML = facts.length
+    ? facts.map((f, i) => `<div class="fact-card"><div class="fact-n">${f.slot_number || i + 1}</div><div class="fact-t">${esc(f.fact_text)}</div></div>`).join('')
+    : '<div class="empty-state">no fun facts yet ♡</div>';
+};
+const LINK_ICONS = {
+  instagram: '<path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9-.1-1.3-.1-1.6-.1-4.8s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3c1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/>',
+  tiktok: '<path d="M19.6 6.7a4.8 4.8 0 0 1-3.8-4.3V2h-3.4v13.7a2.9 2.9 0 0 1-5.2 1.7 2.9 2.9 0 0 1 3.2-4.5V9a6.3 6.3 0 0 0-5.4 10.7 6.3 6.3 0 0 0 10.8-4.4V8.7a8.2 8.2 0 0 0 4.8 1.5V6.7h-1z"/>',
+  spotify: '<path d="M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm5.5 17.3c-.2.4-.7.5-1 .2-2.8-1.7-6.4-2.1-10.6-1.1-.4.1-.8-.2-.9-.5-.1-.4.2-.8.5-.9 4.6-1 8.5-.6 11.6 1.3.4.2.5.6.4 1zm1.5-3.3c-.3.4-.8.6-1.3.3-3.2-2-8.2-2.6-11.9-1.4-.5.1-1-.1-1.1-.6-.1-.5.1-1 .6-1.1 4.3-1.3 9.7-.7 13.4 1.6.4.2.5.8.3 1.2zm.1-3.4C15.2 8.4 8.8 8.2 5.2 9.3c-.6.2-1.2-.2-1.4-.7-.2-.6.2-1.2.7-1.4 4.3-1.3 11.3-1 15.7 1.6.5.3.7 1 .4 1.6-.3.4-1 .6-1.5.2z"/>',
+};
+function renderLinks() {
+  const items = [
+    { key: 'instagram', label: 'INSTAGRAM', url: safeUrl(profile.social_instagram) },
+    { key: 'tiktok', label: 'TIKTOK', url: safeUrl(profile.social_tiktok) },
+    { key: 'spotify', label: 'SPOTIFY', url: safeUrl(profile.social_spotify) },
+  ].filter(i => i.url);
+  const handle = u => { const last = u.replace(/\/+$/, '').split('/').pop() || ''; return last.startsWith('@') ? last : '@' + last.slice(0, 30); };
+  $('#links').innerHTML = items.length
+    ? items.map(i => `<a class="link-card lc-${i.key}" href="${esc(i.url)}" target="_blank" rel="noopener noreferrer">
+        <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">${LINK_ICONS[i.key]}</svg>
+        <div><div class="link-name">${i.label}</div><div class="link-handle">${esc(i.key === 'spotify' ? "kaiana's music ♡" : handle(i.url))}</div></div>
+        <div class="link-arrow">→</div></a>`).join('')
+    : '<div class="empty-state">no links yet ♡</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PETS
+// ═══════════════════════════════════════════════════════════════
+let spriteList = [], roomStage = null, palStage = null;
+const spritesReady = (async () => {
+  const res = await Pets.fetchSprites(API);
+  spriteList = res.items.length ? res.items : ['cat', 'bat', 'slime'].map(Pets.templateSprite);
+  buildPicker();
+  buildPawMenu();
+  restorePals();
+})();
+function buildPicker() {
+  const el = $('#petscape-controls');
+  el.innerHTML = '';
+  spriteList.forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'pick'; b.type = 'button';
+    b.setAttribute('aria-label', 'Add ' + s.name);
+    b.appendChild(Pets.thumb(s, 40));
+    b.appendChild(document.createTextNode('+ ' + s.name));
+    b.addEventListener('click', () => { if (roomStage) roomStage.add(s); });
+    el.appendChild(b);
+  });
+  el.insertAdjacentHTML('beforeend', '<button class="btn btn-sm" type="button" id="pet-random">🎲 RANDOM</button><button class="btn btn-sm btn-ghost" type="button" id="pet-clear">CLEAR ALL</button>');
+  $('#pet-random').addEventListener('click', () => { if (roomStage) roomStage.add(spriteList[Math.floor(Math.random() * spriteList.length)]); });
+  $('#pet-clear').addEventListener('click', () => { if (roomStage) { roomStage.clear(); toast('all pets cleared ♡'); } });
+}
+loaders.pets = async function () {
+  await spritesReady;
+  if (roomStage) return;
+  roomStage = new Pets.Stage($('#petroom'), { ground: 16, max: 14, onRemove: (p, poof) => { if (poof) toast('bye ' + p.sprite.name + ' ♡'); } });
+  spriteList.slice(0, 5).forEach(s => roomStage.add(s));
+};
+function savePals() { store.set('kw_pals', palStage ? palStage.pets.map(p => p.sprite.name) : []); }
+function ensurePalStage() {
+  if (!palStage) palStage = new Pets.Stage(document.body, { ground: 0, max: 6, onRemove: savePals });
+  return palStage;
+}
+async function addPal(s) { await ensurePalStage().add(s); savePals(); }
+function restorePals() {
+  store.get('kw_pals', []).forEach(n => { const s = spriteList.find(x => x.name === n); if (s) ensurePalStage().add(s); });
+}
+function buildPawMenu() {
+  const grid = $('#paw-grid');
+  grid.innerHTML = '';
+  spriteList.forEach(s => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.appendChild(Pets.thumb(s, 38));
+    b.appendChild(document.createTextNode(s.name));
+    b.addEventListener('click', () => { addPal(s); toast(`✨ ${s.name} appeared! ✨`); });
+    grid.appendChild(b);
+  });
+}
+$('#paw').addEventListener('click', () => {
+  const pop = $('#paw-pop');
+  pop.hidden = !pop.hidden;
+  $('#paw').setAttribute('aria-expanded', String(!pop.hidden));
+});
+$('#paw-clear').addEventListener('click', () => { if (palStage) palStage.clear(); savePals(); });
+document.addEventListener('click', e => {
+  if (!e.target.closest('#paw-pop, #paw')) { $('#paw-pop').hidden = true; $('#paw').setAttribute('aria-expanded', 'false'); }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE
+// Two ways to be live: a YouTube stream link, or Kai streaming her camera
+// straight from the lounge. Camera streams arrive as short clips that are
+// played back to back (MediaSource when the browser supports it).
+// ═══════════════════════════════════════════════════════════════
+let liveTimer = null, liveKey = '', liveTick = 0;
+const cam = { session: null, mime: null, next: 0, queue: [], ms: null, sb: null, video: null, fallback: false, fetching: false, urls: [], watch: null };
+
+function offlineScreen(bg) {
+  const screen = $('#screen');
+  screen.style.backgroundImage = bg ? `url("${bg.replace(/"/g, '%22')}")` : '';
+  screen.innerHTML = bg ? '' : '<div class="offline-title">KAIANA IS OFFLINE</div><div class="offline-sub">check back soon ♡</div>';
+}
+function teardownCamera() {
+  clearInterval(cam.watch);
+  if (cam.video) { cam.video.pause(); cam.video.removeAttribute('src'); cam.video.load(); }
+  cam.urls.forEach(u => URL.revokeObjectURL(u));
+  Object.assign(cam, { session: null, mime: null, next: 0, queue: [], ms: null, sb: null, video: null, fallback: false, urls: [] });
+}
+function setupCamera(state) {
+  teardownCamera();
+  cam.session = state.session;
+  cam.mime = state.mime;
+  cam.next = Math.max(state.oldest || 1, (state.latest || 1) - 1);
+  const screen = $('#screen');
+  screen.style.backgroundImage = '';
+  screen.innerHTML = '<video id="cam-video" autoplay muted playsinline></video><div class="cam-wait" id="cam-wait">connecting to kaiana… ♡</div><button class="unmute" id="unmute" type="button">🔇 tap for sound</button>';
+  const v = $('#cam-video');
+  cam.video = v;
+  $('#unmute').addEventListener('click', () => { v.muted = false; v.play().catch(() => {}); $('#unmute').hidden = true; });
+  v.addEventListener('playing', () => { const w = $('#cam-wait'); if (w) w.remove(); });
+  v.addEventListener('ended', pumpCamera);
+  const MS = window.MediaSource || window.ManagedMediaSource;
+  if (MS && MS.isTypeSupported && MS.isTypeSupported(state.mime)) {
+    const ms = new MS();
+    cam.ms = ms;
+    v.disableRemotePlayback = true;
+    v.src = URL.createObjectURL(ms);
+    ms.addEventListener('sourceopen', () => {
+      try {
+        cam.sb = ms.addSourceBuffer(state.mime);
+        cam.sb.mode = 'sequence';
+        cam.sb.addEventListener('updateend', pumpCamera);
+      } catch (e) { cam.fallback = true; }
+      pumpCamera();
+    }, { once: true });
+  } else {
+    cam.fallback = true;
+  }
+  // Clips join with tiny gaps and the browser stops at a gap instead of
+  // skipping it, so when playback stalls, hop to the next buffered bit.
+  let lastT = -1, still = 0;
+  cam.watch = setInterval(() => {
+    if (cam.fallback || !v.buffered.length) return;
+    if (Math.abs(v.currentTime - lastT) < .01) still++; else still = 0;
+    lastT = v.currentTime;
+    if (still < 2) return;
+    const b = v.buffered;
+    for (let i = 0; i < b.length; i++) {
+      if (b.start(i) > v.currentTime) { v.currentTime = b.start(i) + .05; still = 0; break; }
+    }
+    if (v.paused) v.play().catch(() => {});
+  }, 400);
+}
+function pumpCamera() {
+  const v = cam.video;
+  if (!v) return;
+  if (!cam.fallback && cam.sb) {
+    if (cam.sb.updating) return;
+    if (cam.queue.length) {
+      try { cam.sb.appendBuffer(cam.queue.shift()); }
+      catch (e) { cam.fallback = true; cam.sb = null; v.removeAttribute('src'); v.load(); pumpCamera(); }
+      return;
+    }
+    const b = v.buffered;
+    if (b.length) {
+      const end = b.end(b.length - 1);
+      if (end - v.currentTime > 8) v.currentTime = end - 2;              // fell behind: jump closer to live
+      if (v.currentTime - b.start(0) > 40) { try { cam.sb.remove(0, v.currentTime - 20); } catch (e) {} }
+      if (v.paused) v.play().catch(() => {});
+    }
+    return;
+  }
+  if (cam.fallback && cam.queue.length && (!v.currentSrc || v.ended || v.error)) {
+    while (cam.queue.length > 2) cam.queue.shift();                       // fell behind: skip to newer clips
+    const url = URL.createObjectURL(new Blob([cam.queue.shift()], { type: cam.mime.split(';')[0] }));
+    cam.urls.push(url);
+    if (cam.urls.length > 3) URL.revokeObjectURL(cam.urls.shift());
+    v.src = url;
+    v.play().catch(() => {});
+  }
+}
+async function fetchClips(latest) {
+  if (cam.fetching) return;
+  cam.fetching = true;
+  try {
+    while (cam.session && cam.next <= latest) {
+      const seq = cam.next++;
+      const r = await fetch(`${API}/api/live/camera/${encodeURIComponent(cam.session)}/${seq}`);
+      if (r.ok) cam.queue.push(await r.arrayBuffer());
+    }
+  } catch (e) {}
+  cam.fetching = false;
+  pumpCamera();
+}
+async function refreshLive() {
+  const lv = await api('/api/live');
+  if (liveTick++ % 4 === 0) loadChat();
+  if (!lv.ok) return;
+  const s = lv.data, camState = s.camera || { live: false };
+  $('#live-pill').hidden = !camState.live;
+  if (camState.live) {
+    $('#live-badge').hidden = false;
+    liveKey = 'camera';
+    if (cam.session !== camState.session) setupCamera(camState);
+    fetchClips(camState.latest);
+    return;
+  }
+  if (cam.session) teardownCamera();
+  const yt = s.is_live ? ytId(s.stream_url) : null;
+  const k = (yt || '') + '|' + (s.offline_image_url || '');
+  $('#live-badge').hidden = !yt;
+  if (k === liveKey) return;
+  liveKey = k;
+  if (yt) $('#screen').innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${yt}?autoplay=1" title="Live stream" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  else offlineScreen(safeUrl(s.offline_image_url));
+}
+async function loadChat() {
+  const r = await api('/api/chat');
+  const log = $('#chat-log'), ms = list(r);
+  const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 30;
+  log.innerHTML = ms.length
+    ? ms.map(m => `<div class="chat-msg"><div class="chat-author">${esc(m.author_name || 'anon')}</div><div class="chat-text">${esc(m.message || '')}</div></div>`).join('')
+    : `<div class="detail" style="text-align:center">it's quiet in here… ♡</div>`;
+  if (atBottom) log.scrollTop = log.scrollHeight;
+}
+function startLive() {
+  stopLive();
+  liveTick = 0;
+  const loop = async () => {
+    if (!document.hidden) await refreshLive();
+    liveTimer = setTimeout(loop, cam.session ? 1500 : 6000);
+  };
+  loop();
+}
+function stopLive() {
+  clearTimeout(liveTimer); liveTimer = null;
+  if (cam.session) teardownCamera();
+  liveKey = '';
+}
+$('#chat-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.currentTarget, name = f.elements.name.value.trim() || 'Anonymous', message = f.elements.message.value.trim();
+  if (!message) return;
+  const btn = f.querySelector('button');
+  btn.disabled = true;
+  const r = await api('/api/chat', 'POST', { author_name: name, message, session_id: visitorId() });
+  btn.disabled = false;
+  if (!r.ok) { toast(r.error); return; }
+  if (name !== 'Anonymous') store.set('kw_name', name);
+  f.elements.message.value = '';
+  loadChat();
+});
+$('#chat-form').elements.name.value = store.get('kw_name', '');
+
+// ═══════════════════════════════════════════════════════════════
+// SIGNATURES
+// ═══════════════════════════════════════════════════════════════
+loaders.guestbook = async function () {
+  const el = $('#sigs'), f = $('#sig-form');
+  if (!f.elements.name.value) f.elements.name.value = store.get('kw_name', '');
+  if (!el.children.length) el.innerHTML = '<div class="loader" style="grid-column:1/-1"></div>';
+  const r = await api('/api/signatures');
+  const ss = list(r);
+  if (!r.ok) { el.innerHTML = `<div class="empty-state">${esc(r.error)}</div>`; return; }
+  el.innerHTML = ss.length
+    ? ss.map(s => `<div class="sig-card"><div class="sig-name">${esc(s.name || 'Anonymous')}</div><div class="sig-msg">${esc(s.message || '')}</div><div class="sig-dt">${esc(fmtDate(s.created_at))}</div></div>`).join('')
+    : '<div class="empty-state"><div class="empty-icon">✍</div>be the first to sign ♡</div>';
+};
+$('#sig-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.currentTarget, name = f.elements.name.value.trim(), message = f.elements.message.value.trim();
+  if (!name || !message) { toast('fill in your name and message ♡'); return; }
+  const btn = f.querySelector('button');
+  btn.disabled = true;
+  const r = await api('/api/signatures', 'POST', { name, message, visitor_id: visitorId() });
+  btn.disabled = false;
+  if (!r.ok) { toast(r.error); return; }
+  store.set('kw_name', name);
+  f.elements.message.value = '';
+  toast('you were here ♡');
+  chime('unlock');
+  loaders.guestbook();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// CLICKS & FORMS (delegated)
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('click', async e => {
+  const yt = e.target.closest('.yt[data-yt]');
+  if (yt) { const id = yt.dataset.yt; if (/^[\w-]{11}$/.test(id)) yt.outerHTML = ytFrame(id, true); return; }
+  const scroll = e.target.closest('[data-scroll]');
+  if (scroll) scrollTarget = scroll.dataset.scroll;
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const act = btn.dataset.act;
+  if (act === 'open-post') showPost(+btn.dataset.i);
+  if (act === 'close-post') $('#post-dialog').close();
+  if (act === 'toggle-cmts') {
+    const panel = document.getElementById('cmts-' + btn.dataset.id);
+    panel.hidden = !panel.hidden;
+    btn.setAttribute('aria-expanded', String(!panel.hidden));
+    if (!panel.hidden) loadComments(btn.dataset.id);
+  }
+  if (act === 'reply') {
+    const slot = document.getElementById('reply-' + btn.dataset.id);
+    slot.innerHTML = slot.innerHTML ? '' : cmtForm(btn.dataset.thread, btn.dataset.id);
+    const ta = slot.querySelector('textarea');
+    if (ta) ta.focus();
+  }
+  if (act === 'vote') {
+    const voted = store.get('kw_voted', []);
+    if (voted.includes(btn.dataset.id)) { toast('you already voted on this one ♡'); return; }
+    const r = await api(`/api/comments/${encodeURIComponent(btn.dataset.id)}/vote`, 'POST', { direction: btn.dataset.dir });
+    if (!r.ok) { toast(r.error); return; }
+    voted.push(btn.dataset.id);
+    store.set('kw_voted', voted.slice(-500));
+    if (r.data.counted) { const n = btn.querySelector('span'); n.textContent = (+n.textContent || 0) + 1; }
+    else toast('you already voted on this one ♡');
+  }
+});
+document.addEventListener('submit', async e => {
+  const f = e.target.closest('.cmt-form');
+  if (!f) return;
+  e.preventDefault();
+  const name = f.elements.name.value.trim(), content = f.elements.content.value.trim();
+  if (!content) { toast('write something first ♡'); return; }
+  const btn = f.querySelector('button');
+  btn.disabled = true;
+  const r = await api('/api/comments', 'POST', {
+    thread_id: f.dataset.thread, parent_id: f.dataset.parent || null, author_name: name || 'anonymous',
+    author_color: COMMENT_COLORS[Math.floor(Math.random() * COMMENT_COLORS.length)], content,
+  });
+  btn.disabled = false;
+  if (!r.ok) { toast(r.error); return; }
+  if (name) store.set('kw_name', name);
+  f.elements.content.value = '';
+  toast('comment posted ♡');
+  const chip = $(`[data-act="toggle-cmts"][data-id="${CSS.escape(f.dataset.thread)}"]`);
+  if (chip) { const n = (parseInt(chip.textContent.replace(/\D/g, ''), 10) || 0) + 1; chip.textContent = '💬 ' + plural(n, 'comment'); }
+  loadComments(f.dataset.thread);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+loadProfile();
+route();
+checkOnline();
+setInterval(checkOnline, 30000);
+</script>
+</body>
+</html>

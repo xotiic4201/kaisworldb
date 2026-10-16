@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ KAI'S LOUNGE ✦</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffe3ee">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Raleway:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pk: #f78fb3;
+  --rose: #ec6f9d;
+  --deep: #d4578a;
+  --blush: #ffd6e7;
+  --bubblegum: #ffb5d2;
+  --candy: #c9668f;
+  --ink: #7d3a5d;
+  --ink-soft: #a8708f;
+  --gold: #e9b45c;
+  --title: #e0679b;
+  --line: rgba(247,143,179,.35);
+  --good: #2f9e6a;
+  --bad: #d6324f;
+  --glow-pk: 0 0 20px rgba(247,143,179,.55), 0 0 40px rgba(247,143,179,.25);
+  --title-glow: 0 0 18px rgba(255,182,213,.95), 0 2px 0 #fff;
+  --shadow: 0 10px 30px -14px rgba(212,87,138,.4);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; font: 14px/1.5 'Raleway', sans-serif; color: var(--ink); background: linear-gradient(160deg, #fff6fa 0%, #ffe8f1 55%, #ffdbe9 100%); background-attachment: fixed; }
+button { font: inherit; color: inherit; cursor: pointer; }
+img, video { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+[hidden] { display: none !important; }
+.hand { font-family: 'Dancing Script', cursive; }
+
+/* ══ buttons & inputs ══ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 11px 24px; border-radius: 40px; border: 2px solid #fff;
+  background: linear-gradient(135deg, #ffa6c9, #f27aa9); color: #fff;
+  font: 700 10.5px 'Cinzel Decorative', serif; letter-spacing: 2px; white-space: nowrap; text-decoration: none;
+  box-shadow: 0 4px 16px rgba(236,111,157,.35); transition: all .3s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--glow-pk); }
+.btn:disabled { opacity: .5; pointer-events: none; }
+.btn.small { padding: 7px 15px; font-size: 9px; }
+.btn.ghost { background: rgba(255,255,255,.8); color: var(--deep); border-color: var(--line); box-shadow: none; }
+.btn.danger { background: linear-gradient(135deg, #ff8a9f, #e04a6a); }
+.btn.wide { width: 100%; }
+.link { all: unset; cursor: pointer; font-weight: 700; font-size: 12px; color: var(--deep); text-decoration: underline; text-underline-offset: 3px; }
+.mini-btn { padding: 5px 13px; border-radius: 14px; border: 1.5px solid var(--line); background: rgba(255,255,255,.8); color: var(--deep); font: 700 10.5px 'Raleway', sans-serif; letter-spacing: .5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all .2s; }
+.mini-btn:hover { background: var(--blush); }
+.mini-btn:disabled { opacity: .4; pointer-events: none; }
+.mini-btn.del { border-color: rgba(214,50,79,.35); color: var(--bad); }
+.mini-btn.del:hover { background: #ffe1e6; }
+.field { display: block; margin-bottom: 16px; }
+.field > span { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 7px; font: 700 10px 'Raleway', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--candy); }
+.field > span i { font-style: normal; font-weight: 600; letter-spacing: 1px; text-transform: none; opacity: .85; }
+.input {
+  width: 100%; padding: 12px 18px; border-radius: 20px; outline: none;
+  background: rgba(255,255,255,.85); border: 2px solid rgba(247,143,179,.35);
+  color: var(--ink); font: 15px 'Raleway', sans-serif; transition: all .3s;
+}
+textarea.input { resize: vertical; border-radius: 16px; }
+.input:focus { border-color: var(--rose); box-shadow: var(--glow-pk); }
+.input::placeholder { color: #c99bb2; }
+.count, .check { display: block; margin-top: 5px; font: 600 11.5px 'Raleway', sans-serif; color: var(--ink-soft); text-align: right; }
+.check { text-align: left; }
+.check.good { color: var(--good); }
+.check.bad { color: var(--bad); }
+.count.near { color: var(--bad); }
+.peek { display: block; margin-top: 8px; max-height: 140px; max-width: 100%; border-radius: 12px; border: 3px solid #fff; box-shadow: var(--shadow); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tip { font: 600 15px/1.35 'Dancing Script', cursive; color: var(--candy); }
+.muted { color: var(--ink-soft); }
+.loading { display: block; width: 30px; height: 30px; margin: 26px auto; border-radius: 50%; border: 3px solid rgba(247,143,179,.2); border-top-color: var(--pk); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { padding: 30px 10px; text-align: center; font: 600 16px 'Dancing Script', cursive; color: var(--candy); }
+.switch { position: relative; display: inline-block; width: 52px; height: 28px; flex: none; }
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
+.switch span { position: absolute; inset: 0; border-radius: 28px; background: rgba(247,143,179,.25); border: 2px solid rgba(247,143,179,.5); transition: .3s; }
+.switch span::before { content: ''; position: absolute; left: 2px; bottom: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(150,40,90,.25); transition: .3s; }
+.switch input:checked + span { background: var(--rose); border-color: var(--deep); }
+.switch input:checked + span::before { transform: translateX(24px); }
+.switch input:focus-visible + span { outline: 3px solid var(--rose); outline-offset: 2px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 16px; background: rgba(255,255,255,.75); border: 1.5px solid var(--line); }
+.seg button { border: 0; background: transparent; padding: 7px 12px; border-radius: 12px; font: 700 12px 'Raleway', sans-serif; color: var(--candy); display: inline-flex; align-items: center; gap: 5px; }
+.seg button:hover { background: var(--blush); }
+.seg button[aria-pressed="true"] { background: linear-gradient(135deg, #ffa6c9, #f27aa9); color: #fff; }
+.seg button kbd { font: 700 9px 'Raleway', sans-serif; opacity: .7; }
+
+/* ══ login ══ */
+.login { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 20px; background: radial-gradient(ellipse at 50% 30%, #fff7fb 0%, #ffe3ee 50%, #ffcfe2 100%); }
+.login-card { width: min(420px, 100%); padding: 46px 40px 30px; border-radius: 50px; text-align: center; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.95), rgba(255,226,238,.85)); border: 2px solid rgba(233,180,92,.5); box-shadow: var(--glow-pk), var(--shadow); }
+.login-card h1 { font: 700 26px 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); }
+.login-card .sub { margin: 4px 0 30px; font: 700 10px 'Raleway', sans-serif; letter-spacing: 3px; color: var(--candy); }
+.login-card .field { text-align: left; }
+.pw { position: relative; }
+.pw .input { padding-right: 66px; }
+.pw button { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: 0; background: var(--blush); color: var(--deep); border-radius: 12px; padding: 5px 10px; font: 700 11px 'Raleway', sans-serif; }
+.login-msg { min-height: 20px; margin-top: 12px; font-weight: 700; font-size: 12.5px; color: var(--bad); }
+.login-msg.info { color: var(--candy); }
+.fine { margin-top: 10px; font-size: 11.5px; color: var(--ink-soft); }
+
+/* ══ app shell ══ */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+#header { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 24px; background: linear-gradient(90deg, #ffd9e8, #fff0f6, #ffd9e8); border-bottom: 2px solid rgba(233,180,92,.5); }
+.header-logo { font: 700 18px 'Cinzel Decorative', serif; letter-spacing: 4px; color: var(--title); text-shadow: var(--title-glow); }
+.header-sub { margin-top: 2px; font: 700 9px 'Raleway', sans-serif; letter-spacing: 3px; color: var(--candy); }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.online-badge { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 30px; background: rgba(70,200,130,.12); border: 1.5px solid rgba(70,200,130,.45); color: var(--good); font: 700 10px 'Raleway', sans-serif; letter-spacing: 2px; }
+.online-badge.live { background: rgba(240,60,100,.12); border-color: rgba(240,60,100,.5); color: #e0365f; }
+.online-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1.5s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+.hdr-btn { padding: 8px 16px; border-radius: 30px; border: 2px solid; font: 700 9px 'Cinzel Decorative', serif; letter-spacing: 2px; text-decoration: none; transition: all .3s; background: rgba(255,255,255,.7); }
+.hdr-btn-site { border-color: rgba(233,180,92,.6); color: #b5802a; }
+.hdr-btn-site:hover { box-shadow: 0 0 16px rgba(233,180,92,.5); }
+.hdr-btn-out { border-color: rgba(214,50,79,.35); color: var(--bad); }
+#menu-btn { display: none; border: 0; background: transparent; color: var(--deep); font-size: 22px; }
+#body-wrap { flex: 1; display: flex; min-height: 0; }
+#side { width: 220px; flex-shrink: 0; position: sticky; top: 73px; height: calc(100vh - 73px); overflow-y: auto; padding: 14px 10px; background: rgba(255,255,255,.55); backdrop-filter: blur(20px); border-right: 1px solid rgba(233,180,92,.35); }
+.sb-section { padding: 14px 8px 6px; font: 700 9px 'Raleway', sans-serif; letter-spacing: 3px; color: #c49040; }
+#nav button { width: 100%; display: flex; align-items: center; gap: 8px; margin-bottom: 3px; padding: 10px 14px; border-radius: 14px; border: 1px solid transparent; background: transparent; color: var(--candy); font: 700 12px 'Raleway', sans-serif; letter-spacing: 1px; text-align: left; transition: all .2s; }
+#nav button:hover { background: rgba(247,143,179,.15); color: var(--deep); }
+#nav button[aria-current="page"] { background: linear-gradient(135deg, rgba(255,166,201,.5), rgba(242,122,169,.35)); color: var(--deep); border-color: rgba(233,180,92,.45); }
+#nav button small { margin-left: auto; font-size: 8px; letter-spacing: 1px; color: var(--ink-soft); }
+#nav .badge { margin-left: auto; min-width: 20px; padding: 1px 6px; border-radius: 99px; background: var(--rose); color: #fff; font: 700 10px/16px 'Raleway', sans-serif; text-align: center; }
+#main { flex: 1; min-width: 0; padding: 28px; }
+.panel-head { margin-bottom: 22px; }
+.panel-title { font: 700 22px 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); }
+.panel-sub { margin-top: 2px; font: 600 15px 'Dancing Script', cursive; color: var(--candy); }
+.panel-sub a { color: var(--deep); }
+.panel { max-width: 1180px; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+.card { position: relative; margin-bottom: 20px; padding: 24px; border-radius: 24px; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.95), rgba(255,236,244,.85)); border: 2px solid rgba(233,180,92,.3); box-shadow: var(--shadow); }
+.card h3 { margin-bottom: 18px; font: 700 13px 'Cinzel Decorative', serif; letter-spacing: 2px; color: var(--rose); text-transform: uppercase; }
+.card h3 small { margin-left: 6px; font: 600 14px 'Dancing Script', cursive; letter-spacing: 0; text-transform: none; color: var(--candy); }
+.card > .tip:first-of-type { margin: -8px 0 14px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.grid2 > .card, .grid2 > div > .card:last-child { margin-bottom: 0; }
+
+/* ══ lists ══ */
+.item { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; padding: 16px; border-radius: 18px; background: rgba(255,255,255,.75); border: 1px solid rgba(247,143,179,.25); }
+.item-body { flex: 1; min-width: 0; }
+.item-meta { margin-bottom: 4px; font: 600 14px 'Dancing Script', cursive; color: var(--candy); }
+.item-text { margin-bottom: 8px; font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; }
+.item-title { font: 700 14px 'Playfair Display', serif; color: var(--deep); }
+.item-thumb { flex: none; width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: var(--blush); display: grid; place-items: center; font-size: 22px; overflow: hidden; }
+.item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.journal-entry { margin-bottom: 10px; padding: 14px 16px; border-radius: 18px; background: rgba(255,255,255,.75); border: 1px solid rgba(247,143,179,.25); }
+.journal-entry summary { list-style: none; cursor: pointer; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.journal-entry summary::-webkit-details-marker { display: none; }
+.journal-entry summary::before { content: '▸'; color: var(--rose); transition: transform .15s; }
+.journal-entry[open] summary::before { transform: rotate(90deg); }
+.journal-entry .full { margin: 10px 0; padding: 14px 16px; border-radius: 14px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.75; }
+.search { max-width: 320px; margin-bottom: 14px; }
+
+/* ══ uploads ══ */
+.uploader { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: -6px 0 16px; }
+.uploader label.btn { cursor: pointer; }
+.uploader input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.progress { flex: 1; min-width: 160px; display: flex; align-items: center; gap: 8px; font: 700 11px 'Raleway', sans-serif; color: var(--candy); }
+.progress i { flex: 1; height: 10px; border-radius: 99px; background: var(--blush); overflow: hidden; position: relative; }
+.progress i::after { content: ''; position: absolute; inset: 0; width: var(--p, 0%); background: linear-gradient(90deg, var(--pk), var(--rose)); border-radius: 99px; transition: width .2s; }
+.peek-video { display: block; margin-top: 8px; max-height: 180px; border-radius: 12px; background: #000; }
+
+/* ══ home ══ */
+.hello h2 { font: 700 clamp(20px, 3vw, 28px) 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); }
+.hello p { margin: 2px 0 20px; font: 600 16px 'Dancing Script', cursive; color: var(--candy); }
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat { padding: 18px 12px; text-align: center; border-radius: 20px; background: rgba(255,255,255,.75); border: 1.5px solid rgba(233,180,92,.4); }
+.stat b { display: block; font: 700 30px 'Cinzel Decorative', serif; color: var(--title); text-shadow: var(--title-glow); }
+.stat span { font: 700 9px 'Raleway', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--candy); }
+.shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.shortcut { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; border: 1.5px solid var(--line); background: rgba(255,255,255,.8); color: var(--deep); font: 700 12px 'Raleway', sans-serif; text-align: left; transition: all .2s; }
+.shortcut:hover { transform: translateY(-2px); box-shadow: var(--glow-pk); }
+.shortcut span { font-size: 20px; }
+
+/* ══ profile preview ══ */
+.profile-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start; }
+.preview-card { position: sticky; top: 92px; text-align: center; }
+.preview-card .pic { width: 110px; height: 110px; margin: 4px auto 12px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: var(--glow-pk); display: grid; place-items: center; background: linear-gradient(135deg, var(--bubblegum), var(--rose)); color: #fff; font: 700 36px 'Cinzel Decorative', serif; }
+.preview-card .pic img { width: 100%; height: 100%; object-fit: cover; }
+.preview-card b { display: block; font: 700 18px 'Cinzel Decorative', serif; color: var(--title); }
+.preview-card .mood { display: inline-block; margin: 8px 0 4px; padding: 5px 14px; border-radius: 99px; background: #fff; border: 1px solid var(--line); font-size: 12px; color: var(--candy); }
+.preview-card .where-txt { font: 600 14px 'Dancing Script', cursive; color: var(--candy); }
+.preview-card p { margin-top: 8px; font-size: 12.5px; text-align: left; white-space: pre-wrap; line-height: 1.7; }
+
+/* ══ live ══ */
+.cam-preview { position: relative; aspect-ratio: 16 / 9; margin-bottom: 14px; overflow: hidden; border-radius: 20px; background: linear-gradient(135deg, #fff5f9, #ffe2ee); border: 2px solid var(--line); }
+.cam-preview video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.cam-preview video.mirror { transform: scaleX(-1); }
+.cam-off { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 20px; font: 600 17px 'Dancing Script', cursive; color: var(--candy); }
+.cam-badge { position: absolute; top: 12px; left: 12px; z-index: 2; display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; background: #e0365f; color: #fff; font: 700 11px 'Raleway', sans-serif; letter-spacing: 2px; box-shadow: 0 0 16px rgba(224,54,95,.6); }
+.cam-badge b { font-weight: 600; letter-spacing: 0; }
+.cam-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.check-row { display: inline-flex; align-items: center; gap: 6px; font: 700 12px 'Raleway', sans-serif; color: var(--candy); }
+.check-row input { accent-color: var(--rose); width: 16px; height: 16px; }
+.live-switch { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding: 14px; border-radius: 18px; background: rgba(255,255,255,.75); border: 1px solid var(--line); }
+.live-switch b { display: block; font: 700 13px 'Cinzel Decorative', serif; color: var(--deep); }
+.live-switch small { color: var(--ink-soft); }
+.live-switch.on b { color: #e0365f; }
+.howto { padding-left: 20px; line-height: 1.7; }
+.howto li { margin-bottom: 4px; }
+
+/* ══ stats ══ */
+.bars { display: grid; gap: 8px; }
+.bar-row { display: grid; grid-template-columns: 100px 1fr 44px; gap: 10px; align-items: center; font-size: 12px; }
+.bar-row span:first-child { text-align: right; color: var(--candy); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-row b { color: var(--deep); }
+.bar-track { height: 18px; border-radius: 10px; background: rgba(255,255,255,.8); border: 1px solid var(--line); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--bubblegum), var(--rose), var(--gold)); transition: width 1.2s ease; }
+
+/* ══ pet studio ══ */
+.steps-card { padding-bottom: 18px; }
+.steps-head { display: flex; align-items: baseline; gap: 12px; }
+.steps-head h3 { margin: 0; }
+.steps-head .link { margin-left: auto; }
+.steps { list-style: none; margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; counter-reset: step; }
+.steps li { position: relative; padding: 12px 12px 12px 46px; border-radius: 16px; background: rgba(255,255,255,.75); border: 1px solid var(--line); counter-increment: step; font-size: 12.5px; line-height: 1.5; transition: all .2s; }
+.steps li::before { content: counter(step); position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: var(--rose); font: 700 12px 'Raleway', sans-serif; box-shadow: inset 0 0 0 2px var(--rose); }
+.steps li > b:first-child { display: block; margin-bottom: 2px; font-size: 13px; color: var(--deep); }
+.steps li.now { background: #fff; box-shadow: 0 0 0 3px var(--rose), var(--glow-pk); }
+.steps li.done { background: #e7f8ee; border-color: rgba(47,158,106,.3); }
+.steps li.done::before { content: '✓'; background: var(--good); color: #fff; box-shadow: none; }
+.steps li kbd { padding: 0 4px; border-radius: 4px; background: var(--blush); font: 700 10px 'Raleway', sans-serif; }
+.steps.collapsed { display: none; }
+.warn { margin-bottom: 20px; padding: 14px 18px; border-radius: 18px; background: #fff3d6; border: 1.5px solid rgba(233,180,92,.6); color: #7a5410; font-size: 13px; }
+.warn b { display: block; }
+.studio { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 20px; align-items: start; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+.toolbar .sep { width: 2px; height: 26px; background: var(--line); }
+.icon { width: 38px; height: 38px; border-radius: 12px; border: 1.5px solid var(--line); background: rgba(255,255,255,.85); color: var(--deep); font-size: 16px; display: inline-grid; place-items: center; }
+.icon:hover { background: var(--blush); }
+.icon:disabled { opacity: .35; pointer-events: none; }
+.icon[aria-pressed="true"] { background: linear-gradient(135deg, #ffa6c9, #f27aa9); color: #fff; border-color: #fff; }
+.canvas-wrap { display: grid; place-items: center; padding: 14px; border-radius: 18px; background: #fbeaf2; }
+#px { display: block; width: min(100%, 500px); height: auto; image-rendering: pixelated; touch-action: none; border-radius: 6px; box-shadow: 0 6px 16px -8px rgba(150,40,90,.4); cursor: crosshair; }
+.frames { display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 8px; }
+.frame { flex: none; width: 62px; padding: 6px 6px 4px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; display: grid; justify-items: center; gap: 2px; }
+.frame canvas { width: 50px; height: 50px; object-fit: contain; image-rendering: pixelated; background: repeating-conic-gradient(#f6e4ec 0 25%, #fff 0 50%) 0 0 / 10px 10px; border-radius: 4px; }
+.frame span { font: 700 10px 'Raleway', sans-serif; color: var(--candy); }
+.frame[aria-current="true"] { background: linear-gradient(135deg, #ffa6c9, #f27aa9); border-color: #fff; }
+.frame[aria-current="true"] span { color: #fff; }
+.frame-add { flex: none; width: 62px; height: 74px; border: 2px dashed var(--pk); border-radius: 12px; background: transparent; color: var(--rose); font-size: 24px; }
+.frame-add:hover { background: #fff; }
+.frame-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.frame-tools .label { width: 100%; margin-top: 4px; font: 700 10px 'Raleway', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--candy); }
+.palette { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 12px; }
+.swatch { aspect-ratio: 1; border: 0; border-radius: 7px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); padding: 0; }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--deep); }
+.color-row { display: flex; gap: 10px; align-items: center; }
+.color-row input[type="color"] { width: 44px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: none; cursor: pointer; }
+.current-color { width: 36px; height: 36px; border-radius: 10px; box-shadow: inset 0 0 0 2px rgba(0,0,0,.12); }
+.recent { display: flex; gap: 5px; margin-top: 10px; min-height: 22px; }
+.recent .swatch { width: 22px; }
+.anim-row { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+.anim-box { flex: none; width: 112px; height: 112px; border-radius: 16px; display: grid; place-items: center; background: repeating-conic-gradient(#f6e4ec 0 25%, #fff 0 50%) 0 0 / 16px 16px; border: 1.5px solid var(--line); }
+#anim { image-rendering: pixelated; width: 96px; }
+.fps { flex: 1; }
+.fps input { width: 100%; accent-color: var(--rose); }
+.fps b { color: var(--deep); }
+.playground { position: relative; height: 160px; margin: 6px 0 12px; overflow: hidden; border-radius: 18px; border: 1.5px solid var(--line); background: radial-gradient(circle, rgba(236,111,157,.18) 1.2px, transparent 1.7px) 0 0 / 22px 22px, linear-gradient(170deg, #fff9fc, #ffe8f1); }
+.playground::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: linear-gradient(#ffcfe2, #ffbcd6); border-top: 2px solid #f6a9c8; }
+.pg-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 20px; text-align: center; font: 600 16px 'Dancing Script', cursive; color: var(--candy); }
+.set-label { display: block; margin: 12px 0 6px; font: 700 10px 'Raleway', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: var(--candy); }
+.hint { margin-top: 6px; font: 600 14px/1.3 'Dancing Script', cursive; color: var(--candy); }
+#save-note { margin-top: 12px; }
+.starters { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.starter { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 16px; border: 1.5px solid var(--line); background: rgba(255,255,255,.85); color: var(--deep); font: 700 12px 'Raleway', sans-serif; text-align: left; transition: all .2s; }
+.starter:hover { box-shadow: var(--glow-pk); }
+.starter small { display: block; font-weight: 600; color: var(--ink-soft); }
+.starter .blank { width: 40px; height: 40px; flex: none; border-radius: 8px; background: repeating-conic-gradient(#f6e4ec 0 25%, #fff 0 50%) 0 0 / 10px 10px; display: grid; place-items: center; font: 700 10px 'Raleway', sans-serif; color: var(--candy); }
+.pet-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.pet-card { padding: 12px; border-radius: 18px; background: rgba(255,255,255,.8); border: 1px solid var(--line); }
+.pet-card-top { display: flex; gap: 12px; align-items: center; }
+.pet-card .art { flex: none; width: 64px; height: 64px; display: grid; place-items: center; border-radius: 12px; background: repeating-conic-gradient(#f6e4ec 0 25%, #fff 0 50%) 0 0 / 12px 12px; }
+.pet-card b { display: block; font: 700 13px 'Cinzel Decorative', serif; color: var(--deep); overflow-wrap: anywhere; }
+.pet-card small { color: var(--ink-soft); font-size: 12px; }
+.pet-card .item-actions { margin-top: 10px; }
+.pet-settings { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pet-settings label { font: 700 10px 'Raleway', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--candy); }
+.pet-settings .input { padding: 6px 10px; font-size: 13px; border-radius: 10px; }
+.pet-settings .row { grid-column: 1 / -1; }
+.upload-preview { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding: 12px; border-radius: 16px; background: rgba(255,255,255,.75); }
+.upload-preview img { max-width: 220px; max-height: 90px; image-rendering: pixelated; background: repeating-conic-gradient(#f6e4ec 0 25%, #fff 0 50%) 0 0 / 10px 10px; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 400; max-width: calc(100vw - 40px); padding: 12px 26px; border-radius: 30px; background: #fff; border: 2px solid var(--pk); color: var(--deep); font: 600 16px 'Dancing Script', cursive; box-shadow: var(--glow-pk); transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .4s; }
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.toast.bad { border-color: var(--bad); color: var(--bad); font: 700 13px 'Raleway', sans-serif; }
+
+@media (max-width: 1060px) { .studio { grid-template-columns: 1fr; } .steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 860px) {
+  #menu-btn { display: block; }
+  #side { position: fixed; z-index: 200; top: 0; left: 0; height: 100vh; width: 250px; transform: translateX(-105%); transition: transform .3s; background: #fff6fa; box-shadow: 20px 0 40px rgba(150,40,90,.2); }
+  #side.open { transform: none; }
+  #header { padding: 12px 14px; }
+  .header-logo { font-size: 13px; letter-spacing: 2px; }
+  .header-sub, .online-badge { display: none; }
+  .hdr-btn { padding: 7px 10px; }
+  #main { padding: 18px 14px 80px; }
+  .grid2, .profile-grid, .two { grid-template-columns: 1fr; }
+  .preview-card { position: static; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } .card { padding: 18px 16px; } .shortcuts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login" id="login">
+  <form class="login-card" id="login-form" novalidate>
+    <h1>✦ KAI'S LOUNGE ✦</h1>
+    <p class="sub">CONTROL CENTER — AUTHORIZED ACCESS ONLY</p>
+    <label class="field"><span>email</span><input class="input" type="email" name="email" autocomplete="username" placeholder="kai@kaicore.com" required></label>
+    <label class="field"><span>password</span>
+      <div class="pw"><input class="input" type="password" name="password" autocomplete="current-password" placeholder="password..." required><button type="button" id="pw-eye" aria-label="Show password">show</button></div>
+    </label>
+    <button class="btn wide" type="submit" id="login-btn">ENTER THE LOUNGE ♡</button>
+    <p class="login-msg" id="login-msg" role="alert"></p>
+    <p class="fine">the server naps when nobody's around, so the first login of the day can take about 30 seconds ♡</p>
+  </form>
+</div>
+
+<!-- ══ APP ══ -->
+<div class="app" id="app" hidden>
+  <header id="header">
+    <div class="row" style="gap:12px">
+      <button id="menu-btn" type="button" aria-label="Menu">☰</button>
+      <div><div class="header-logo">✦ KAI'S LOUNGE ✦</div><div class="header-sub">WEBSITE CONTROL CENTER</div></div>
+    </div>
+    <div class="header-right">
+      <div class="online-badge" id="online-badge"><span class="online-dot"></span><span id="online-text">KAI ONLINE</span></div>
+      <a class="hdr-btn hdr-btn-site" href="/" target="_blank" rel="noopener">VIEW SITE</a>
+      <button class="hdr-btn hdr-btn-out" type="button" id="logout">LOGOUT</button>
+    </div>
+  </header>
+
+  <div id="body-wrap">
+    <aside id="side">
+      <nav id="nav" aria-label="Lounge sections">
+        <button data-panel="home">🏠 HOME</button>
+        <div class="sb-section">CONTENT</div>
+        <button data-panel="threads">📝 THREADS</button>
+        <button data-panel="posts">📸 FEED POSTS</button>
+        <button data-panel="vlogs">▶ VLOGS</button>
+        <button data-panel="journal">📖 JOURNAL <small>PRIVATE</small></button>
+        <div class="sb-section">INTERACTIVE</div>
+        <button data-panel="live">📡 LIVE STAGE</button>
+        <button data-panel="comments">💬 COMMENTS <span class="badge" id="cmt-badge" hidden></span></button>
+        <button data-panel="guestbook">✍ GUESTBOOK</button>
+        <div class="sb-section">PROFILE</div>
+        <button data-panel="profile">✨ PROFILE &amp; LINKS</button>
+        <button data-panel="facts">⭐ FUN FACTS</button>
+        <button data-panel="pets">🎨 PET STUDIO ✦</button>
+        <div class="sb-section">ANALYTICS</div>
+        <button data-panel="stats">📊 STATS</button>
+      </nav>
+    </aside>
+
+    <div id="main">
+      <div class="panel-head"><div class="panel-title" id="panel-title">HOME</div><div class="panel-sub" id="panel-where"></div></div>
+
+      <!-- HOME -->
+      <section class="panel" id="p-home">
+        <div class="hello"><h2 id="hello">hi kai ♡</h2><p>here's what's been happening on your site ♡</p></div>
+        <div class="stat-row">
+          <div class="stat"><b id="h-today">–</b><span>visitors today</span></div>
+          <div class="stat"><b id="h-total">–</b><span>visitors ever</span></div>
+          <div class="stat"><b id="h-cmts">–</b><span>comments this week</span></div>
+          <div class="stat"><b id="h-sigs">–</b><span>signatures</span></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <h3>quick thread <small>posts straight to your site</small></h3>
+            <label class="field"><span>what's on your mind? <i id="q-count"></i></span><textarea class="input" id="q-text" rows="4" maxlength="5000"></textarea></label>
+            <button class="btn" type="button" id="q-post">POST IT ✦</button>
+          </div>
+          <div class="card">
+            <h3>shortcuts</h3>
+            <div class="shortcuts">
+              <button class="shortcut" data-go="live"><span>🔴</span>go live now</button>
+              <button class="shortcut" data-go="posts"><span>📸</span>new feed post</button>
+              <button class="shortcut" data-go="vlogs"><span>🎬</span>upload a vlog</button>
+              <button class="shortcut" data-go="pets"><span>🐾</span>make a pet</button>
+              <button class="shortcut" data-go="journal"><span>📖</span>write in journal</button>
+              <button class="shortcut" data-go="profile"><span>✨</span>change mood</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>latest comments</h3>
+            <div id="h-cmt-list"><span class="loading"></span></div>
+            <button class="link" data-go="comments">see all comments →</button>
+          </div>
+          <div class="card">
+            <h3>newest signatures</h3>
+            <div id="h-sig-list"><span class="loading"></span></div>
+            <button class="link" data-go="guestbook">open guestbook →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- THREADS -->
+      <section class="panel" id="p-threads" hidden>
+        <div class="card">
+          <h3 id="th-heading">create new thread</h3>
+          <label class="field"><span>content <i id="th-count"></i></span><textarea class="input" id="th-content" rows="6" maxlength="5000" placeholder="what's on your mind..."></textarea></label>
+          <div class="two">
+            <label class="field"><span>image link <i>optional</i></span><input class="input" id="th-image" placeholder="https://…" inputmode="url"><small class="check" id="th-image-check"></small><img class="peek" id="th-image-peek" alt="" hidden></label>
+            <label class="field"><span>video link <i>youtube or uploaded</i></span><input class="input" id="th-video" placeholder="https://youtube.com/…" inputmode="url"><small class="check" id="th-video-check"></small></label>
+          </div>
+          <div class="uploader" data-kind="thread" data-image="th-image" data-video="th-video">
+            <label class="btn small ghost">📁 UPLOAD PHOTO OR VIDEO<input type="file" accept="image/*,video/*"></label>
+            <div class="progress" hidden><i></i><span></span></div>
+          </div>
+          <div class="row">
+            <button class="btn" type="button" id="th-save">POST THREAD ✦</button>
+            <button class="btn ghost" type="button" id="th-cancel" hidden>STOP EDITING</button>
+            <span class="tip">your draft saves itself while you type</span>
+          </div>
+        </div>
+        <div class="card"><h3>all threads</h3><div id="th-list"></div></div>
+      </section>
+
+      <!-- FEED POSTS -->
+      <section class="panel" id="p-posts" hidden>
+        <div class="card">
+          <h3>create post</h3>
+          <p class="tip">upload a photo or video straight from your phone or computer, or paste a link ♡</p>
+          <div class="uploader" data-kind="feed" data-image="po-image" data-video="po-video">
+            <label class="btn">📁 UPLOAD PHOTO OR VIDEO<input type="file" accept="image/*,video/*"></label>
+            <div class="progress" hidden><i></i><span></span></div>
+          </div>
+          <div class="two">
+            <label class="field"><span>image link</span><input class="input" id="po-image" placeholder="https://…" inputmode="url"><small class="check" id="po-image-check"></small><img class="peek" id="po-image-peek" alt="" hidden></label>
+            <label class="field"><span>video link</span><input class="input" id="po-video" placeholder="https://…" inputmode="url"><small class="check" id="po-video-check"></small><video class="peek-video" id="po-video-peek" controls playsinline muted hidden></video></label>
+          </div>
+          <label class="field"><span>caption <i id="po-count"></i></span><textarea class="input" id="po-caption" rows="3" maxlength="2200" placeholder="add a caption..."></textarea></label>
+          <button class="btn" type="button" id="po-save">SHARE POST ✦</button>
+        </div>
+        <div class="card"><h3>all posts</h3><div id="po-list"></div></div>
+      </section>
+
+      <!-- VLOGS -->
+      <section class="panel" id="p-vlogs" hidden>
+        <div class="card">
+          <h3>add vlog entry</h3>
+          <label class="field"><span>title</span><input class="input" id="vl-title" maxlength="150" placeholder="vlog title..."></label>
+          <div class="uploader" data-kind="vlog" data-video="vl-url" data-only="video">
+            <label class="btn">🎬 UPLOAD A VIDEO<input type="file" accept="video/*"></label>
+            <div class="progress" hidden><i></i><span></span></div>
+          </div>
+          <label class="field"><span>video <i>uploaded video or a youtube link</i></span><input class="input" id="vl-url" placeholder="upload above, or paste https://youtube.com/…" inputmode="url"><small class="check" id="vl-url-check"></small><img class="peek" id="vl-peek" alt="" hidden><video class="peek-video" id="vl-video-peek" controls playsinline muted hidden></video></label>
+          <label class="field"><span>description <i>optional</i></span><textarea class="input" id="vl-desc" rows="3" maxlength="2000" placeholder="what's this vlog about..."></textarea></label>
+          <button class="btn" type="button" id="vl-save">ADD VLOG ✦</button>
+          <p class="tip" style="margin-top:12px">videos can be up to 50MB. shorter clips upload faster ♡</p>
+        </div>
+        <div class="card"><h3>all vlogs</h3><div id="vl-list"></div></div>
+      </section>
+
+      <!-- JOURNAL -->
+      <section class="panel" id="p-journal" hidden>
+        <div class="card">
+          <h3>new entry <small>only you can see these ♡</small></h3>
+          <div class="two">
+            <label class="field"><span>date</span><input class="input" type="date" id="jo-date"></label>
+            <label class="field"><span>mood</span><input class="input" id="jo-mood" maxlength="40" placeholder="✨ vibing..."></label>
+          </div>
+          <label class="field"><span>title <i>optional</i></span><input class="input" id="jo-title" maxlength="150" placeholder="entry title..."></label>
+          <label class="field"><span>entry <i id="jo-count"></i></span><textarea class="input" id="jo-content" rows="9" maxlength="20000" placeholder="dear journal..."></textarea></label>
+          <div class="row"><button class="btn" type="button" id="jo-save">SAVE ENTRY ✦</button><span class="tip">your draft saves itself while you type</span></div>
+        </div>
+        <div class="card"><h3>all entries <small>click one to read it</small></h3><div id="jo-list"></div></div>
+      </section>
+
+      <!-- COMMENTS -->
+      <section class="panel" id="p-comments" hidden>
+        <div class="card">
+          <h3>recent comments</h3>
+          <p class="tip">the newest 60 comments from every thread. delete anything mean or spammy ♡</p>
+          <input class="input search" id="cm-search" placeholder="search comments…" type="search">
+          <div id="cm-list"></div>
+        </div>
+      </section>
+
+      <!-- GUESTBOOK -->
+      <section class="panel" id="p-guestbook" hidden>
+        <div class="card"><h3>signatures</h3><div id="gb-list"></div></div>
+      </section>
+
+      <!-- LIVE -->
+      <section class="panel" id="p-live" hidden>
+        <div class="grid2">
+          <div class="card">
+            <h3>go live right here <small>no youtube needed ♡</small></h3>
+            <div class="cam-preview">
+              <video id="cam-preview" muted playsinline autoplay hidden></video>
+              <div class="cam-off" id="cam-off">turn on your camera to see yourself here ♡</div>
+              <span class="cam-badge" id="cam-badge" hidden>● LIVE <b id="cam-time">0:00</b></span>
+            </div>
+            <div class="cam-controls">
+              <div class="seg" id="cam-source">
+                <button type="button" data-v="camera" aria-pressed="true">📷 camera</button>
+                <button type="button" data-v="screen" aria-pressed="false" id="cam-screen-btn">🖥 my screen</button>
+              </div>
+              <button class="mini-btn" type="button" id="cam-flip" title="Switch between front and back camera">🔄 flip camera</button>
+              <label class="check-row"><input type="checkbox" id="cam-mic" checked> microphone on</label>
+            </div>
+            <div class="row">
+              <button class="btn" type="button" id="cam-on">📷 TURN ON CAMERA</button>
+              <button class="btn" type="button" id="cam-go" hidden>🔴 GO LIVE</button>
+              <button class="btn danger" type="button" id="cam-end" hidden>END STREAM</button>
+            </div>
+            <p class="tip" id="cam-msg" style="margin-top:12px">viewers see you a few seconds behind. keep this tab open while you're live (it can be in the background).</p>
+          </div>
+          <div>
+            <div class="card">
+              <h3>how it works</h3>
+              <ol class="howto">
+                <li>press <b>turn on camera</b> and let your browser use the camera &amp; mic.</li>
+                <li>check you look cute in the preview ♡</li>
+                <li>press <b>go live</b>. a 🔴 LIVE button pops up on your site and the live stage shows you.</li>
+                <li>press <b>end stream</b> when you're done.</li>
+              </ol>
+              <p class="tip" style="margin-top:10px">works best in Chrome or Edge. on iPhone, viewers might see a tiny pause between clips.</p>
+            </div>
+            <div class="card">
+              <h3>live chat</h3>
+              <p class="tip">clear out old messages before a new stream.</p>
+              <button class="btn danger" type="button" id="lv-clear">CLEAR LIVE CHAT ✦</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>or use a youtube stream <small>optional</small></h3>
+          <div class="live-switch" id="lv-box">
+            <label class="switch"><input type="checkbox" id="lv-on" aria-label="YouTube stream is live"><span></span></label>
+            <div><b id="lv-state">OFFLINE</b><small>flip this on when your YouTube stream is running, then save</small></div>
+          </div>
+          <div class="two">
+            <label class="field"><span>youtube live link</span><input class="input" id="lv-url" placeholder="https://youtube.com/live/…" inputmode="url"><small class="check" id="lv-url-check"></small></label>
+            <label class="field"><span>offline picture <i>shown when you're not live</i></span><input class="input" id="lv-img" placeholder="https://…" inputmode="url"><small class="check" id="lv-img-check"></small><img class="peek" id="lv-img-peek" alt="" hidden></label>
+          </div>
+          <button class="btn" type="button" id="lv-save">UPDATE LIVE STATUS ✦</button>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="panel" id="p-profile" hidden>
+        <div class="profile-grid">
+          <div>
+            <div class="card">
+              <h3>profile settings</h3>
+              <div class="two">
+                <label class="field"><span>display name</span><input class="input" id="pf-name" maxlength="60" placeholder="KAI"></label>
+                <label class="field"><span>mood emoji</span><input class="input" id="pf-mood" maxlength="40" placeholder="✨"></label>
+                <label class="field"><span>location</span><input class="input" id="pf-location" maxlength="80" placeholder="planet earth"></label>
+                <label class="field"><span>zodiac</span><input class="input" id="pf-zodiac" maxlength="40" placeholder="scorpio ♏"></label>
+              </div>
+              <label class="field"><span>profile picture link</span><input class="input" id="pf-pic" placeholder="https://…" inputmode="url"><small class="check" id="pf-pic-check"></small></label>
+              <div class="uploader" data-kind="profile" data-image="pf-pic" data-only="image">
+                <label class="btn small ghost">📁 UPLOAD A PICTURE<input type="file" accept="image/*"></label>
+                <div class="progress" hidden><i></i><span></span></div>
+              </div>
+              <label class="field"><span>bio <i id="pf-count"></i></span><textarea class="input" id="pf-bio" rows="5" maxlength="1500" placeholder="tell the world about yourself..."></textarea></label>
+            </div>
+            <div class="card">
+              <h3>social links <small>empty ones are hidden on the site</small></h3>
+              <label class="field"><span>instagram</span><input class="input" id="pf-ig" placeholder="https://instagram.com/…" inputmode="url"><small class="check" id="pf-ig-check"></small></label>
+              <label class="field"><span>tiktok</span><input class="input" id="pf-tt" placeholder="https://tiktok.com/@…" inputmode="url"><small class="check" id="pf-tt-check"></small></label>
+              <label class="field"><span>spotify</span><input class="input" id="pf-sp" placeholder="https://open.spotify.com/…" inputmode="url"><small class="check" id="pf-sp-check"></small></label>
+              <button class="btn" type="button" id="pf-save">SAVE PROFILE &amp; LINKS ✦</button>
+            </div>
+          </div>
+          <div class="card preview-card">
+            <h3>preview</h3>
+            <div class="pic" id="pv-pic">K</div>
+            <b id="pv-name">KAIANA</b>
+            <span class="mood" id="pv-mood">✨ current mood</span>
+            <div class="where-txt" id="pv-where"></div>
+            <p id="pv-bio"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FUN FACTS -->
+      <section class="panel" id="p-facts" hidden>
+        <div class="card">
+          <h3>edit all 8 facts</h3>
+          <p class="tip">leave a box empty to take that fact down.</p>
+          <div id="ff-list"></div>
+          <button class="btn" type="button" id="ff-save">SAVE ALL FACTS ✦</button>
+        </div>
+      </section>
+
+      <!-- PET STUDIO -->
+      <section class="panel" id="p-pets" hidden>
+        <div class="card steps-card">
+          <div class="steps-head"><h3>how to make a pet that moves</h3><button class="link" type="button" id="steps-toggle">hide steps</button></div>
+          <ol class="steps" id="steps">
+            <li data-step="start"><b>pick a starting point</b>start blank, or open an example pet (further down) to see how it's made. examples are the easiest way to learn!</li>
+            <li data-step="draw"><b>draw frame 1</b>pencil <kbd>B</kbd> draws, eraser <kbd>E</kbd> (or right-click) erases, bucket <kbd>G</kbd> fills, dropper <kbd>I</kbd> grabs a color. mirror <kbd>M</kbd> draws both sides at once. draw it facing <b>right</b>, it flips by itself.</li>
+            <li data-step="frames"><b>make frame 2</b>hit <b>duplicate</b> to copy frame 1, then change a little: move the legs, flap the wings, squish it. onion skin <kbd>O</kbd> shows the last frame faintly. 2–4 frames is plenty.</li>
+            <li data-step="play"><b>watch it play</b>the preview loops your frames. too fast or slow? drag the speed slider. 4–8 fps feels cute for pixel pets.</li>
+            <li data-step="motion"><b>choose how it moves</b>walk, hop, fly, float or follow the mouse. watch it in the little room and pick a size.</li>
+            <li data-step="save"><b>name it &amp; save</b>it shows up on your site right away: in petscape and the 🐾 button.</li>
+          </ol>
+        </div>
+
+        <div class="warn" id="storage-warn" hidden>
+          <b>heads up: pets aren't saved for keeps yet</b>
+          right now they're stored on the server's disk, and Render wipes that every time the site restarts. ask xotiic to run <code>supabase_setup.sql</code> in Supabase once and your pets will stay forever.
+        </div>
+
+        <div class="studio">
+          <div>
+            <div class="card">
+              <div class="toolbar" role="toolbar" aria-label="Drawing tools">
+                <div class="seg" id="tools">
+                  <button type="button" data-tool="pencil" aria-pressed="true">✏️ pencil <kbd>B</kbd></button>
+                  <button type="button" data-tool="eraser" aria-pressed="false">🧽 eraser <kbd>E</kbd></button>
+                  <button type="button" data-tool="fill" aria-pressed="false">🪣 fill <kbd>G</kbd></button>
+                  <button type="button" data-tool="picker" aria-pressed="false">💧 dropper <kbd>I</kbd></button>
+                </div>
+                <span class="sep"></span>
+                <button class="icon" type="button" id="t-mirror" aria-pressed="false" title="Mirror drawing (M)" aria-label="Mirror drawing">⇿</button>
+                <button class="icon" type="button" id="t-onion" aria-pressed="true" title="Onion skin: see the last frame faintly (O)" aria-label="Onion skin">🧅</button>
+                <button class="icon" type="button" id="t-grid" aria-pressed="true" title="Grid lines" aria-label="Grid lines">#</button>
+                <span class="sep"></span>
+                <button class="icon" type="button" id="t-undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>
+                <button class="icon" type="button" id="t-redo" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>
+              </div>
+              <div class="canvas-wrap"><canvas id="px" width="320" height="320" aria-label="Pixel canvas"></canvas></div>
+              <div class="frames" id="frames" aria-label="Frames"></div>
+              <div class="frame-tools">
+                <span class="label">this frame</span>
+                <button class="mini-btn" type="button" id="f-dup">⧉ duplicate</button>
+                <button class="mini-btn" type="button" id="f-left">◀ move</button>
+                <button class="mini-btn" type="button" id="f-right">move ▶</button>
+                <button class="mini-btn" type="button" id="f-flip">⇋ flip</button>
+                <button class="mini-btn" type="button" id="f-clear">clear</button>
+                <button class="mini-btn del" type="button" id="f-del">🗑 delete</button>
+                <span class="label">nudge the drawing</span>
+                <button class="mini-btn" type="button" data-nudge="0,-1" aria-label="Nudge up">↑</button>
+                <button class="mini-btn" type="button" data-nudge="0,1" aria-label="Nudge down">↓</button>
+                <button class="mini-btn" type="button" data-nudge="-1,0" aria-label="Nudge left">←</button>
+                <button class="mini-btn" type="button" data-nudge="1,0" aria-label="Nudge right">→</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <h3>colors</h3>
+              <div class="palette" id="palette"></div>
+              <div class="color-row">
+                <span class="current-color" id="cur-color"></span>
+                <label class="row" style="gap:6px"><input type="color" id="color-pick" value="#ec6f9d"><span class="muted" style="font-size:12px">pick any color</span></label>
+              </div>
+              <div class="recent" id="recent" aria-label="Recent colors"></div>
+            </div>
+            <div class="card">
+              <h3>preview</h3>
+              <div class="anim-row">
+                <div class="anim-box"><canvas id="anim" width="16" height="16"></canvas></div>
+                <label class="fps"><span class="set-label" style="margin-top:0">speed: <b id="fps-label">6 fps</b></span><input type="range" id="fps" min="1" max="16" value="6"></label>
+              </div>
+              <div class="playground" id="playground"><div class="pg-empty" id="pg-empty">draw something and it'll come to life in here ♡</div></div>
+              <span class="set-label">how it moves</span>
+              <div class="seg" id="motion"></div>
+              <p class="hint" id="motion-hint"></p>
+              <span class="set-label">walking speed</span>
+              <div class="seg" id="speed"><button type="button" data-v="slow">slow</button><button type="button" data-v="normal">normal</button><button type="button" data-v="fast">fast</button></div>
+              <span class="set-label">size on the site</span>
+              <div class="seg" id="size"><button type="button" data-v="s">small</button><button type="button" data-v="m">medium</button><button type="button" data-v="l">large</button><button type="button" data-v="xl">huge</button></div>
+            </div>
+            <div class="card">
+              <h3 id="save-heading">name it &amp; save</h3>
+              <label class="field"><span>pet name <i>letters, numbers, - and _</i></span><input class="input" id="pet-name" maxlength="24" placeholder="e.g. mochi" autocomplete="off"></label>
+              <button class="btn wide" type="button" id="pet-save">SAVE PET ♡</button>
+              <p class="hint" id="save-note">it'll show up on your site right away.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>start something new</h3>
+          <div class="starters" id="starters">
+            <button class="starter" type="button" data-blank="16"><span class="blank">16</span><span>blank<small>16 × 16, easiest</small></span></button>
+            <button class="starter" type="button" data-blank="24"><span class="blank">24</span><span>blank<small>24 × 24</small></span></button>
+            <button class="starter" type="button" data-blank="32"><span class="blank">32</span><span>blank<small>32 × 32, most detail</small></span></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>your pets <small>these are on your site right now</small></h3>
+          <div class="pet-list" id="pet-list"><span class="loading"></span></div>
+        </div>
+
+        <div class="card">
+          <h3>already have a gif or sprite sheet?</h3>
+          <p class="tip">gifs animate by themselves. a sprite sheet is one png with all the frames side by side, left to right, all the same size.</p>
+          <form id="up-form">
+            <label class="field"><span>file <i>png, gif, webp or jpg · max 3MB</i></span><input class="input" type="file" name="file" accept="image/png,image/gif,image/webp,image/jpeg" required></label>
+            <div class="upload-preview" id="up-preview" hidden><img id="up-img" alt=""><span id="up-info" class="muted"></span></div>
+            <div class="two">
+              <label class="field"><span>pet name</span><input class="input" name="name" maxlength="24" required autocomplete="off"></label>
+              <label class="field"><span>frames in the sheet <i>leave 0 to guess</i></span><input class="input" type="number" name="frames" min="0" max="24" value="0"></label>
+              <label class="field"><span>how it moves</span><select class="input" name="motion"></select></label>
+              <label class="field"><span>speed (fps)</span><input class="input" type="number" name="fps" min="1" max="24" value="6"></label>
+              <label class="field"><span>walking speed</span><select class="input" name="speed"><option value="slow">slow</option><option value="normal" selected>normal</option><option value="fast">fast</option></select></label>
+              <label class="field"><span>size</span><select class="input" name="size"><option value="s">small</option><option value="m" selected>medium</option><option value="l">large</option><option value="xl">huge</option></select></label>
+            </div>
+            <button class="btn" type="submit">UPLOAD PET ♡</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="panel" id="p-stats" hidden>
+        <div class="stat-row">
+          <div class="stat"><b id="s-total">–</b><span>total visitors</span></div>
+          <div class="stat"><b id="s-today">–</b><span>today</span></div>
+          <div class="stat"><b id="s-active">–</b><span>active now</span></div>
+          <div class="stat"><b id="s-sigs">–</b><span>signatures</span></div>
+          <div class="stat"><b id="s-threads">–</b><span>threads</span></div>
+          <div class="stat"><b id="s-comments">–</b><span>comments</span></div>
+          <div class="stat"><b id="s-posts">–</b><span>posts</span></div>
+          <div class="stat"><b id="s-vlogs">–</b><span>vlogs</span></div>
+        </div>
+        <div class="card">
+          <h3>top pages</h3>
+          <div class="bars" id="s-pages"></div>
+          <p class="tip" style="margin-top:12px">numbers update about once a minute.</p>
+        </div>
+        <button class="btn" type="button" id="s-refresh">REFRESH STATS ✦</button>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/assets/pets.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIG & HELPERS
+═══════════════════════════════════════════════════════════ */
+const API = location.protocol === 'file:' ? 'https://kaisworldb.onrender.com' : '';
+const $ = (s, el) => (el || document).querySelector(s);
+const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+let token = null;
+try { token = sessionStorage.getItem('lounge_token'); } catch (e) {}
+
+const local = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} },
+};
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function safeUrl(u) { return /^https?:\/\/[^\s"'<>]+$/i.test(u || '') ? u : ''; }
+function ytId(u) {
+  if (!u) return null;
+  u = String(u).trim();
+  if (/^[\w-]{11}$/.test(u)) return u;
+  const m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+const isVideoFile = u => /\.(mp4|mov|webm|m4v)(\?|$)/i.test(u || '');
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso.length === 10 ? iso + 'T12:00:00' : iso);
+  return isNaN(d) ? iso : d.toLocaleDateString('en-US', { weekday: iso.length === 10 ? 'short' : undefined, month: 'short', day: 'numeric', year: 'numeric' });
+}
+function ago(iso) {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (!isFinite(s)) return '';
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+  if (s < 604800) return Math.floor(s / 86400) + 'd ago';
+  return fmtDate(iso);
+}
+
+let toastTimer = null;
+function toast(msg, bad) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.toggle('bad', !!bad);
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), bad ? 5000 : 3000);
+}
+function errText(d, status) {
+  if (d && typeof d.detail === 'string') return d.detail;
+  if (d && Array.isArray(d.detail) && d.detail[0]) {
+    const m = d.detail[0], field = m.loc ? m.loc[m.loc.length - 1] : '';
+    return (field ? String(field).replace(/_/g, ' ') + ': ' : '') + String(m.msg).replace(/^Value error, /, '');
+  }
+  if (status === 429) return 'slow down a little and try again in a minute';
+  if (status === 413) return 'that file is too big';
+  return 'something went wrong (' + status + ')';
+}
+async function api(path, method, body) {
+  const headers = {};
+  if (token) headers.Authorization = 'Bearer ' + token;
+  const isForm = body instanceof FormData;
+  if (body && !isForm) headers['Content-Type'] = 'application/json';
+  try {
+    const r = await fetch(API + path, { method: method || 'GET', headers, body: body ? (isForm ? body : JSON.stringify(body)) : undefined });
+    let data = null;
+    try { data = await r.json(); } catch (e) {}
+    if (r.status === 401 && token) { needLogin(); return { ok: false, status: 401, error: 'you got logged out, log in again and try that once more' }; }
+    if (!r.ok) return { ok: false, status: r.status, error: errText(data, r.status) };
+    return { ok: true, data: data || {} };
+  } catch (e) {
+    return { ok: false, status: 0, error: "can't reach the server. check your internet, or wait a few seconds if it's waking up" };
+  }
+}
+const list = r => (r.ok && r.data && Array.isArray(r.data.data)) ? r.data.data : [];
+async function busy(btn, label, fn) {
+  const old = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = label;
+  try { return await fn(); }
+  finally { btn.disabled = false; btn.innerHTML = old; }
+}
+function counter(input, out) {
+  const max = +input.maxLength;
+  const upd = () => {
+    const n = input.value.length;
+    out.textContent = n ? `${n} / ${max}` : '';
+    out.classList.toggle('near', n > max * .9);
+  };
+  input.addEventListener('input', upd);
+  upd();
+}
+// Live checks under link boxes, with a picture/video preview where it helps.
+function linkCheck(input, out, kind, peek, videoPeek) {
+  const upd = () => {
+    const v = input.value.trim();
+    out.className = 'check';
+    out.textContent = '';
+    if (peek) peek.hidden = true;
+    if (videoPeek) { videoPeek.hidden = true; videoPeek.removeAttribute('src'); }
+    if (!v) return;
+    if (kind === 'youtube' || kind === 'video') {
+      const id = ytId(v);
+      if (id) {
+        out.textContent = '✓ found the youtube video'; out.classList.add('good');
+        if (peek) { peek.src = `https://i.ytimg.com/vi/${id}/mqdefault.jpg`; peek.hidden = false; }
+        return;
+      }
+      if (kind === 'video' && safeUrl(v)) {
+        out.textContent = isVideoFile(v) ? '✓ video file' : '✓ looks like a link';
+        out.classList.add('good');
+        if (videoPeek && isVideoFile(v)) { videoPeek.src = v; videoPeek.hidden = false; }
+        return;
+      }
+      out.textContent = kind === 'youtube' ? "hmm, that doesn't look like a YouTube link" : 'upload a video, or paste a YouTube link';
+      out.classList.add('bad');
+      return;
+    }
+    if (!safeUrl(v)) { out.textContent = 'links need to start with https://'; out.classList.add('bad'); return; }
+    if (kind === 'image' && peek) {
+      peek.onload = () => { peek.hidden = false; out.textContent = '✓ picture loads fine'; out.className = 'check good'; };
+      peek.onerror = () => { peek.hidden = true; out.textContent = "couldn't load that picture. make sure it's a direct link to the image"; out.className = 'check bad'; };
+      peek.src = v;
+    } else {
+      out.textContent = '✓ looks good'; out.classList.add('good');
+    }
+  };
+  input.addEventListener('input', upd);
+  input.addEventListener('change', upd);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UPLOADS (photos & videos go to Supabase Storage)
+═══════════════════════════════════════════════════════════ */
+const MAX_UPLOAD = 50 * 1024 * 1024;
+function uploadMedia(file, kind, onProgress) {
+  return new Promise(resolve => {
+    const x = new XMLHttpRequest();
+    x.open('POST', API + '/api/media/upload?kind=' + encodeURIComponent(kind));
+    x.setRequestHeader('Authorization', 'Bearer ' + token);
+    x.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+    x.upload.onprogress = e => { if (e.lengthComputable) onProgress(e.loaded / e.total); };
+    x.onload = () => {
+      let d = null;
+      try { d = JSON.parse(x.responseText); } catch (e) {}
+      if (x.status === 401) { needLogin(); resolve({ ok: false, error: 'you got logged out, log in and try again' }); return; }
+      resolve(x.status < 300 ? { ok: true, data: d } : { ok: false, error: errText(d, x.status) });
+    };
+    x.onerror = () => resolve({ ok: false, error: 'the upload stopped. check your internet and try again' });
+    x.send(file);
+  });
+}
+function setupUploaders() {
+  $$('.uploader').forEach(box => {
+    const input = box.querySelector('input[type="file"]'), bar = box.querySelector('.progress');
+    input.addEventListener('change', async () => {
+      const file = input.files[0];
+      input.value = '';
+      if (!file) return;
+      const isVideo = file.type.startsWith('video/'), only = box.dataset.only;
+      if ((only === 'video' && !isVideo) || (only === 'image' && isVideo)) { toast(only === 'video' ? 'pick a video file ♡' : 'pick a picture ♡', true); return; }
+      if (file.size > MAX_UPLOAD) { toast(`that file is ${Math.round(file.size / 1048576)}MB, the max is 50MB. try a shorter clip`, true); return; }
+      const label = box.querySelector('label');
+      label.style.pointerEvents = 'none'; label.style.opacity = '.5';
+      bar.hidden = false;
+      const setP = p => { bar.querySelector('i').style.setProperty('--p', Math.round(p * 100) + '%'); bar.querySelector('span').textContent = p >= 1 ? 'saving…' : Math.round(p * 100) + '%'; };
+      setP(0);
+      const r = await uploadMedia(file, box.dataset.kind, setP);
+      label.style.pointerEvents = ''; label.style.opacity = '';
+      bar.hidden = true;
+      if (!r.ok) { toast(r.error, true); return; }
+      const target = r.data.type === 'video' ? box.dataset.video : box.dataset.image;
+      if (target) {
+        const field = document.getElementById(target);
+        field.value = r.data.url;
+        field.dispatchEvent(new Event('input'));
+      }
+      toast(r.data.type === 'video' ? 'video uploaded ✦' : 'picture uploaded ✦');
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════════════ */
+let entered = false;
+function showLogin(message, info) {
+  $('#login').hidden = false;
+  const m = $('#login-msg');
+  m.textContent = message || '';
+  m.classList.toggle('info', !!info);
+  setTimeout(() => $('#login-form').elements.email.focus(), 50);
+}
+function needLogin() {
+  token = null;
+  try { sessionStorage.removeItem('lounge_token'); } catch (e) {}
+  stopHeartbeat();
+  showLogin('you got logged out (logins last a day). log back in, everything you typed is still here ♡', true);
+}
+$('#pw-eye').addEventListener('click', () => {
+  const pw = $('#login-form').elements.password, show = pw.type === 'password';
+  pw.type = show ? 'text' : 'password';
+  $('#pw-eye').textContent = show ? 'hide' : 'show';
+  $('#pw-eye').setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+});
+$('#login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.currentTarget, email = f.elements.email.value.trim(), password = f.elements.password.value;
+  const msg = $('#login-msg');
+  if (!email || !password) { msg.className = 'login-msg'; msg.textContent = 'fill in your email and password ♡'; return; }
+  const slow = setTimeout(() => { msg.className = 'login-msg info'; msg.textContent = 'waking the server up… this can take ~30 seconds'; }, 2500);
+  await busy($('#login-btn'), 'CHECKING…', async () => {
+    let r;
+    try {
+      r = await fetch(API + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+    } catch (err) {
+      clearTimeout(slow);
+      msg.className = 'login-msg'; msg.textContent = "can't reach the server. check your internet and try again";
+      return;
+    }
+    clearTimeout(slow);
+    let data = null;
+    try { data = await r.json(); } catch (err) {}
+    if (!r.ok) {
+      msg.className = 'login-msg';
+      msg.textContent = r.status === 429 ? 'too many tries, take a 15 minute break and try again'
+        : r.status === 401 ? "✗ that email or password isn't right ♡" : errText(data, r.status);
+      return;
+    }
+    token = data.access_token;
+    try { sessionStorage.setItem('lounge_token', token); } catch (err) {}
+    f.elements.password.value = '';
+    msg.textContent = '';
+    $('#login').hidden = true;
+    if (!entered) enterApp(); else { startHeartbeat(); toast("you're back ♡ try that again"); }
+  });
+});
+$('#logout').addEventListener('click', async () => {
+  if (LIVE.session && !confirm("you're live right now. logging out ends your stream. log out?")) return;
+  if (S.dirty && !confirm("your pet drawing isn't saved yet. log out anyway?")) return;
+  if (LIVE.session) await endLive();
+  await api('/api/auth/logout', 'POST');
+  token = null;
+  try { sessionStorage.removeItem('lounge_token'); } catch (e) {}
+  location.reload();
+});
+let heartbeat = null;
+function startHeartbeat() {
+  stopHeartbeat();
+  api('/api/kai/heartbeat', 'POST');
+  heartbeat = setInterval(() => api('/api/kai/heartbeat', 'POST'), 60000);
+}
+function stopHeartbeat() { clearInterval(heartbeat); heartbeat = null; }
+
+/* ═══════════════════════════════════════════════════════════
+   PANEL NAVIGATION
+═══════════════════════════════════════════════════════════ */
+const PANELS = {
+  home:      { title: 'HOME', where: "welcome back ♡" },
+  threads:   { title: 'THREADS', where: 'post & manage your thoughts ♡ · shows on your <a href="/#threads" target="_blank">threads page</a>' },
+  posts:     { title: 'FEED POSTS', where: 'photo & video posts ♡ · shows on your <a href="/#feed" target="_blank">feed</a>' },
+  vlogs:     { title: 'VLOGS', where: '▶ video diary manager · shows on your <a href="/#vlog" target="_blank">vlog page</a>' },
+  journal:   { title: 'JOURNAL', where: '📖 private entries, only you can see these ♡' },
+  comments:  { title: 'COMMENTS', where: 'comments people left on your <a href="/#threads" target="_blank">threads</a>' },
+  guestbook: { title: 'GUESTBOOK', where: '✍ signatures from visitors · <a href="/#guestbook" target="_blank">see it on the site</a>' },
+  live:      { title: 'LIVE STAGE', where: '📡 go live right from your browser · <a href="/#live" target="_blank">see your live page</a>' },
+  profile:   { title: 'PROFILE', where: '✨ shows on <a href="/#home" target="_blank">home</a>, <a href="/#about" target="_blank">about</a> &amp; <a href="/#links" target="_blank">links</a>' },
+  facts:     { title: 'FUN FACTS', where: '⭐ 8 facts shown on your <a href="/#about" target="_blank">about page</a>' },
+  pets:      { title: 'PET STUDIO', where: '🎨 draw pets that walk, hop &amp; fly around your <a href="/#pets" target="_blank">site</a>' },
+  stats:     { title: 'ANALYTICS', where: '📊 visitor stats & content overview' },
+};
+const loaders = {};
+let current = null;
+function show(id) {
+  if (!PANELS[id]) id = 'home';
+  current = id;
+  $$('.panel').forEach(p => { p.hidden = p.id !== 'p-' + id; });
+  $$('#nav button').forEach(b => { if (b.dataset.panel === id) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  $('#panel-title').textContent = PANELS[id].title;
+  $('#panel-where').innerHTML = PANELS[id].where;
+  $('#side').classList.remove('open');
+  if (location.hash.slice(1) !== id) history.replaceState(null, '', '#' + id);
+  window.scrollTo(0, 0);
+  if (loaders[id]) loaders[id]();
+}
+$('#nav').addEventListener('click', e => { const b = e.target.closest('button[data-panel]'); if (b) show(b.dataset.panel); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) show(b.dataset.go); });
+$('#menu-btn').addEventListener('click', () => $('#side').classList.toggle('open'));
+window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (id !== current && entered) show(id); });
+function enterApp() {
+  entered = true;
+  $('#login').hidden = true;
+  $('#app').hidden = false;
+  startHeartbeat();
+  setupForms();
+  show(location.hash.slice(1) || 'home');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HOME
+═══════════════════════════════════════════════════════════ */
+function greeting() {
+  const h = new Date().getHours();
+  return h < 5 ? 'up late, kai?' : h < 12 ? 'good morning, kai' : h < 17 ? 'good afternoon, kai' : h < 22 ? 'good evening, kai' : 'hi night owl';
+}
+function cmtRow(c, threadsById) {
+  const t = threadsById[c.thread_id];
+  return `<div class="item"><div class="item-body">
+    <div class="item-meta">${esc(c.author_name || 'anonymous')} · ${esc(ago(c.created_at))}</div>
+    <div class="item-text">${esc(c.content)}</div>
+    ${t ? `<div class="muted" style="font-size:12px;margin-bottom:8px">on: "${esc((t.content || '').slice(0, 70))}${(t.content || '').length > 70 ? '…' : ''}"</div>` : ''}
+    <div class="item-actions"><button class="mini-btn del" type="button" data-del-cmt="${esc(c.id)}">DELETE</button></div>
+  </div></div>`;
+}
+loaders.home = async function () {
+  $('#hello').textContent = greeting() + ' ♡';
+  const [st, cm, sg, th] = await Promise.all([api('/api/stats'), api('/api/comments/recent'), api('/api/signatures'), api('/api/threads')]);
+  if (st.ok) { $('#h-today').textContent = st.data.today || 0; $('#h-total').textContent = st.data.total || 0; }
+  const comments = list(cm), sigs = list(sg), byId = {};
+  list(th).forEach(t => { byId[t.id] = t; });
+  const week = comments.filter(c => Date.now() - new Date(c.created_at) < 7 * 864e5).length;
+  $('#h-cmts').textContent = week;
+  $('#h-sigs').textContent = sigs.length;
+  $('#cmt-badge').hidden = !week;
+  $('#cmt-badge').textContent = week;
+  $('#h-cmt-list').innerHTML = comments.length ? comments.slice(0, 3).map(c => cmtRow(c, byId)).join('') : '<p class="empty">no comments yet ♡</p>';
+  $('#h-sig-list').innerHTML = sigs.length ? sigs.slice(0, 3).map(s => `<div class="item"><div class="item-body"><div class="item-meta">${esc(s.name)} · ${esc(ago(s.created_at))}</div><div class="item-text">${esc(s.message)}</div></div></div>`).join('') : '<p class="empty">no signatures yet ♡</p>';
+};
+$('#q-post').addEventListener('click', e => busy(e.currentTarget, 'POSTING…', async () => {
+  const content = $('#q-text').value.trim();
+  if (!content) { toast('write something first ♡'); return; }
+  const r = await api('/api/threads', 'POST', { content });
+  if (!r.ok) { toast(r.error, true); return; }
+  $('#q-text').value = '';
+  $('#q-text').dispatchEvent(new Event('input'));
+  toast("posted! it's on your site now ✦");
+}));
+
+/* ═══════════════════════════════════════════════════════════
+   THREADS
+═══════════════════════════════════════════════════════════ */
+let editingThread = null, threadsCache = [];
+loaders.threads = async function () {
+  const el = $('#th-list');
+  if (!el.children.length) el.innerHTML = '<span class="loading"></span>';
+  const r = await api('/api/threads');
+  if (!r.ok) { el.innerHTML = `<p class="empty">${esc(r.error)}</p>`; return; }
+  threadsCache = list(r);
+  el.innerHTML = threadsCache.length ? threadsCache.map(t => `
+    <div class="item">
+      ${safeUrl(t.image_url) ? `<img class="item-thumb" src="${esc(t.image_url)}" alt="" loading="lazy">` : ''}
+      <div class="item-body">
+        <div class="item-meta">${esc(fmtDate(t.created_at))} · 💬 ${t.comment_count || 0}</div>
+        <div class="item-text">${esc(t.content)}</div>
+        <div class="item-actions">
+          <button class="mini-btn" type="button" data-edit-thread="${esc(t.id)}">✏️ EDIT</button>
+          <button class="mini-btn del" type="button" data-del-thread="${esc(t.id)}">DELETE</button>
+        </div>
+      </div>
+    </div>`).join('') : '<p class="empty">no threads yet, post your first one above ♡</p>';
+};
+function threadForm(t) {
+  editingThread = t ? t.id : null;
+  $('#th-content').value = t ? t.content || '' : '';
+  $('#th-image').value = t ? t.image_url || '' : '';
+  $('#th-video').value = t ? t.video_url || '' : '';
+  ['#th-content', '#th-image', '#th-video'].forEach(s => $(s).dispatchEvent(new Event('input')));
+  $('#th-heading').textContent = t ? 'editing a thread' : 'create new thread';
+  $('#th-save').textContent = t ? 'SAVE CHANGES ✦' : 'POST THREAD ✦';
+  $('#th-cancel').hidden = !t;
+  if (!t) local.del('draft_thread');
+}
+$('#th-save').addEventListener('click', e => busy(e.currentTarget, 'SAVING…', async () => {
+  const body = { content: $('#th-content').value.trim(), image_url: $('#th-image').value.trim() || null, video_url: $('#th-video').value.trim() || null };
+  if (!body.content) { toast('write something first ♡'); return; }
+  const r = editingThread ? await api('/api/threads/' + encodeURIComponent(editingThread), 'PATCH', body) : await api('/api/threads', 'POST', body);
+  if (!r.ok) { toast(r.error, true); return; }
+  toast(editingThread ? 'thread updated ✦' : "posted! it's on your site now ✦");
+  threadForm(null);
+  loaders.threads();
+}));
+$('#th-cancel').addEventListener('click', () => threadForm(null));
+
+/* ═══════════════════════════════════════════════════════════
+   FEED POSTS
+═══════════════════════════════════════════════════════════ */
+loaders.posts = async function () {
+  const el = $('#po-list');
+  if (!el.children.length) el.innerHTML = '<span class="loading"></span>';
+  const r = await api('/api/posts');
+  if (!r.ok) { el.innerHTML = `<p class="empty">${esc(r.error)}</p>`; return; }
+  const posts = list(r);
+  el.innerHTML = posts.length ? posts.map(p => {
+    const img = safeUrl(p.image_url), yt = ytId(p.video_url), vid = safeUrl(p.video_url);
+    const thumb = img ? `<img class="item-thumb" src="${esc(img)}" alt="" loading="lazy">`
+      : yt ? `<img class="item-thumb" src="https://i.ytimg.com/vi/${yt}/default.jpg" alt="" loading="lazy">`
+      : vid ? `<video class="item-thumb" src="${esc(vid)}#t=0.5" muted preload="metadata" playsinline></video>`
+      : '<span class="item-thumb">✦</span>';
+    return `<div class="item">${thumb}
+      <div class="item-body">
+        <div class="item-meta">${esc(fmtDate(p.created_at))} · ♥ ${p.like_count || 0} likes</div>
+        <div class="item-text">${esc(p.caption || '')}</div>
+        <div class="item-actions"><button class="mini-btn del" type="button" data-del-post="${esc(p.id)}">DELETE</button></div>
+      </div></div>`;
+  }).join('') : '<p class="empty">no posts yet ♡</p>';
+};
+$('#po-save').addEventListener('click', e => busy(e.currentTarget, 'SHARING…', async () => {
+  const body = { caption: $('#po-caption').value.trim() || null, image_url: $('#po-image').value.trim() || null, video_url: $('#po-video').value.trim() || null };
+  if (!body.caption && !body.image_url && !body.video_url) { toast('add a photo, video or caption first ♡'); return; }
+  const r = await api('/api/posts', 'POST', body);
+  if (!r.ok) { toast(r.error, true); return; }
+  ['#po-caption', '#po-image', '#po-video'].forEach(s => { $(s).value = ''; $(s).dispatchEvent(new Event('input')); });
+  toast('shared to your feed ✦');
+  loaders.posts();
+}));
+
+/* ═══════════════════════════════════════════════════════════
+   VLOGS
+═══════════════════════════════════════════════════════════ */
+loaders.vlogs = async function () {
+  const el = $('#vl-list');
+  if (!el.children.length) el.innerHTML = '<span class="loading"></span>';
+  const r = await api('/api/vlogs');
+  if (!r.ok) { el.innerHTML = `<p class="empty">${esc(r.error)}</p>`; return; }
+  const vs = list(r);
+  el.innerHTML = vs.length ? vs.map(v => {
+    const yt = ytId(v.video_url), vid = safeUrl(v.video_url);
+    const thumb = yt ? `<img class="item-thumb" src="https://i.ytimg.com/vi/${yt}/default.jpg" alt="" loading="lazy">`
+      : vid ? `<video class="item-thumb" src="${esc(vid)}#t=0.5" muted preload="metadata" playsinline></video>` : '<span class="item-thumb">▶</span>';
+    return `<div class="item">${thumb}
+      <div class="item-body">
+        <div class="item-title">${esc(v.title || 'untitled')}</div>
+        <div class="item-meta">${esc(fmtDate(v.created_at))}</div>
+        <div class="item-text">${esc(v.description || '')}</div>
+        <div class="item-actions"><button class="mini-btn del" type="button" data-del-vlog="${esc(v.id)}">DELETE</button></div>
+      </div></div>`;
+  }).join('') : '<p class="empty">no vlogs yet ♡</p>';
+};
+$('#vl-save').addEventListener('click', e => busy(e.currentTarget, 'ADDING…', async () => {
+  const title = $('#vl-title').value.trim(), video_url = $('#vl-url').value.trim(), description = $('#vl-desc').value.trim() || null;
+  if (!title) { toast('give your vlog a title ♡'); return; }
+  if (!video_url) { toast('upload a video or paste a YouTube link first ♡'); return; }
+  if (!ytId(video_url) && !safeUrl(video_url)) { toast("that link doesn't look right. upload the video instead ♡", true); return; }
+  const r = await api('/api/vlogs', 'POST', { title, video_url, description });
+  if (!r.ok) { toast(r.error, true); return; }
+  ['#vl-title', '#vl-url', '#vl-desc'].forEach(s => { $(s).value = ''; $(s).dispatchEvent(new Event('input')); });
+  toast('vlog added ✦');
+  loaders.vlogs();
+}));
+
+/* ═══════════════════════════════════════════════════════════
+   JOURNAL
+═══════════════════════════════════════════════════════════ */
+loaders.journal = async function () {
+  const el = $('#jo-list');
+  if (!el.children.length) el.innerHTML = '<span class="loading"></span>';
+  const r = await api('/api/journal');
+  if (!r.ok) { el.innerHTML = `<p class="empty">${esc(r.error)}</p>`; return; }
+  const es = list(r);
+  el.innerHTML = es.length ? es.map(j => `
+    <details class="journal-entry">
+      <summary><span class="item-title">${esc(j.title || 'untitled entry')}</span><span class="item-meta">${esc(fmtDate(j.date || j.created_at))}${j.mood ? ' · ' + esc(j.mood) : ''}</span></summary>
+      <div class="full">${esc(j.content || '')}</div>
+      <button class="mini-btn del" type="button" data-del-journal="${esc(j.id)}">DELETE THIS ENTRY</button>
+    </details>`).join('') : '<p class="empty">no journal entries yet. this is a safe space ♡</p>';
+};
+$('#jo-save').addEventListener('click', e => busy(e.currentTarget, 'SAVING…', async () => {
+  const content = $('#jo-content').value.trim();
+  if (!content) { toast('write something first ♡'); return; }
+  const r = await api('/api/journal', 'POST', { date: $('#jo-date').value || null, mood: $('#jo-mood').value.trim() || null, title: $('#jo-title').value.trim() || null, content });
+  if (!r.ok) { toast(r.error, true); return; }
+  ['#jo-content', '#jo-mood', '#jo-title'].forEach(s => { $(s).value = ''; $(s).dispatchEvent(new Event('input')); });
+  local.del('draft_journal');
+  toast('saved to your journal ♡');
+  loaders.journal();
+}));
+
+/* ═══════════════════════════════════════════════════════════
+   COMMENTS & GUESTBOOK
+═══════════════════════════════════════════════════════════ */
+let allComments = [], threadsById = {};
+function renderComments() {
+  const q = $('#cm-search').value.trim().toLowerCase();
+  const shown = q ? allComments.filter(c => (c.content + ' ' + c.author_name).toLowerCase().includes(q)) : allComments;
+  $('#cm-list').innerHTML = shown.length ? shown.map(c => cmtRow(c, threadsById)).join('') : `<p class="empty">${q ? 'nothing matches that' : 'no comments yet ♡'}</p>`;
+}
+loaders.comments = async function () {
+  const el = $('#cm-list');
+  if (!el.children.length) el.innerHTML = '<span class="loading"></span>';
+  const [cm, th] = await Promise.all([api('/api/comments/recent'), api('/api/threads')]);
+  if (!cm.ok) { el.innerHTML = `<p class="empty">${esc(cm.error)}</p>`; return; }
+  allComments = list(cm);
+  threadsById = {};
+  list(th).forEach(t => { threadsById[t.id] = t; });
+  renderComments();
+};
+$('#cm-search').addEventListener('input', renderComments);
+loaders.guestbook = async function () {
+  const el = $('#gb-list');
+  if (!el.children.length) el.innerHTML = '<span class="loading"></span>';
+  const r = await api('/api/signatures');
+  if (!r.ok) { el.innerHTML = `<p class="empty">${esc(r.error)}</p>`; return; }
+  const ss = list(r);
+  el.innerHTML = ss.length ? ss.map(s => `
+    <div class="item"><div class="item-body">
+      <div class="item-title">${esc(s.name)}</div>
+      <div class="item-meta">${esc(ago(s.created_at))}</div>
+      <div class="item-text">${esc(s.message)}</div>
+      <div class="item-actions"><button class="mini-btn del" type="button" data-del-sig="${esc(s.id)}">DELETE</button></div>
+    </div></div>`).join('') : '<p class="empty">no signatures yet ♡</p>';
+};
+const DELETES = {
+  'del-thread':  { path: '/api/threads/',    ask: 'delete this thread? cannot be undone.', done: 'thread deleted', reload: ['threads'] },
+  'del-post':    { path: '/api/posts/',      ask: 'delete this post?', done: 'post deleted', reload: ['posts'] },
+  'del-vlog':    { path: '/api/vlogs/',      ask: 'delete this vlog?', done: 'vlog deleted', reload: ['vlogs'] },
+  'del-journal': { path: '/api/journal/',    ask: "delete this journal entry? it can't be brought back.", done: 'entry deleted', reload: ['journal'] },
+  'del-cmt':     { path: '/api/comments/',   ask: 'delete this comment?', done: 'comment deleted', reload: ['comments', 'home'] },
+  'del-sig':     { path: '/api/signatures/', ask: 'delete this signature?', done: 'signature deleted', reload: ['guestbook'] },
+};
+document.addEventListener('click', async e => {
+  const edit = e.target.closest('[data-edit-thread]');
+  if (edit) {
+    const t = threadsCache.find(x => String(x.id) === edit.dataset.editThread);
+    if (t) { threadForm(t); window.scrollTo({ top: 0, behavior: 'smooth' }); $('#th-content').focus(); }
+    return;
+  }
+  for (const [attr, cfg] of Object.entries(DELETES)) {
+    const b = e.target.closest(`[data-${attr}]`);
+    if (!b) continue;
+    if (!confirm(cfg.ask)) return;
+    const id = b.getAttribute('data-' + attr);
+    const r = await api(cfg.path + encodeURIComponent(id), 'DELETE');
+    if (!r.ok) { toast(r.error, true); return; }
+    toast(cfg.done);
+    if (attr === 'del-cmt') allComments = allComments.filter(c => String(c.id) !== id);
+    cfg.reload.forEach(p => { if (p === current && loaders[p]) loaders[p](); });
+    return;
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE FROM THE WEBSITE
+   The camera is recorded in short clips (each one a complete little video)
+   and uploaded one after another; the site plays them back to back.
+═══════════════════════════════════════════════════════════ */
+const LIVE = { stream: null, source: 'camera', facing: 'user', session: null, mime: null, rec: null, uploads: Promise.resolve(), started: 0, clock: null };
+const CLIP_MS = 2500;
+function pickMime() {
+  if (!window.MediaRecorder) return null;
+  return ['video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm', 'video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4']
+    .find(m => MediaRecorder.isTypeSupported(m)) || null;
+}
+function camMsg(t, bad) { const m = $('#cam-msg'); m.textContent = t; m.style.color = bad ? 'var(--bad)' : ''; }
+function stopTracks() { if (LIVE.stream) LIVE.stream.getTracks().forEach(t => t.stop()); LIVE.stream = null; }
+async function camOn() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { camMsg("this browser can't use a camera. try Chrome on a phone or computer", true); return; }
+  stopTracks();
+  const mic = $('#cam-mic').checked;
+  try {
+    if (LIVE.source === 'screen') {
+      const screen = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 24 }, audio: true });
+      if (mic && !screen.getAudioTracks().length) {
+        try { (await navigator.mediaDevices.getUserMedia({ audio: true })).getAudioTracks().forEach(t => screen.addTrack(t)); } catch (e) {}
+      }
+      LIVE.stream = screen;
+    } else {
+      LIVE.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: LIVE.facing, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 24, max: 30 } },
+        audio: mic ? { echoCancellation: true, noiseSuppression: true } : false,
+      });
+    }
+  } catch (e) {
+    const why = e && e.name === 'NotAllowedError' ? 'your browser blocked it. tap the camera icon by the web address and allow camera & mic, then try again'
+      : e && e.name === 'NotFoundError' ? "couldn't find a camera on this device"
+      : e && e.name === 'NotReadableError' ? 'another app is using the camera. close it and try again'
+      : "couldn't turn the camera on (" + (e && e.name || 'error') + ')';
+    camMsg(why, true);
+    return;
+  }
+  const v = $('#cam-preview');
+  v.srcObject = LIVE.stream;
+  v.hidden = false;
+  v.classList.toggle('mirror', LIVE.source === 'camera' && LIVE.facing === 'user');
+  $('#cam-off').hidden = true;
+  $('#cam-go').hidden = !!LIVE.session;
+  $('#cam-on').textContent = LIVE.source === 'screen' ? '🖥 PICK AGAIN' : '🔄 RESTART CAMERA';
+  LIVE.stream.getVideoTracks()[0].addEventListener('ended', () => {
+    if (LIVE.session) endLive('screen sharing stopped, so the stream ended');
+    $('#cam-preview').hidden = true; $('#cam-off').hidden = false; $('#cam-go').hidden = true;
+  });
+  if (LIVE.session) restartRecorder();
+  camMsg(LIVE.session ? "you're live ♡" : 'looking good! press go live when you\'re ready ♡');
+}
+function newRecorder() {
+  const rec = new MediaRecorder(LIVE.stream, { mimeType: LIVE.mime, videoBitsPerSecond: 1000000, audioBitsPerSecond: 64000 });
+  const chunks = [];
+  let rolled = false;
+  rec.ondataavailable = e => {
+    if (e.data && e.data.size) chunks.push(e.data);
+    // The recorder's own timer drives the clips, so background tabs keep streaming.
+    if (!rolled && rec.state === 'recording' && LIVE.session) { rolled = true; restartRecorder(); }
+  };
+  rec.onstop = () => { if (chunks.length) queueClip(new Blob(chunks, { type: LIVE.mime })); };
+  rec.start(CLIP_MS);
+  return rec;
+}
+function restartRecorder() {
+  const old = LIVE.rec;
+  try { LIVE.rec = newRecorder(); } catch (e) { endLive("couldn't keep recording (" + e.name + ')'); return; }
+  if (old && old.state !== 'inactive') old.stop();
+}
+function queueClip(blob) {
+  const session = LIVE.session;
+  if (!session) return;
+  LIVE.uploads = LIVE.uploads.then(async () => {
+    if (LIVE.session !== session) return;
+    let r = null;
+    try {
+      r = await fetch(`${API}/api/live/camera/segment?session=${encodeURIComponent(session)}`, {
+        method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/octet-stream' }, body: blob,
+      });
+    } catch (e) { camMsg('your internet hiccuped, still trying ♡', true); return; }
+    if (r.status === 401) { needLogin(); endLive('you got logged out, so the stream stopped'); }
+    else if (r.status === 409) endLive('the stream was ended');
+    else if (r.ok && LIVE.session) camMsg("you're live ♡ viewers see you a few seconds behind");
+  });
+}
+async function goLive() {
+  if (!LIVE.stream) { await camOn(); if (!LIVE.stream) return; }
+  LIVE.mime = pickMime();
+  if (!LIVE.mime) { camMsg("this browser can't record video. try Chrome or Edge", true); return; }
+  const r = await api('/api/live/camera/start', 'POST', { mime: LIVE.mime });
+  if (!r.ok) { camMsg(r.error, true); return; }
+  LIVE.session = r.data.session;
+  LIVE.started = Date.now();
+  restartRecorder();
+  $('#cam-go').hidden = true;
+  $('#cam-end').hidden = false;
+  $('#cam-badge').hidden = false;
+  $$('#cam-source button').forEach(b => { b.disabled = true; });
+  $('#online-badge').classList.add('live');
+  $('#online-text').textContent = 'LIVE NOW';
+  LIVE.clock = setInterval(() => {
+    const s = Math.floor((Date.now() - LIVE.started) / 1000);
+    $('#cam-time').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }, 1000);
+  camMsg('going live… ♡');
+  toast("you're live on your site! 🔴");
+}
+async function endLive(reason) {
+  const session = LIVE.session;
+  LIVE.session = null;
+  clearInterval(LIVE.clock);
+  if (LIVE.rec && LIVE.rec.state !== 'inactive') LIVE.rec.stop();
+  LIVE.rec = null;
+  $('#cam-end').hidden = true;
+  $('#cam-badge').hidden = true;
+  $('#cam-go').hidden = !LIVE.stream;
+  $$('#cam-source button').forEach(b => { b.disabled = false; });
+  $('#online-badge').classList.remove('live');
+  $('#online-text').textContent = 'KAI ONLINE';
+  if (session) await api('/api/live/camera/stop', 'POST');
+  camMsg(typeof reason === 'string' ? reason : 'stream ended ♡ thanks for hanging out', typeof reason === 'string');
+  if (typeof reason !== 'string') toast('stream ended ♡');
+}
+$('#cam-on').addEventListener('click', camOn);
+$('#cam-go').addEventListener('click', e => busy(e.currentTarget, 'STARTING…', goLive));
+$('#cam-end').addEventListener('click', () => { if (confirm('end your stream?')) endLive(); });
+$('#cam-source').addEventListener('click', e => {
+  const b = e.target.closest('[data-v]');
+  if (!b || LIVE.session) return;
+  LIVE.source = b.dataset.v;
+  $$('#cam-source [data-v]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  $('#cam-flip').hidden = LIVE.source !== 'camera';
+  $('#cam-on').textContent = LIVE.source === 'screen' ? '🖥 PICK WHAT TO SHARE' : '📷 TURN ON CAMERA';
+  if (LIVE.stream) camOn();
+});
+$('#cam-flip').addEventListener('click', () => { LIVE.facing = LIVE.facing === 'user' ? 'environment' : 'user'; if (LIVE.stream) camOn(); });
+$('#cam-mic').addEventListener('change', () => { if (LIVE.stream && !LIVE.session) camOn(); });
+if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) $('#cam-screen-btn').hidden = true;
+window.addEventListener('beforeunload', e => { if (LIVE.session) { e.preventDefault(); e.returnValue = ''; } });
+
+function liveLabel() {
+  const on = $('#lv-on').checked;
+  $('#lv-state').textContent = on ? '🔴 YOUTUBE LIVE' : 'OFFLINE';
+  $('#lv-box').classList.toggle('on', on);
+}
+$('#lv-on').addEventListener('change', liveLabel);
+loaders.live = async function () {
+  const r = await api('/api/live');
+  if (!r.ok) return;
+  $('#lv-on').checked = !!r.data.is_live;
+  $('#lv-url').value = r.data.stream_url || '';
+  $('#lv-img').value = r.data.offline_image_url || '';
+  ['#lv-url', '#lv-img'].forEach(s => $(s).dispatchEvent(new Event('input')));
+  liveLabel();
+};
+$('#lv-save').addEventListener('click', e => busy(e.currentTarget, 'SAVING…', async () => {
+  const body = { is_live: $('#lv-on').checked, stream_url: $('#lv-url').value.trim() || null, offline_image_url: $('#lv-img').value.trim() || null };
+  if (body.is_live && !ytId(body.stream_url)) { toast('paste your YouTube live link first, then save', true); return; }
+  const r = await api('/api/live', 'PATCH', body);
+  if (!r.ok) { toast(r.error, true); return; }
+  toast(body.is_live ? 'your youtube stream is on your site 🔴' : 'live status saved ♡');
+}));
+$('#lv-clear').addEventListener('click', async () => {
+  if (!confirm('clear every message in the live chat?')) return;
+  const r = await api('/api/chat', 'DELETE');
+  toast(r.ok ? 'chat cleared ♡' : r.error, !r.ok);
+});
+
+/* ═══════════════════════════════════════════════════════════
+   PROFILE & LINKS
+═══════════════════════════════════════════════════════════ */
+const PF = { name: 'pf-name', mood_emoji: 'pf-mood', location: 'pf-location', zodiac: 'pf-zodiac', profile_pic_url: 'pf-pic', bio: 'pf-bio', social_instagram: 'pf-ig', social_tiktok: 'pf-tt', social_spotify: 'pf-sp' };
+function profilePreview() {
+  const name = $('#pf-name').value.trim() || 'KAIANA', pic = safeUrl($('#pf-pic').value.trim());
+  $('#pv-name').textContent = name;
+  $('#pv-pic').innerHTML = pic ? `<img src="${esc(pic)}" alt="">` : esc(name.charAt(0).toUpperCase());
+  $('#pv-mood').textContent = ($('#pf-mood').value.trim() || '✨') + ' current mood';
+  $('#pv-where').textContent = [$('#pf-location').value.trim() && '📍 ' + $('#pf-location').value.trim(), $('#pf-zodiac').value.trim() && '⭐ ' + $('#pf-zodiac').value.trim()].filter(Boolean).join('  ·  ');
+  $('#pv-bio').textContent = $('#pf-bio').value;
+}
+loaders.profile = async function () {
+  const r = await api('/api/profile');
+  if (!r.ok) return;
+  Object.entries(PF).forEach(([k, id]) => { $('#' + id).value = r.data[k] || ''; $('#' + id).dispatchEvent(new Event('input')); });
+  profilePreview();
+};
+$('#pf-save').addEventListener('click', e => busy(e.currentTarget, 'SAVING…', async () => {
+  const body = {};
+  Object.entries(PF).forEach(([k, id]) => { body[k] = $('#' + id).value.trim(); });
+  if (!body.name) body.name = 'KAIANA';
+  const r = await api('/api/profile', 'PATCH', body);
+  if (!r.ok) { toast(r.error, true); return; }
+  toast('profile saved ✦');
+}));
+
+/* ═══════════════════════════════════════════════════════════
+   FUN FACTS
+═══════════════════════════════════════════════════════════ */
+loaders.facts = async function () {
+  const el = $('#ff-list');
+  const facts = list(await api('/api/facts'));
+  el.innerHTML = '';
+  for (let i = 1; i <= 8; i++) {
+    const f = facts.find(x => x.slot_number === i);
+    const lab = document.createElement('label');
+    lab.className = 'field';
+    lab.innerHTML = `<span>fact ${i} <i class="ff-count"></i></span><input class="input" id="ff-${i}" maxlength="300" placeholder="fun fact about kai...">`;
+    el.appendChild(lab);
+    const inp = lab.querySelector('input');
+    inp.value = f ? f.fact_text || '' : '';
+    counter(inp, lab.querySelector('.ff-count'));
+  }
+};
+$('#ff-save').addEventListener('click', e => busy(e.currentTarget, 'SAVING…', async () => {
+  const facts = [];
+  for (let i = 1; i <= 8; i++) facts.push({ slot_number: i, fact_text: ($('#ff-' + i) || { value: '' }).value.trim() });
+  const r = await api('/api/facts', 'POST', facts);
+  if (!r.ok) { toast(r.error, true); return; }
+  toast(`saved ${facts.filter(f => f.fact_text).length} fun facts ✦`);
+}));
+
+/* ═══════════════════════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════════════════════ */
+loaders.stats = async function () {
+  const r = await api('/api/stats');
+  if (!r.ok) { toast(r.error, true); return; }
+  const d = r.data;
+  [['s-total', d.total], ['s-today', d.today], ['s-active', d.active], ['s-sigs', d.signatures], ['s-threads', d.threads], ['s-comments', d.comments], ['s-posts', d.posts], ['s-vlogs', d.vlogs]]
+    .forEach(([id, v]) => { $('#' + id).textContent = v == null ? '–' : v; });
+  const pages = d.pages || [], max = pages.length ? pages[0].count : 0;
+  $('#s-pages').innerHTML = pages.length ? pages.map(p => `
+    <div class="bar-row"><span>${esc(p.label)}</span><div class="bar-track"><div class="bar-fill" style="width:${max ? Math.round(p.count / max * 100) : 0}%"></div></div><b>${p.count}</b></div>`).join('')
+    : '<p class="empty">no page data yet ♡</p>';
+};
+$('#s-refresh').addEventListener('click', () => loaders.stats());
+
+/* ═══════════════════════════════════════════════════════════
+   FORM SETUP (counters, link checks, drafts)
+═══════════════════════════════════════════════════════════ */
+function draft(key, ids, paused) {
+  const saved = local.get(key, null);
+  if (saved) ids.forEach(id => { if (saved[id] && !$('#' + id).value) $('#' + id).value = saved[id]; });
+  let t = null;
+  ids.forEach(id => $('#' + id).addEventListener('input', () => {
+    clearTimeout(t);
+    if (paused && paused()) return;
+    t = setTimeout(() => {
+      const v = {};
+      ids.forEach(i => { v[i] = $('#' + i).value; });
+      if (ids.some(i => v[i].trim())) local.set(key, v); else local.del(key);
+    }, 400);
+  }));
+}
+let formsReady = false;
+function setupForms() {
+  if (formsReady) return;
+  formsReady = true;
+  draft('draft_thread', ['th-content', 'th-image', 'th-video'], () => editingThread);
+  draft('draft_journal', ['jo-content', 'jo-title', 'jo-mood']);
+  counter($('#q-text'), $('#q-count'));
+  counter($('#th-content'), $('#th-count'));
+  counter($('#po-caption'), $('#po-count'));
+  counter($('#jo-content'), $('#jo-count'));
+  counter($('#pf-bio'), $('#pf-count'));
+  linkCheck($('#th-image'), $('#th-image-check'), 'image', $('#th-image-peek'));
+  linkCheck($('#th-video'), $('#th-video-check'), 'video');
+  linkCheck($('#po-image'), $('#po-image-check'), 'image', $('#po-image-peek'));
+  linkCheck($('#po-video'), $('#po-video-check'), 'video', null, $('#po-video-peek'));
+  linkCheck($('#vl-url'), $('#vl-url-check'), 'video', $('#vl-peek'), $('#vl-video-peek'));
+  linkCheck($('#lv-url'), $('#lv-url-check'), 'youtube');
+  linkCheck($('#lv-img'), $('#lv-img-check'), 'image', $('#lv-img-peek'));
+  linkCheck($('#pf-pic'), $('#pf-pic-check'), 'link');
+  ['pf-ig', 'pf-tt', 'pf-sp'].forEach(id => linkCheck($('#' + id), $('#' + id + '-check'), 'link'));
+  Object.values(PF).forEach(id => $('#' + id).addEventListener('input', profilePreview));
+  ['#th-content', '#th-image', '#th-video', '#jo-content'].forEach(s => $(s).dispatchEvent(new Event('input')));
+  $('#jo-date').value = new Date().toLocaleDateString('en-CA');
+  setupUploaders();
+  studioInit();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PET STUDIO
+   The drawing is a list of frames; each frame is an array of
+   w*h colors (null = see-through). Saving turns the frames into
+   one PNG sprite sheet, frames side by side.
+═══════════════════════════════════════════════════════════ */
+const PALETTE = ['#000000', '#7d3a5d', '#a35ad1', '#d4578a', '#ec6f9d', '#f78fb3', '#ffb5d2', '#ffe3ee', '#ffffff', '#c9a3bd',
+  '#e9b45c', '#ffd84a', '#ff9a3c', '#e0503a', '#8b4a2b', '#8bd17c', '#2f9e8f', '#5bc0eb', '#4a5bd1', '#3a1030'];
+const MAX_FRAMES = 12, NAME_RE = /^[a-z0-9][a-z0-9_-]{0,23}$/;
+const blank = (w, h) => new Array(w * h).fill(null);
+const S = {
+  w: 16, h: 16, frames: [blank(16, 16)], cur: 0,
+  tool: 'pencil', color: '#ec6f9d', mirror: false, onion: true, grid: true,
+  undo: [], redo: [], fps: 6, motion: 'walk', speed: 'normal', size: 'm',
+  editing: null, dirty: false, recent: local.get('studio_recent', []),
+};
+let steps = {}, petItems = [], pxCtx = null, cell = 20, playStage = null, playUrl = null, playTimer = null, stepTimer = null;
+
+function studioInit() {
+  const px = $('#px');
+  pxCtx = px.getContext('2d');
+  $('#palette').innerHTML = PALETTE.map(c => `<button class="swatch" type="button" style="background:${c}" data-color="${c}" aria-label="color ${c}" aria-pressed="false"></button>`).join('');
+  $('#motion').innerHTML = Object.entries(Pets.MOTIONS).map(([k, m]) => `<button type="button" data-v="${k}">${m.label.toLowerCase()}</button>`).join('');
+  $('#up-form').elements.motion.innerHTML = Object.entries(Pets.MOTIONS).map(([k, m]) => `<option value="${k}">${m.label.toLowerCase()}: ${m.hint}</option>`).join('');
+  ['cat', 'bat', 'slime'].forEach(name => {
+    const tpl = Pets.TEMPLATES[name];
+    const b = document.createElement('button');
+    b.className = 'starter'; b.type = 'button'; b.dataset.template = name;
+    b.appendChild(Pets.thumb(Pets.templateSprite(name), 40));
+    const label = document.createElement('span');
+    label.innerHTML = `example: ${tpl.label.toLowerCase()}<small>${tpl.frames.length} frames, ${Pets.MOTIONS[tpl.motion].label.toLowerCase()}s</small>`;
+    b.appendChild(label);
+    $('#starters').appendChild(b);
+  });
+
+  let painting = false, last = null, strokeTool = null;
+  const cellAt = e => {
+    const r = px.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) / r.width * S.w), y = Math.floor((e.clientY - r.top) / r.height * S.h);
+    return x >= 0 && y >= 0 && x < S.w && y < S.h ? { x, y } : null;
+  };
+  px.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const p = cellAt(e);
+    if (!p) return;
+    const tool = e.button === 2 ? 'eraser' : S.tool;
+    if (tool === 'picker') {
+      const c = S.frames[S.cur][p.y * S.w + p.x];
+      if (c) { setColor(c); setTool('pencil'); }
+      return;
+    }
+    pushUndo();
+    if (tool === 'fill') { flood(p.x, p.y); changed(); return; }
+    painting = true; strokeTool = tool; last = p;
+    px.setPointerCapture(e.pointerId);
+    plot(p.x, p.y, tool);
+    drawCanvas();
+  });
+  px.addEventListener('pointermove', e => {
+    if (!painting) return;
+    const p = cellAt(e);
+    if (!p) return;
+    lineCells(last, p).forEach(q => plot(q.x, q.y, strokeTool));
+    last = p;
+    drawCanvas();
+  });
+  const end = () => { if (!painting) return; painting = false; changed(); };
+  px.addEventListener('pointerup', end);
+  px.addEventListener('pointercancel', end);
+  px.addEventListener('contextmenu', e => e.preventDefault());
+
+  $('#tools').addEventListener('click', e => { const b = e.target.closest('[data-tool]'); if (b) setTool(b.dataset.tool); });
+  $('#t-mirror').addEventListener('click', () => toggle('mirror'));
+  $('#t-onion').addEventListener('click', () => toggle('onion'));
+  $('#t-grid').addEventListener('click', () => toggle('grid'));
+  $('#t-undo').addEventListener('click', undo);
+  $('#t-redo').addEventListener('click', redo);
+  $('#palette').addEventListener('click', e => { const b = e.target.closest('[data-color]'); if (b) setColor(b.dataset.color); });
+  $('#recent').addEventListener('click', e => { const b = e.target.closest('[data-color]'); if (b) setColor(b.dataset.color); });
+  $('#color-pick').addEventListener('input', e => setColor(e.target.value));
+  $('#color-pick').addEventListener('change', e => {
+    const c = e.target.value;
+    S.recent = [c].concat(S.recent.filter(x => x !== c)).slice(0, 10);
+    local.set('studio_recent', S.recent);
+    renderRecent();
+  });
+  $('#frames').addEventListener('click', e => {
+    if (e.target.closest('.frame-add')) { addFrame(false); return; }
+    const b = e.target.closest('.frame');
+    if (b) { S.cur = +b.dataset.i; drawCanvas(); renderFrames(); }
+  });
+  $('#f-dup').addEventListener('click', () => addFrame(true));
+  $('#f-del').addEventListener('click', deleteFrame);
+  $('#f-left').addEventListener('click', () => moveFrame(-1));
+  $('#f-right').addEventListener('click', () => moveFrame(1));
+  $('#f-flip').addEventListener('click', () => {
+    pushUndo();
+    const f = S.frames[S.cur], out = blank(S.w, S.h);
+    for (let y = 0; y < S.h; y++) for (let x = 0; x < S.w; x++) out[y * S.w + (S.w - 1 - x)] = f[y * S.w + x];
+    S.frames[S.cur] = out;
+    changed();
+  });
+  $('#f-clear').addEventListener('click', () => { pushUndo(); S.frames[S.cur] = blank(S.w, S.h); changed(); });
+  $$('[data-nudge]').forEach(b => b.addEventListener('click', () => {
+    const [dx, dy] = b.dataset.nudge.split(',').map(Number);
+    pushUndo();
+    const f = S.frames[S.cur], out = blank(S.w, S.h);
+    for (let y = 0; y < S.h; y++) for (let x = 0; x < S.w; x++) out[((y + dy + S.h) % S.h) * S.w + ((x + dx + S.w) % S.w)] = f[y * S.w + x];
+    S.frames[S.cur] = out;
+    changed();
+  }));
+  $('#fps').addEventListener('input', e => { S.fps = +e.target.value; $('#fps-label').textContent = S.fps + ' fps'; markStep('play'); schedulePlay(); });
+  $('#motion').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.motion = b.dataset.v; markStep('motion'); renderSettings(); schedulePlay(); } });
+  $('#speed').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.speed = b.dataset.v; renderSettings(); schedulePlay(); } });
+  $('#size').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.size = b.dataset.v; renderSettings(); schedulePlay(); } });
+  $('#pet-name').addEventListener('input', e => {
+    const v = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '').replace(/^[-_]+/, '').slice(0, 24);
+    if (v !== e.target.value) e.target.value = v;
+    renderSaveCard();
+  });
+  $('#pet-save').addEventListener('click', e => busy(e.currentTarget, 'SAVING…', savePet));
+  $('#starters').addEventListener('click', e => {
+    const b = e.target.closest('.starter');
+    if (!b) return;
+    if (S.dirty && !confirm("start fresh? your current drawing isn't saved and will be replaced.")) return;
+    if (b.dataset.blank) {
+      const n = +b.dataset.blank;
+      loadDrawing({ w: n, h: n, frames: [blank(n, n)] }, { fps: 6, motion: 'walk', speed: 'normal', size: 'm' }, '', null);
+      toast(`fresh ${n}×${n} canvas ✦ start drawing!`);
+    } else {
+      const name = b.dataset.template, tpl = Pets.TEMPLATES[name];
+      loadDrawing(Pets.templatePixels(name), { fps: tpl.fps, motion: tpl.motion, speed: 'normal', size: 'm' }, 'my-' + name, null);
+      toast(`here's the ${name}! click the frames under the canvas to see how it moves`);
+    }
+    steps = { start: true };
+    updateSteps();
+    window.scrollTo({ top: $('#p-pets .studio').offsetTop - 90, behavior: 'smooth' });
+  });
+  const stepsHidden = local.get('studio_steps_hidden', false);
+  $('#steps').classList.toggle('collapsed', stepsHidden);
+  $('#steps-toggle').textContent = stepsHidden ? 'show steps' : 'hide steps';
+  $('#steps-toggle').addEventListener('click', () => {
+    const hide = !$('#steps').classList.contains('collapsed');
+    $('#steps').classList.toggle('collapsed', hide);
+    $('#steps-toggle').textContent = hide ? 'show steps' : 'hide steps';
+    local.set('studio_steps_hidden', hide);
+  });
+  $('#pet-list').addEventListener('click', petListClick);
+  setupSpriteUpload();
+  document.addEventListener('keydown', e => {
+    if (current !== 'pets' || e.target.closest('input, textarea, select')) return;
+    const k = e.key.toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+    if ((e.ctrlKey || e.metaKey) && k === 'y') { e.preventDefault(); redo(); return; }
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const tools = { b: 'pencil', e: 'eraser', g: 'fill', i: 'picker' };
+    if (tools[k]) setTool(tools[k]);
+    else if (k === 'm') toggle('mirror');
+    else if (k === 'o') toggle('onion');
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      S.cur = (S.cur + (e.key === 'ArrowRight' ? 1 : -1) + S.frames.length) % S.frames.length;
+      drawCanvas(); renderFrames();
+    }
+  });
+  window.addEventListener('beforeunload', e => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
+  setupCanvas();
+  setColor(S.color);
+  setTool('pencil');
+  renderRecent();
+  renderSettings();
+  renderFrames();
+  renderSteps();
+  requestAnimationFrame(animLoop);
+}
+loaders.pets = async function () { drawCanvas(); schedulePlay(); await loadPetList(); };
+
+function setupCanvas() {
+  const px = $('#px');
+  cell = Math.max(6, Math.floor(512 / Math.max(S.w, S.h)));
+  px.width = S.w * cell;
+  px.height = S.h * cell;
+  const anim = $('#anim');
+  anim.width = S.w; anim.height = S.h;
+  anim.style.width = (S.w >= S.h ? 96 : Math.round(96 * S.w / S.h)) + 'px';
+  anim.style.height = (S.h >= S.w ? 96 : Math.round(96 * S.h / S.w)) + 'px';
+  drawCanvas();
+}
+function paintFrame(ctx, f, size, w) {
+  for (let i = 0; i < f.length; i++) {
+    if (!f[i]) continue;
+    ctx.fillStyle = f[i];
+    ctx.fillRect((i % w) * size, Math.floor(i / w) * size, size, size);
+  }
+}
+function drawCanvas() {
+  if (!pxCtx) return;
+  const ctx = pxCtx, W = S.w, H = S.h;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    ctx.fillStyle = (x + y) % 2 ? '#f6e4ec' : '#fffafc';
+    ctx.fillRect(x * cell, y * cell, cell, cell);
+  }
+  if (S.onion && S.frames.length > 1) {
+    ctx.globalAlpha = .28;
+    paintFrame(ctx, S.frames[(S.cur - 1 + S.frames.length) % S.frames.length], cell, W);
+    ctx.globalAlpha = 1;
+  }
+  paintFrame(ctx, S.frames[S.cur], cell, W);
+  if (S.grid) {
+    ctx.strokeStyle = 'rgba(125,58,93,.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 1; i < W; i++) { ctx.moveTo(i * cell + .5, 0); ctx.lineTo(i * cell + .5, H * cell); }
+    for (let i = 1; i < H; i++) { ctx.moveTo(0, i * cell + .5); ctx.lineTo(W * cell, i * cell + .5); }
+    ctx.stroke();
+  }
+  if (S.mirror) {
+    ctx.strokeStyle = 'rgba(236,111,157,.9)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.beginPath(); ctx.moveTo(W * cell / 2, 0); ctx.lineTo(W * cell / 2, H * cell); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+function plot(x, y, tool) {
+  const v = tool === 'eraser' ? null : S.color, f = S.frames[S.cur];
+  f[y * S.w + x] = v;
+  if (S.mirror) f[y * S.w + (S.w - 1 - x)] = v;
+}
+function lineCells(a, b) {
+  const out = [];
+  let x = a.x, y = a.y;
+  const dx = Math.abs(b.x - x), dy = -Math.abs(b.y - y), sx = x < b.x ? 1 : -1, sy = y < b.y ? 1 : -1;
+  let err = dx + dy;
+  for (;;) {
+    out.push({ x, y });
+    if (x === b.x && y === b.y) break;
+    const e2 = 2 * err;
+    if (e2 >= dy) { err += dy; x += sx; }
+    if (e2 <= dx) { err += dx; y += sy; }
+  }
+  return out;
+}
+function flood(x0, y0) {
+  const f = S.frames[S.cur], target = f[y0 * S.w + x0], color = S.color;
+  if (target === color) return;
+  const stack = [[x0, y0]];
+  while (stack.length) {
+    const [x, y] = stack.pop();
+    if (x < 0 || y < 0 || x >= S.w || y >= S.h || f[y * S.w + x] !== target) continue;
+    f[y * S.w + x] = color;
+    stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+  }
+}
+const snapshot = () => ({ w: S.w, h: S.h, cur: S.cur, frames: S.frames.map(f => f.slice()) });
+function pushUndo() { S.undo.push(snapshot()); if (S.undo.length > 60) S.undo.shift(); S.redo = []; }
+function restore(s) {
+  const resized = s.w !== S.w || s.h !== S.h;
+  S.w = s.w; S.h = s.h; S.frames = s.frames; S.cur = Math.min(s.cur, s.frames.length - 1);
+  if (resized) setupCanvas();
+  changed();
+}
+function undo() { if (S.undo.length) { S.redo.push(snapshot()); restore(S.undo.pop()); } }
+function redo() { if (S.redo.length) { S.undo.push(snapshot()); restore(S.redo.pop()); } }
+function addFrame(copy) {
+  if (S.frames.length >= MAX_FRAMES) { toast(`${MAX_FRAMES} frames is the max, that's plenty ♡`); return; }
+  pushUndo();
+  S.frames.splice(S.cur + 1, 0, copy ? S.frames[S.cur].slice() : blank(S.w, S.h));
+  S.cur++;
+  changed();
+  if (copy) toast(`frame ${S.cur + 1} is a copy. now change it a little!`);
+}
+function deleteFrame() {
+  if (S.frames.length === 1) { toast("that's your only frame. use clear instead"); return; }
+  pushUndo();
+  S.frames.splice(S.cur, 1);
+  S.cur = Math.min(S.cur, S.frames.length - 1);
+  changed();
+}
+function moveFrame(d) {
+  const to = S.cur + d;
+  if (to < 0 || to >= S.frames.length) return;
+  pushUndo();
+  const f = S.frames.splice(S.cur, 1)[0];
+  S.frames.splice(to, 0, f);
+  S.cur = to;
+  changed();
+}
+function renderFrames() {
+  const el = $('#frames');
+  el.innerHTML = '';
+  S.frames.forEach((f, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'frame'; b.dataset.i = i;
+    b.setAttribute('aria-current', String(i === S.cur));
+    b.setAttribute('aria-label', 'Frame ' + (i + 1));
+    const c = document.createElement('canvas');
+    c.width = S.w; c.height = S.h;
+    paintFrame(c.getContext('2d'), f, 1, S.w);
+    b.appendChild(c);
+    const n = document.createElement('span');
+    n.textContent = i + 1;
+    b.appendChild(n);
+    el.appendChild(b);
+  });
+  if (S.frames.length < MAX_FRAMES) el.insertAdjacentHTML('beforeend', '<button type="button" class="frame-add" aria-label="Add a blank frame" title="Add a blank frame">+</button>');
+  $('#f-del').disabled = S.frames.length === 1;
+  $('#f-left').disabled = S.cur === 0;
+  $('#f-right').disabled = S.cur === S.frames.length - 1;
+  $('#t-undo').disabled = !S.undo.length;
+  $('#t-redo').disabled = !S.redo.length;
+}
+function changed() { S.dirty = true; drawCanvas(); renderFrames(); updateSteps(); schedulePlay(); renderSaveCard(); }
+function setTool(t) { S.tool = t; $$('#tools [data-tool]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tool === t))); }
+function toggle(k) { S[k] = !S[k]; $('#t-' + k).setAttribute('aria-pressed', String(S[k])); drawCanvas(); }
+function setColor(c) {
+  S.color = c;
+  $('#cur-color').style.background = c;
+  $('#color-pick').value = c;
+  $$('#palette .swatch').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.color.toLowerCase() === c.toLowerCase())));
+  if (S.tool === 'eraser' || S.tool === 'picker') setTool('pencil');
+}
+function renderRecent() { $('#recent').innerHTML = S.recent.map(c => `<button class="swatch" type="button" style="background:${esc(c)}" data-color="${esc(c)}" aria-label="recent color ${esc(c)}"></button>`).join(''); }
+function renderSettings() {
+  $('#fps').value = S.fps;
+  $('#fps-label').textContent = S.fps + ' fps';
+  [['#motion', S.motion], ['#speed', S.speed], ['#size', S.size]].forEach(([sel, v]) => $$(sel + ' [data-v]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v))));
+  $('#motion-hint').textContent = Pets.MOTIONS[S.motion].hint;
+}
+function renderSaveCard() {
+  const name = $('#pet-name').value;
+  const replacing = name && petItems.some(p => p.name === name);
+  $('#save-heading').textContent = S.editing ? `editing "${S.editing}"` : 'name it & save';
+  $('#save-note').textContent = !name ? "it'll show up on your site right away."
+    : replacing ? (name === S.editing ? 'saving will update this pet on your site.' : `heads up: you already have a pet called "${name}", saving will replace it.`)
+    : `"${name}" will show up on your site right away.`;
+}
+function animLoop(now) {
+  if (current === 'pets') {
+    const n = S.frames.length, f = n > 1 ? Math.floor(now / 1000 * S.fps) % n : 0;
+    const ctx = $('#anim').getContext('2d');
+    ctx.clearRect(0, 0, S.w, S.h);
+    paintFrame(ctx, S.frames[f], 1, S.w);
+  }
+  requestAnimationFrame(animLoop);
+}
+function schedulePlay() { clearTimeout(playTimer); playTimer = setTimeout(updatePlayground, 350); }
+function updatePlayground() {
+  if (current !== 'pets') return;
+  if (!playStage) playStage = new Pets.Stage($('#playground'), { ground: 10, removable: false, max: 1 });
+  playStage.clear();
+  if (playUrl) Pets.forget(playUrl);
+  const has = S.frames.some(f => f.some(Boolean));
+  $('#pg-empty').hidden = has;
+  if (!has) { playUrl = null; return; }
+  playUrl = Pets.pixelsToSheet(S.frames, S.w, S.h).toDataURL('image/png');
+  playStage.add({ name: 'preview', url: playUrl, kind: 'sheet', frames: S.frames.length, fps: S.fps, motion: S.motion, speed: S.speed, size: S.size });
+}
+const STEP_ORDER = ['start', 'draw', 'frames', 'play', 'motion', 'save'];
+function markStep(k) { if (!steps[k]) { steps[k] = true; renderSteps(); } }
+function updateSteps() {
+  const f0 = S.frames[0], filled = f0.filter(Boolean).length;
+  if (filled > 0) steps.start = true;
+  if (filled >= 12) steps.draw = true;
+  const differs = S.frames.length > 1 && S.frames.some((f, i) => i > 0 && f.some((c, j) => c !== f0[j]));
+  if (differs) {
+    steps.frames = true;
+    if (!steps.play && !stepTimer) stepTimer = setTimeout(() => { stepTimer = null; markStep('play'); }, 4000);
+  }
+  renderSteps();
+}
+function renderSteps() {
+  const now = STEP_ORDER.find(k => !steps[k]);
+  $$('#steps li').forEach(li => { li.classList.toggle('done', !!steps[li.dataset.step]); li.classList.toggle('now', li.dataset.step === now); });
+}
+function loadDrawing(pix, settings, name, editing) {
+  S.w = pix.w; S.h = pix.h;
+  S.frames = pix.frames.map(f => f.slice());
+  S.cur = 0; S.undo = []; S.redo = [];
+  Object.assign(S, settings);
+  S.editing = editing;
+  S.dirty = false;
+  $('#pet-name').value = name;
+  setupCanvas();
+  renderSettings();
+  renderFrames();
+  renderSaveCard();
+  schedulePlay();
+}
+async function savePet() {
+  const name = $('#pet-name').value.trim();
+  if (!S.frames.some(f => f.some(Boolean))) { toast('draw your pet first ♡'); return; }
+  if (!NAME_RE.test(name)) { toast('give your pet a name first (letters, numbers, - or _)'); $('#pet-name').focus(); return; }
+  if (name !== S.editing && petItems.some(p => p.name === name) && !confirm(`you already have a pet called "${name}". replace it with this one?`)) return;
+  const image = Pets.pixelsToSheet(S.frames, S.w, S.h).toDataURL('image/png');
+  const r = await api('/api/sprites/save', 'POST', { name, image, frames: S.frames.length, fps: S.fps, motion: S.motion, speed: S.speed, size: S.size });
+  if (!r.ok) { toast(r.error, true); return; }
+  S.editing = name;
+  S.dirty = false;
+  markStep('save');
+  toast(`${name} is on your site now ♡`);
+  renderSaveCard();
+  loadPetList();
+}
+async function loadPetList() {
+  const res = await Pets.fetchSprites(API);
+  petItems = res.items;
+  $('#storage-warn').hidden = res.storage !== 'server-disk';
+  const el = $('#pet-list');
+  if (res.storage === 'offline') { el.innerHTML = "<p class=\"empty\">couldn't load your pets right now</p>"; return; }
+  if (!petItems.length) { el.innerHTML = '<p class="empty">no pets yet. make your first one above ♡</p>'; renderSaveCard(); return; }
+  el.innerHTML = '';
+  petItems.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pet-card';
+    card.dataset.name = p.name;
+    card.innerHTML = `
+      <div class="pet-card-top">
+        <span class="art"></span>
+        <div><b>${esc(p.name)}</b><small>${esc(p.kind === 'gif' ? 'gif' : p.frames + ' frame' + (p.frames === 1 ? '' : 's'))} · ${esc(p.motion)} · ${esc({ s: 'small', m: 'medium', l: 'large', xl: 'huge' }[p.size] || p.size)}</small></div>
+      </div>
+      <div class="item-actions">
+        ${p.kind === 'sheet' ? '<button class="mini-btn" type="button" data-pet-act="edit">✏️ edit drawing</button>' : ''}
+        <button class="mini-btn" type="button" data-pet-act="settings">⚙️ how it moves</button>
+        <button class="mini-btn del" type="button" data-pet-act="delete">delete</button>
+      </div>`;
+    card.querySelector('.art').appendChild(Pets.thumb(p, 56));
+    el.appendChild(card);
+  });
+  renderSaveCard();
+}
+async function petListClick(e) {
+  const b = e.target.closest('[data-pet-act]');
+  if (!b) return;
+  const card = b.closest('.pet-card'), p = petItems.find(x => x.name === card.dataset.name);
+  if (!p) return;
+  const act = b.dataset.petAct;
+  if (act === 'delete') {
+    if (!confirm(`delete ${p.name}? it'll disappear from your site.`)) return;
+    const r = await api('/api/sprites/' + encodeURIComponent(p.name), 'DELETE');
+    if (!r.ok) { toast(r.error, true); return; }
+    toast(`bye ${p.name} ♡`);
+    if (S.editing === p.name) { S.editing = null; renderSaveCard(); }
+    loadPetList();
+  }
+  if (act === 'edit') {
+    if (S.dirty && !confirm(`open ${p.name}? your current drawing isn't saved and will be replaced.`)) return;
+    const pix = await sheetToPixels(p);
+    if (!pix) return;
+    loadDrawing(pix, { fps: p.fps, motion: p.motion, speed: p.speed, size: p.size }, p.name, p.name);
+    steps = { start: true };
+    updateSteps();
+    window.scrollTo({ top: $('#p-pets .studio').offsetTop - 90, behavior: 'smooth' });
+    toast(`${p.name} is open. change anything, then save`);
+  }
+  if (act === 'settings') {
+    const open = card.querySelector('.pet-settings');
+    if (open) { open.remove(); return; }
+    const opt = (pairs, v) => pairs.map(([k, l]) => `<option value="${k}"${k === v ? ' selected' : ''}>${l}</option>`).join('');
+    card.insertAdjacentHTML('beforeend', `
+      <div class="pet-settings">
+        <label>moves<select class="input" name="motion">${opt(Object.entries(Pets.MOTIONS).map(([k, m]) => [k, m.label.toLowerCase()]), p.motion)}</select></label>
+        <label>size<select class="input" name="size">${opt([['s', 'small'], ['m', 'medium'], ['l', 'large'], ['xl', 'huge']], p.size)}</select></label>
+        <label>walking speed<select class="input" name="speed">${opt([['slow', 'slow'], ['normal', 'normal'], ['fast', 'fast']], p.speed)}</select></label>
+        ${p.kind === 'sheet' ? `<label>fps<input class="input" type="number" name="fps" min="1" max="24" value="${p.fps}"></label>` : ''}
+        <div class="row"><button class="btn small" type="button" data-pet-act="save-settings">SAVE</button></div>
+      </div>`);
+  }
+  if (act === 'save-settings') {
+    const box = card.querySelector('.pet-settings'), val = n => { const el = box.querySelector(`[name="${n}"]`); return el ? el.value : null; };
+    const body = { frames: p.frames || 1, fps: +(val('fps') || p.fps || 6), motion: val('motion'), speed: val('speed'), size: val('size') };
+    const r = await busy(b, 'SAVING…', () => api('/api/sprites/' + encodeURIComponent(p.name), 'PATCH', body));
+    if (!r.ok) { toast(r.error, true); return; }
+    toast(`${p.name} updated ✦`);
+    loadPetList();
+  }
+}
+function sheetToPixels(p) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const frames = Math.max(1, p.frames || 1), fw = img.naturalWidth / frames, fh = img.naturalHeight;
+      if (!Number.isInteger(fw) || fw > 64 || fh > 64) { toast("this one's too big to edit pixel by pixel (max 64×64), but you can still change how it moves"); resolve(null); return; }
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = fh;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, c.width, fh).data;
+      const hex = n => n.toString(16).padStart(2, '0');
+      const out = [];
+      for (let f = 0; f < frames; f++) {
+        const px = blank(fw, fh);
+        for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) {
+          const i = (y * c.width + f * fw + x) * 4;
+          if (data[i + 3] >= 128) px[y * fw + x] = '#' + hex(data[i]) + hex(data[i + 1]) + hex(data[i + 2]);
+        }
+        out.push(px);
+      }
+      resolve({ w: fw, h: fh, frames: out });
+    };
+    img.onerror = () => { toast("couldn't open that pet's picture", true); resolve(null); };
+    img.src = p.url;
+  });
+}
+function setupSpriteUpload() {
+  const f = $('#up-form');
+  f.elements.file.addEventListener('change', () => {
+    const file = f.elements.file.files[0];
+    if (!file) { $('#up-preview').hidden = true; return; }
+    if (!f.elements.name.value) f.elements.name.value = file.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '').replace(/^[-_]+/, '').slice(0, 24);
+    const img = $('#up-img');
+    img.onload = () => {
+      const w = img.naturalWidth, h = img.naturalHeight;
+      let info = `${w} × ${h}px`;
+      if (file.type === 'image/gif') info += ' · gif, it animates by itself';
+      else if (w > h && w % h === 0) { info += ` · looks like ${w / h} frames side by side`; f.elements.frames.value = w / h; }
+      else info += ' · a single picture (1 frame)';
+      $('#up-info').textContent = info;
+      $('#up-preview').hidden = false;
+    };
+    img.src = URL.createObjectURL(file);
+  });
+  f.elements.name.addEventListener('input', e => { e.target.value = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '').slice(0, 24); });
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    busy(f.querySelector('button[type="submit"]'), 'UPLOADING…', async () => {
+      const file = f.elements.file.files[0], name = f.elements.name.value.trim();
+      if (!file) { toast('pick a file first ♡'); return; }
+      if (file.size > 3 * 1024 * 1024) { toast('that file is over 3MB, try a smaller one', true); return; }
+      if (!NAME_RE.test(name)) { toast('give it a name (letters, numbers, - or _)'); return; }
+      if (petItems.some(p => p.name === name) && !confirm(`you already have a pet called "${name}". replace it?`)) return;
+      const fd = new FormData();
+      fd.append('file', file);
+      ['name', 'frames', 'fps', 'motion', 'speed', 'size'].forEach(k => fd.append(k, f.elements[k].value));
+      const r = await api('/api/sprites/upload', 'POST', fd);
+      if (!r.ok) { toast(r.error, true); return; }
+      toast(`${name} is on your site now ♡`);
+      f.reset();
+      $('#up-preview').hidden = true;
+      loadPetList();
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   START
+═══════════════════════════════════════════════════════════ */
+(async function start() {
+  if (!token) { showLogin(); return; }
+  $('#login').hidden = true;
+  const r = await api('/api/auth/check');
+  if (r.ok) enterApp();
+  else if (r.status !== 401) showLogin(r.error);
+})();
+</script>
+</body>
+</html>
